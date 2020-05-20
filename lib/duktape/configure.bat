@@ -1,0 +1,1 @@
+call python2 ./tools/configure.py --config-metadata config/ --source-directory src-input --option-file config/examples/low_memory.yaml --output-directory duktape-src

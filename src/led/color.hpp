@@ -1,4 +1,3 @@
-#pragma once
 #ifndef COLOR_H
 #define COLOR_H
 
@@ -14,12 +13,19 @@ namespace Murli
 
         Color getFaded(const char value) 
         { 
+            CRGB fadedColor = CRGB(Red, Green, Blue).fadeLightBy(value);
+            return { fadedColor.r, fadedColor.g, fadedColor.b };  
+        }
+
+        Color getFadedBlack(const char value) 
+        { 
             CRGB fadedColor = CRGB(Red, Green, Blue).fadeToBlackBy(value);
             return { fadedColor.r, fadedColor.g, fadedColor.b };  
         }
 
         bool isBlack() { return Red == 0 && Green == 0 && Blue == 0; }
         bool operator!=(const Color other) { return other.Red != Red || other.Green != Green || other.Blue != Blue; }
+        bool operator==(const Color other) { return other.Red == Red || other.Green == Green || other.Blue == Blue; }
     };
 
     static const Color Black = { 0, 0, 0 };
