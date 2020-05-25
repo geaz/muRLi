@@ -18,12 +18,12 @@ namespace Murli
 
     int Rom24LC32A::write(const uint8_t* buffer, unsigned short length)
     {
-        waitReady();
-
         char transmissionStatus = 0;
         unsigned short pagesToWrite = ceil(length / (double)_pageSize);
         for(char i = 0; i < pagesToWrite; i++)
         {
+            waitReady();
+
             // Start transmission on rom address (i * _pageSize)
             // First Page = 0
             // Second Page = 32 etc.

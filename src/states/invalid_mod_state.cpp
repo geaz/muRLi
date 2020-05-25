@@ -14,13 +14,11 @@ namespace Murli
 
             State* run(StateContext& context)
             {
-                State* nextState = this;
-
                 _led.setColor(Murli::Red);
                 _centeredTextView.setText("Invalid MOD ...");
                 _display.setView(&_centeredTextView);
 
-                return nextState;
+                return this;
             }
 
         private:

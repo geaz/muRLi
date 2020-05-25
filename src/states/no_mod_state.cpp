@@ -17,16 +17,14 @@ namespace Murli
 
             State* run(StateContext& context)
             {
+                _led.fadeLoop(Murli::Yellow);
                 _centeredTextView.setText("Insert MOD ...");
                 _display.setView(&_centeredTextView);
-                _led.fadeLoop(Murli::Yellow);
 
                 State* nextState = this;
                 if(isModInserted())
                 {                    
                     _led.stopFadeLoop();
-                    _centeredTextView.setText("Reading MOD ...");
-                    _display.setView(&_centeredTextView);
                     nextState = &_readModState;
                 }
                 return nextState;

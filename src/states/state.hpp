@@ -11,9 +11,10 @@ namespace Murli
     struct StateContext
     {
         Rom24LC32A rom = Rom24LC32A(0x50);
-        uint8_t loadedMod[ModMemorySize];     
-        uint16_t receivingLength = 0;
-        bool writeRequested = false;   
+        uint8_t loadedMod[ModMemorySize] = { 0 };
+        uint8_t receivedMod[ModMemorySize] = { 0 };
+        uint16_t receivingLength, receivingIndex = 0;
+        bool writeRequested = false;
     };
 
     class State

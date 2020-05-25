@@ -4,6 +4,7 @@ import glob
 import math
 import serial
 import struct
+import time
 
 def serial_ports():
     """ Lists serial port names
@@ -36,9 +37,9 @@ def serial_ports():
 
 def checkAck(ser):
     response = ser.read()
-    if struct.unpack('>B', response)[0] == 30:
+    if struct.unpack('B', response)[0] == 30:
         return True
-    elif struct.unpack('>B', response)[0] == 31:
+    elif struct.unpack('B', response)[0] == 31:
         return False
     else:
         print('muRLi did not answer correctly ...')
@@ -53,7 +54,7 @@ if len(sys.argv) != 3:
 ser = serial.Serial(sys.argv[1], 74880, timeout=15)
 
 print('Sending write request ...')
-ser.write(struct.pack('>B', 30))
+ser.write(struct.pack('B', 30))
 checkAck(ser)
 
 print('Reading MOD file ...')
@@ -62,19 +63,16 @@ modContent = file.read()
 
 modContentLen = len(modContent)
 print('Sending MOD length (' + str(modContentLen) + ') ...')
-ser.write(struct.pack('>I', modContentLen))
+ser.write(struct.pack('<I', modContentLen))
 if not checkAck(ser):
     print('MOD length to high!')
     sys.exit()
 
-print('Sending MOD ...')
-ser.write(modContent.encode())
-ser.write(0)
+print('Sending and Writing MOD ...')
+modBytes = modContent.encode()
+# Send in chunks to avoid serial buffer errors
+# and wait ack from muRLi before sending next chunk
+for i in range(0, modContentLen, 128):
+    ser.write(modBytes[i:i + 128])
+    checkAck(ser)
 checkAck(ser)
-
-print('Sending write commit ...')
-ser.write(struct.pack('>B', 30))
-checkAck(ser)
-
-print('muRLI is now writing the MOD. Please wait until it is finished ...')
-print(struct.unpack('>B', ser.read()))

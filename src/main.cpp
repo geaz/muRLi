@@ -40,7 +40,7 @@ void setup()
 void loop() 
 {
     // Check if there arrived a new write request
-    if(Serial.available()
+    if(Serial.available() > 0
         && !context.writeRequested 
         && currentState->isModInserted())
     {

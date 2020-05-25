@@ -20,5 +20,6 @@ namespace Murli
     void Display::setView(View* view)
     {
         _currentView = view;
+        drawView();
     }
 }

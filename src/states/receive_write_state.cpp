@@ -5,7 +5,6 @@
 #include "no_mod_state.cpp"
 #include "receive_length_state.cpp"
 #include "../led/led.hpp"
-#include "../display/centeredTextView.cpp"
 
 namespace Murli
 {
@@ -25,12 +24,10 @@ namespace Murli
                 if(incomingByte == 30)
                 {
                     Serial.write(30);
-                    
-                    _led.setColor(Murli::Cyan);
-                    _centeredTextView.setText("Receiving MOD ...");
-                    _display.setView(&_centeredTextView);
 
                     context.writeRequested = true;
+                    context.receivingIndex = 0;
+                    context.receivingLength = 0;
                     nextState = &_receiveLengthState;
                 }
                 else
@@ -44,7 +41,6 @@ namespace Murli
         private:
             NoModState _noModState;
             ReceiveLengthState _receiveLengthState;
-            CenteredTextView _centeredTextView;
     };
 }
 

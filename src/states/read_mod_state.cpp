@@ -17,14 +17,16 @@ namespace Murli
                 _invalidModState(led, display) {}
 
             State* run(StateContext& context)
-            {         
+            {                         
+                _led.setColor(Murli::Yellow);
+                _centeredTextView.setText("Reading MOD ...");
+                _display.setView(&_centeredTextView);
+
                 State* nextState = this;
-
-                _led.setColor(Murli::Cyan);
                 uint8_t result = context.rom.read(context.loadedMod, ModMemorySize);
-
-                if(result != 0)
+                if(result == 0)
                 {
+                    Serial.println((char*)context.loadedMod);
                     nextState = &_invalidModState;
                 }
                 else
