@@ -13,7 +13,7 @@ namespace Murli
     class MurliContext
     {
         public:
-            MurliContext(Display& display, LED& led);
+            MurliContext(LED& led, Display& display);
 
             void loop();
             bool isModInserted() const;
@@ -25,8 +25,8 @@ namespace Murli
             bool writeRequested = false;
 
         private:
-            LED _led;
-            Display _display;
+            LED& _led;
+            Display& _display;
             Rom24LC32A _rom = Rom24LC32A(0x50);
 
             std::shared_ptr<State> _currentState;

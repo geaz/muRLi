@@ -6,9 +6,9 @@
 
 namespace Murli
 {
-    MurliContext::MurliContext(Display& display, LED& led) :        
-        _display(display),
-        _led(led)
+    MurliContext::MurliContext(LED& led, Display& display) :
+        _led(led),
+        _display(display)
     {
         _currentState = std::make_shared<NoModState>();
     }

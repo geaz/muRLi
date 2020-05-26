@@ -12,7 +12,7 @@ Murli::MurliWifi wifi;
 Murli::Display display;
 Murli::SplashView splashView;
 
-Murli::MurliContext murliContext(display, led);
+Murli::MurliContext murliContext(led, display);
 
 void setup()
 {
