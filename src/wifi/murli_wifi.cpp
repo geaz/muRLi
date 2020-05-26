@@ -11,7 +11,19 @@ namespace Murli
 
     void MurliWifi::startMesh()
     {
-        Serial.println("Scanning for muRLi Nodes ...");
+        Serial.println("Starting mesh ...");
+
+        ssid = SSID + " #1";
+        WiFi.softAPConfig(
+            IPAddress(192, 168, 1, 1), 
+            IPAddress(0, 0, 0, 0), 
+            IPAddress(255, 255, 255, 0));
+        WiFi.softAP(ssid, Password, 1, false, 8);
+
+        Serial.println("Node AP IP: " + WiFi.softAPIP().toString());
+        Serial.println("Node Local IP: " + WiFi.localIP().toString());
+
+      /*  Serial.println("Scanning for muRLi Nodes ...");
         unsigned char foundNetworkCount = WiFi.scanNetworks();
         unsigned char nodeNr = 1;
         short nearestNode = -1;
@@ -49,7 +61,7 @@ namespace Murli
         WiFi.softAP(ssid, Password, 1, false, 8);
 
         Serial.println("Node AP IP: " + WiFi.softAPIP().toString());
-        Serial.println("Node Local IP: " + WiFi.localIP().toString());
+        Serial.println("Node Local IP: " + WiFi.localIP().toString());*/
     }
 
     bool MurliWifi::isRootNode() 

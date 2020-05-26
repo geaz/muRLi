@@ -4,23 +4,23 @@ namespace Murli
 {
     Rom24LC32A::Rom24LC32A(const uint8_t deviceAddress) : _deviceAddress(deviceAddress) {}
 
-    int Rom24LC32A::clear()
+    uint8_t Rom24LC32A::clear()
     {
         // Allocate the Array on the heap
         // Stack allocation of this size would overrun it (forces reset)
         uint8_t* zeroData = new uint8_t[ModMemorySize];
         memset(zeroData, 0, ModMemorySize);
-        int result = write(zeroData, ModMemorySize);
+        uint8_t result = write(zeroData, ModMemorySize);
         delete zeroData;
 
         return result;
     }
 
-    int Rom24LC32A::write(const uint8_t* buffer, unsigned short length)
+    uint8_t Rom24LC32A::write(const uint8_t* buffer, const uint16_t length)
     {
-        char transmissionStatus = 0;
-        unsigned short pagesToWrite = ceil(length / (double)_pageSize);
-        for(char i = 0; i < pagesToWrite; i++)
+        uint8_t transmissionStatus = 0;
+        uint16_t pagesToWrite = ceil(length / (double)_pageSize);
+        for(uint8_t i = 0; i < pagesToWrite; i++)
         {
             waitReady();
 
@@ -28,10 +28,10 @@ namespace Murli
             // First Page = 0
             // Second Page = 32 etc.
             Wire.beginTransmission(_deviceAddress);
-            Wire.write((byte)((i * _pageSize) >> 8));
-            Wire.write((byte)((i * _pageSize) & 0xFF));
+            Wire.write((i * _pageSize) >> 8);
+            Wire.write((i * _pageSize) & 0xFF);
 
-            for(char j = 0; j < _pageSize && (i * _pageSize) + j < length; j++)
+            for(uint8_t j = 0; j < _pageSize && (i * _pageSize) + j < length; j++)
             {
                 Wire.write(buffer[(i * _pageSize) + j]);
             }
@@ -41,18 +41,18 @@ namespace Murli
         return transmissionStatus;
     }
 
-    int Rom24LC32A::read(uint8_t* buffer, unsigned short length)
+    uint8_t Rom24LC32A::read(uint8_t* buffer, const uint16_t length)
     {
         waitReady();
 
         uint8_t transmissionStatus = 0;
-        unsigned short pagesToRead = ceil(length / (double)_pageSize);
+        uint16_t pagesToRead = ceil(length / (double)_pageSize);
         
-        for(unsigned short i = 0; i < pagesToRead; i++)
+        for(uint16_t i = 0; i < pagesToRead; i++)
         {
             Wire.beginTransmission(_deviceAddress);
-            Wire.write((byte)((i * _pageSize) >> 8));
-            Wire.write((byte)((i * _pageSize) & 0xFF));
+            Wire.write((i * _pageSize) >> 8);
+            Wire.write((i * _pageSize) & 0xFF);
             transmissionStatus = Wire.endTransmission();
             if(transmissionStatus != 0) break;
 
@@ -63,7 +63,7 @@ namespace Murli
                 break;
             }
             
-            for(char j = 0; j < byteCount && (i * _pageSize) + j < length; j++)
+            for(uint8_t j = 0; j < byteCount && (i * _pageSize) + j < length; j++)
             {
                 buffer[(i * _pageSize) + j] = Wire.read();
             }            
@@ -74,7 +74,7 @@ namespace Murli
 
     void Rom24LC32A::waitReady() const
     {
-        char transmissionStatus = -1;
+        uint8_t transmissionStatus = -1;
         while(transmissionStatus != 0)
         {
             Wire.beginTransmission(_deviceAddress);

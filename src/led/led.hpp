@@ -1,4 +1,3 @@
-#pragma once
 #ifndef LED_H
 #define LED_H
 
@@ -8,17 +7,17 @@
 
 namespace Murli
 {    
-    static const char LedCount = 8;
-    static const char LedDataPin = D4;
+    static const uint8_t LedCount = 8;
+    static const uint8_t LedDataPin = D4;
 
     class LED
     {    
         public:
             LED();
             
-            void blink(const Color color, const char times = 3);
+            void blink(const Color color, const uint8_t times = 3);
 
-            void fadeLoop(const Color fadeColor, const char speed = 50);
+            void fadeLoop(const Color fadeColor, const uint8_t speed = 50);
             void stopFadeLoop();
 
             Color getColor() const;
@@ -29,9 +28,9 @@ namespace Murli
 
             std::vector<CRGB> _leds;
             Color _currentColor = Murli::White;
-            int _fadeAmount = 5;
-            int _currentFade = 0;
-            unsigned long _lastFade = 0;
+            uint8_t _fadeAmount = 5;
+            uint8_t _currentFade = 0;
+            uint64_t _lastFade = 0;
     };
 }
 

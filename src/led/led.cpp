@@ -4,7 +4,7 @@ namespace Murli
 {
     LED::LED()
     {
-        for(int index = 0; index < LedCount; index++)
+        for(uint8_t index = 0; index < LedCount; index++)
             _leds.push_back(CRGB::Black);
 
         FastLED
@@ -13,9 +13,9 @@ namespace Murli
         FastLED.setTemperature(Candle);
     }
 
-    void LED::blink(const Color blinkColor, const char times)
+    void LED::blink(const Color blinkColor, const uint8_t times)
     {
-        for(uint16_t blinkCount = 0; blinkCount < times; blinkCount++)
+        for(uint8_t blinkCount = 0; blinkCount < times; blinkCount++)
         {        
             setAllLeds(blinkColor);      
             delay(200);
@@ -26,7 +26,7 @@ namespace Murli
         setAllLeds(_currentColor);
     }
 
-    void LED::fadeLoop(Color startColor, const char speed)
+    void LED::fadeLoop(Color startColor, const uint8_t speed)
     {
         if(_lastFade + speed < millis())
         {            

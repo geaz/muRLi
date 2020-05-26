@@ -15,13 +15,13 @@ namespace Murli
                 drawVHCenteredStr(display, _text);
             }
 
-            void setText(const char* text) 
+            void setText(const std::string& text) 
             {
                 _text = text;
             }
         
         private:
-            const char* _text;
+            std::string _text;
     };
 }
 

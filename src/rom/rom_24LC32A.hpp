@@ -6,15 +6,15 @@
 
 namespace Murli
 {
-    const unsigned short ModMemorySize = 0xFA0; // 4000 Byte
+    const uint16_t ModMemorySize = 0xFA0; // 4000 Byte
 
     class Rom24LC32A
     {
         public:
             Rom24LC32A(const uint8_t deviceAddress);
-            int clear();
-            int read(uint8_t* buffer, unsigned short length);
-            int write(const uint8_t* buffer, unsigned short length);
+            uint8_t clear();
+            uint8_t read(uint8_t* buffer, const uint16_t length);
+            uint8_t write(const uint8_t* buffer, const uint16_t length);
 
         private:
             void waitReady() const;

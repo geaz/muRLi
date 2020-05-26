@@ -1,6 +1,7 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+#include <memory>
 #include <U8g2lib.h>
 #include "view.hpp"
 
@@ -12,13 +13,18 @@ namespace Murli
             Display();
 
             void init();
-            void drawView();
-            void setView(View* view);
+            void loop();
 
-            U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI ctrl;
+            void setView(std::shared_ptr<View> view);
+            void setLeftStatus(const std::string& text);
+            void setRightStatus(const std::string& text);
 
         private:
-            View* _currentView;
+            std::shared_ptr<View> _currentView;
+            U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI _ctrl;
+
+            std::string _leftStatusText = "";
+            std::string _rightStatusText = "";
     };
 }
 

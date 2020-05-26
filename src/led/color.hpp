@@ -7,17 +7,17 @@ namespace Murli
 {
     struct Color
     {
-        unsigned char Red;
-        unsigned char Green;
-        unsigned char Blue;
+        uint8_t Red;
+        uint8_t Green;
+        uint8_t Blue;
 
-        Color getFaded(const char value) 
+        Color getFaded(const uint8_t value) 
         { 
             CRGB fadedColor = CRGB(Red, Green, Blue).fadeLightBy(value);
             return { fadedColor.r, fadedColor.g, fadedColor.b };  
         }
 
-        Color getFadedBlack(const char value) 
+        Color getFadedBlack(const uint8_t value) 
         { 
             CRGB fadedColor = CRGB(Red, Green, Blue).fadeToBlackBy(value);
             return { fadedColor.r, fadedColor.g, fadedColor.b };  
