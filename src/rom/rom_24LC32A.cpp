@@ -6,20 +6,14 @@ namespace Murli
 
     uint8_t Rom24LC32A::clear()
     {
-        // Allocate the Array on the heap
-        // Stack allocation of this size would overrun it (forces reset)
-        uint8_t* zeroData = new uint8_t[ModMemorySize];
-        memset(zeroData, 0, ModMemorySize);
-        uint8_t result = write(zeroData, ModMemorySize);
-        delete zeroData;
-
-        return result;
+        std::vector<uint8_t> zeroData(ModMemorySize, 0);
+        return write(zeroData);
     }
 
-    uint8_t Rom24LC32A::write(const uint8_t* buffer, const uint16_t length)
+    uint8_t Rom24LC32A::write(const std::vector<uint8_t>& data)
     {
         uint8_t transmissionStatus = 0;
-        uint16_t pagesToWrite = ceil(length / (double)_pageSize);
+        uint16_t pagesToWrite = ceil(data.size() / (double)_pageSize);
         for(uint8_t i = 0; i < pagesToWrite; i++)
         {
             waitReady();
@@ -31,9 +25,9 @@ namespace Murli
             Wire.write((i * _pageSize) >> 8);
             Wire.write((i * _pageSize) & 0xFF);
 
-            for(uint8_t j = 0; j < _pageSize && (i * _pageSize) + j < length; j++)
+            for(uint8_t j = 0; j < _pageSize && (i * _pageSize) + j < data.size(); j++)
             {
-                Wire.write(buffer[(i * _pageSize) + j]);
+                Wire.write(data[(i * _pageSize) + j]);
             }
             transmissionStatus = Wire.endTransmission();
             if(transmissionStatus != 0) break;
@@ -41,7 +35,7 @@ namespace Murli
         return transmissionStatus;
     }
 
-    uint8_t Rom24LC32A::read(uint8_t* buffer, const uint16_t length)
+    uint8_t Rom24LC32A::read(std::vector<uint8_t>& data, const uint16_t length)
     {
         waitReady();
 
@@ -65,7 +59,7 @@ namespace Murli
             
             for(uint8_t j = 0; j < byteCount && (i * _pageSize) + j < length; j++)
             {
-                buffer[(i * _pageSize) + j] = Wire.read();
+                data.push_back(Wire.read());
             }            
         }
         

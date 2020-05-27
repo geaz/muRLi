@@ -1,11 +1,11 @@
 #ifndef RECEIVEMODSTATE_H
 #define RECEIVEMODSTATE_H
 
-#include "no_mod_state.cpp"
+#include "write_result_state.cpp"
 #include "write_mod_state.cpp"
 #include "../state.hpp"
 #include "../murli_context.hpp"
-#include "../../display/centeredTextView.cpp"
+#include "../../display/write_mod_view.cpp"
 
 namespace Murli
 {
@@ -14,45 +14,43 @@ namespace Murli
         public:
             ReceiveModState(uint16_t modSize) : _modSize(modSize)
             {
-                _centeredTextView = std::make_shared<CenteredTextView>();
-                _centeredTextView->setText("Receiving MOD ...");
+                _writeModView = std::make_shared<WriteModView>();
+                _writeModView->setText("Receiving MOD ...");
             }
 
             void run(MurliContext& context)
             {
-                if(_receivingIndex != _modSize && Serial.available())
+                context.getDisplay().setView(_writeModView);
+                context.getDisplay().loop();
+
+                if(_receivedMod.size() != _modSize && Serial.available())
                 {
                     while(Serial.available() > 0)
                     {
-                        _receivedMod[_receivingIndex++] = Serial.read();
+                        _receivedMod.push_back(Serial.read());
                     }
                     // ACK chunk
-                    if(_receivingIndex % 128 == 0 || _receivingIndex == _modSize)
+                    if(_receivedMod.size() % 128 == 0 || _receivedMod.size() == _modSize)
                     {
                         Serial.write(30);
                     }
                 }
-                else if(_receivingIndex == _modSize)
+                else if(_receivedMod.size() == _modSize)
                 {
-                    context.currentState = std::make_shared<WriteModState>(_receivedMod, _modSize);
+                    context.currentState = std::make_shared<WriteModState>(_receivedMod);
                 }
                 else
                 {
                     Serial.write(31);
-                    context.writeRequested = false;
-                    /*
-
-                    _centeredTextView.setText("Error receiving mod (M)!");
-                    context.display.setView(&_centeredTextView);
-                    context.led.blink(Murli::Red);*/
+                    context.writeRequested = false;                    
+                    context.currentState = std::make_shared<WriteResultState>(false, "Error receiving mod!");
                 } 
             }
         
         private:
-            uint16_t _modSize = 0;
-            uint16_t _receivingIndex = 0;
-            uint8_t _receivedMod[ModMemorySize] = { 0 };
-            std::shared_ptr<CenteredTextView> _centeredTextView;
+            uint16_t _modSize;
+            std::vector<uint8_t> _receivedMod;
+            std::shared_ptr<WriteModView> _writeModView;
     };
 }
 

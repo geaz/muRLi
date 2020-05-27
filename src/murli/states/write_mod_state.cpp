@@ -1,49 +1,46 @@
 #ifndef WRITEMODSTATE_H
 #define WRITEMODSTATE_H
 
-#include "no_mod_state.cpp"
+#include "write_result_state.cpp"
 #include "../state.hpp"
 #include "../murli_context.hpp"
-#include "../../display/centeredTextView.cpp"
+#include "../../display/write_mod_view.cpp"
 
 namespace Murli
 {
     class WriteModState : public State
     {
         public:
-            WriteModState(uint8_t* receivedMod, uint16_t modSize) : 
-                _receivedMod(receivedMod),
-                 _modSize(modSize)
-            { }
+            WriteModState(const std::vector<uint8_t> receivedMod) : _receivedMod(receivedMod)
+            { 
+                _writeModView = std::make_shared<WriteModView>();
+                _writeModView->setText("Writing MOD ...");
+            }
 
             void run(MurliContext& context)
             {      
+                context.getDisplay().setView(_writeModView);
+                context.getDisplay().loop();
+
                 int clearResult = context.getRom().clear();
-                int result = context.getRom().write(_receivedMod, _modSize);
+                int result = context.getRom().write(_receivedMod);
+
                 if(clearResult == 0 && result == 0)
                 {
                     Serial.write(30);
-
-                   /* _centeredTextView->setText("MOD saved!");
-                    context.getDisplay().setView(&_centeredTextView);
-                    context.getLed().blink(Murli::Green);*/
+                    context.currentState = std::make_shared<WriteResultState>(true, "MOD saved!");
                 }
                 else
                 {
                     Serial.write(31);
-
-                   /* _centeredTextView.setText("Error during write!");
-                    context.display.setView(&_centeredTextView);
-                    context.led.blink(Murli::Red);*/
+                    context.currentState = std::make_shared<WriteResultState>(false, "Error during write!");
                 }
                 context.writeRequested = false;
-                context.currentState = std::make_shared<NoModState>();
             }
         
         private:
-            uint8_t* _receivedMod;
-            uint16_t _modSize;
-            std::shared_ptr<CenteredTextView> _centeredTextView;
+            const std::vector<uint8_t> _receivedMod;
+            std::shared_ptr<WriteModView> _writeModView;
     };
 }
 

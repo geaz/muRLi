@@ -1,11 +1,11 @@
 #ifndef RECEIVELENGTHSTATE_H
 #define RECEIVELENGTHSTATE_H
 
-#include "no_mod_state.cpp"
+#include "write_result_state.cpp"
 #include "receive_mod_state.cpp"
 #include "../state.hpp"
 #include "../murli_context.hpp"
-#include "../../display/centeredTextView.cpp"
+#include "../../display/write_mod_view.cpp"
 
 namespace Murli
 {
@@ -14,20 +14,21 @@ namespace Murli
         public:
             ReceiveLengthState()
             {
-                _centeredTextView = std::make_shared<CenteredTextView>();
-                _centeredTextView->setText("Receiving MOD ...");
+                _writeModView = std::make_shared<WriteModView>();
+                _writeModView->setText("Receiving MOD ...");
             }
 
             void run(MurliContext& context)
             {          
                 context.getLed().setColor(Murli::Cyan);
-                context.getDisplay().setView(_centeredTextView);
+                context.getDisplay().setView(_writeModView);
+                context.getDisplay().loop();
                                 
                 byte buffer[sizeof(int)] = { 0 };
                 Serial.readBytes(buffer, sizeof(int));
 
-                int length = 0;
-                length = buffer[3] << 24;
+                uint16_t length = 0;
+                length  = buffer[3] << 24;
                 length += buffer[2] << 16;
                 length += buffer[1] << 8;
                 length += buffer[0];
@@ -40,12 +41,13 @@ namespace Murli
                 else
                 {
                     Serial.write(31);
-                    context.currentState = std::make_shared<NoModState>();
+                    context.writeRequested = false;
+                    context.currentState = std::make_shared<WriteResultState>(false, "MOD too big!");
                 }
             }
         
         private:
-            std::shared_ptr<CenteredTextView> _centeredTextView;
+            std::shared_ptr<WriteModView> _writeModView;
     };
 }
 

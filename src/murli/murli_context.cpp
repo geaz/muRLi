@@ -22,12 +22,15 @@ namespace Murli
         
         _wifi.startMesh();
         
-        _display.setLeftStatus("WebSocket:");
         _display.setRightStatus("waiting");
     }
 
     void MurliContext::loop()
     {
+        char heapString[10];
+        itoa(ESP.getFreeHeap(), heapString, 10);
+        _display.setLeftStatus(heapString);
+
         if(Serial.available() > 0
             && !writeRequested
             && isModInserted())

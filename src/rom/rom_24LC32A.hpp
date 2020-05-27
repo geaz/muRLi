@@ -13,8 +13,8 @@ namespace Murli
         public:
             Rom24LC32A(const uint8_t deviceAddress);
             uint8_t clear();
-            uint8_t read(uint8_t* buffer, const uint16_t length);
-            uint8_t write(const uint8_t* buffer, const uint16_t length);
+            uint8_t read(std::vector<uint8_t>& data, const uint16_t length);
+            uint8_t write(const std::vector<uint8_t>& data);
 
         private:
             void waitReady() const;
