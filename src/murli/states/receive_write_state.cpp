@@ -17,11 +17,12 @@ namespace Murli
                 if(incomingByte == 30)
                 {
                     Serial.write(30);
-                    context.setState(std::make_shared<ReceiveLengthState>());
+                    context.writeRequested = true;
+                    context.currentState = std::make_shared<ReceiveLengthState>();
                 }
                 else
                 {
-                    context.setState(std::make_shared<NoModState>());
+                    context.currentState = std::make_shared<NoModState>();
                 }
             }
     };

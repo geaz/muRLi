@@ -3,7 +3,7 @@
 
 #include "../state.hpp"
 #include "../murli_context.hpp"
-#include "../../display/centeredTextView.cpp"
+#include "../../display/invalid_mod_view.cpp"
 
 namespace Murli
 {
@@ -12,18 +12,17 @@ namespace Murli
         public:
             InvalidModState()
             {
-                _centeredTextView = std::make_shared<CenteredTextView>();
-                _centeredTextView->setText("Invalid MOD ...");
+                _invalidModView = std::make_shared<InvalidModView>();
             }
 
             void run(MurliContext& context)
             {
                 context.getLed().setColor(Murli::Red);
-                context.getDisplay().setView(_centeredTextView);
+                context.getDisplay().setView(_invalidModView);
             }
 
         private:
-            std::shared_ptr<CenteredTextView> _centeredTextView;
+            std::shared_ptr<InvalidModView> _invalidModView;
     };
 }
 

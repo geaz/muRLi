@@ -4,7 +4,7 @@
 #include "read_mod_state.cpp"
 #include "../state.hpp"
 #include "../murli_context.hpp"
-#include "../../display/centeredTextView.cpp"
+#include "../../display/insert_mod_view.cpp"
 
 namespace Murli
 {
@@ -13,24 +13,23 @@ namespace Murli
         public:
             NoModState()
             {
-                _centeredTextView = std::make_shared<CenteredTextView>();
-                _centeredTextView->setText("Insert MOD ...");
+                _insertModView = std::make_shared<InsertModView>();
             }
 
             void run(MurliContext& context)
             {
                 context.getLed().fadeLoop(Murli::Yellow);
-                context.getDisplay().setView(_centeredTextView);
+                context.getDisplay().setView(_insertModView);
 
                 if(context.isModInserted())
                 {
                     context.getLed().stopFadeLoop();
-                    context.setState(std::make_shared<ReadModState>());
+                    context.currentState = std::make_shared<ReadModState>();
                 }
             }
 
         private:
-            std::shared_ptr<CenteredTextView> _centeredTextView;
+            std::shared_ptr<InsertModView> _insertModView;
     };
 }
 

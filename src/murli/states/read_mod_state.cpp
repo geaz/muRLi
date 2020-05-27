@@ -3,7 +3,8 @@
 
 #include "../state.hpp"
 #include "../murli_context.hpp"
-#include "../../display/centeredTextView.cpp"
+#include "invalid_mod_state.cpp"
+#include "../../display/read_mod_view.cpp"
 
 namespace Murli
 {
@@ -12,31 +13,30 @@ namespace Murli
         public:
             ReadModState()
             {
-                _centeredTextView = std::make_shared<CenteredTextView>();
-                _centeredTextView->setText("Reading MOD ...");
+                _readModView = std::make_shared<ReadModView>();
             }
 
             void run(MurliContext& context)
             {                         
                 context.getLed().setColor(Murli::Yellow);
-                context.getDisplay().setView(_centeredTextView);
+                context.getDisplay().setView(_readModView);
+                context.getDisplay().loop();
 
-                /*uint8_t result = context.getRom().read(context.loadedMod, ModMemorySize);
+                uint8_t* mod = new uint8_t[ModMemorySize];
+                uint8_t result = context.getRom().read(mod, ModMemorySize);
                 if(result == 0)
                 {
-                    Serial.println((char*)context.loadedMod);
-                    nextState = &_invalidModState;
+                    Serial.println((char*)mod);
+                    context.currentState = std::make_shared<InvalidModState>();
                 }
                 else
                 {
-                    nextState = &_invalidModState;
+                    context.currentState = std::make_shared<InvalidModState>();
                 }
-
-                return nextState;*/
             }
 
         private:
-            std::shared_ptr<CenteredTextView> _centeredTextView;
+            std::shared_ptr<ReadModView> _readModView;
     };
 }
 

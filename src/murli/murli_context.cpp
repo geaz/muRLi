@@ -1,16 +1,29 @@
 #include <Arduino.h>
 
 #include "murli_context.hpp"
+#include "../display/splash_view.cpp"
 #include "states/no_mod_state.cpp"
 #include "states/receive_write_state.cpp"
 
 namespace Murli
 {
-    MurliContext::MurliContext(LED& led, Display& display) :
-        _led(led),
-        _display(display)
+    MurliContext::MurliContext()
     {
-        _currentState = std::make_shared<NoModState>();
+        _noModState = std::make_shared<NoModState>();
+        currentState = _noModState;
+    }
+
+    void MurliContext::setup()
+    {
+        _display.init();
+        _display.setView(std::make_shared<Murli::SplashView>());
+        _display.setLeftStatus("Starting Mesh...");
+        _display.loop();
+        
+        _wifi.startMesh();
+        
+        _display.setLeftStatus("WebSocket:");
+        _display.setRightStatus("waiting");
     }
 
     void MurliContext::loop()
@@ -19,15 +32,17 @@ namespace Murli
             && !writeRequested
             && isModInserted())
         {
-            _currentState = std::make_shared<ReceiveWriteState>();
+            currentState = std::make_shared<ReceiveWriteState>();
         }
         // Reset state, if no MOD inserted
         else if(!isModInserted())
         {
-            _currentState = std::make_shared<NoModState>();
+            currentState = _noModState;
         }
         
-        _currentState->run(*this);
+        currentState->run(*this);
+        _socketServer.loop();
+        _display.loop();
     }
 
     bool MurliContext::isModInserted() const
@@ -38,5 +53,4 @@ namespace Murli
     LED& MurliContext::getLed() { return _led; }
     Rom24LC32A& MurliContext::getRom() { return _rom; }
     Display& MurliContext::getDisplay() { return _display; }
-    void MurliContext::setState(std::shared_ptr<State> state) { _currentState = state; }
 }

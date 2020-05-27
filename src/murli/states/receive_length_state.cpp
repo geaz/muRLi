@@ -35,12 +35,12 @@ namespace Murli
                 if(length <= ModMemorySize)
                 {
                     Serial.write(30);
-                    context.setState(std::make_shared<ReceiveModState>(length));
+                    context.currentState = std::make_shared<ReceiveModState>(length);
                 }
                 else
                 {
                     Serial.write(31);
-                    context.setState(std::make_shared<NoModState>());
+                    context.currentState = std::make_shared<NoModState>();
                 }
             }
         

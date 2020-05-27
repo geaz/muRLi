@@ -34,12 +34,13 @@ namespace Murli
                 }
                 else if(_receivingIndex == _modSize)
                 {
-                    context.setState(std::make_shared<WriteModState>(_receivedMod, _modSize));
+                    context.currentState = std::make_shared<WriteModState>(_receivedMod, _modSize);
                 }
                 else
                 {
                     Serial.write(31);
-                    /*context.writeRequested = false;
+                    context.writeRequested = false;
+                    /*
 
                     _centeredTextView.setText("Error receiving mod (M)!");
                     context.display.setView(&_centeredTextView);

@@ -37,7 +37,7 @@ namespace Murli
                     context.led.blink(Murli::Red);*/
                 }
                 context.writeRequested = false;
-                context.setState(std::make_shared<NoModState>());
+                context.currentState = std::make_shared<NoModState>();
             }
         
         private:
