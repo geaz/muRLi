@@ -3,6 +3,7 @@
 
 #include "../state.hpp"
 #include "../murli_context.hpp"
+#include "run_mod_state.cpp"
 #include "invalid_mod_state.cpp"
 #include "../../display/read_mod_view.cpp"
 #include "../../visualization/script_context.hpp"
@@ -30,9 +31,11 @@ namespace Murli
                 {                        
                     std::string loadedMod((char*)&modChars[0]);
 
-                    // Test run the script to check, if it is valid
+                    // Test run the script with random values to check, if it is valid
                     _scriptContext = std::make_shared<ScriptContext>(loadedMod);
-                    if(!_scriptContext->isFaulted()) context.currentState = std::make_shared<InvalidModState>();
+                    _scriptContext->run(50, 758);
+                    
+                    if(!_scriptContext->isFaulted()) context.currentState = std::make_shared<RunModState>();
                     else context.currentState = std::make_shared<InvalidModState>();
                 }             
             }

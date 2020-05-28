@@ -3,28 +3,27 @@
 
 namespace Murli
 {
-    Color SoundVisualization::getSoundColor()
+    std::tuple<uint8_t, uint16_t> SoundVisualization::getVolAndFreq()
     {
-        Color newSoundColor = {0, 0, 0};
         double sampleRMS = collectSamples();
-        unsigned short dominantFrequency = getDominantFrequency();
+        uint16_t dominantFrequency = getDominantFrequency();
 
+        std::tuple<uint8_t, uint16_t> frameTuple(0, 0);
         if(sampleRMS > lastRMSDeque.front() && dominantFrequency >= MinFrequency)
         {
             unsigned char volumeBrightness = getVolumeBrightness(sampleRMS);
-            newSoundColor = getNewSoundColor(volumeBrightness, dominantFrequency);
+            frameTuple = std::tuple<uint8_t, uint16_t>(sampleRMS, dominantFrequency);
 
             Serial.print("Sample RMS: " + String(sampleRMS));
             Serial.print("| Last Sample RMS: " + String(lastRMSDeque.front()));
             Serial.print("| New Brightness: " + String(volumeBrightness));
             Serial.print("| Dominant Frequency: " + String(dominantFrequency) + " Hz");
-            Serial.print("| New Color: " + String(newSoundColor.Red) + " " + String(newSoundColor.Green) + " " + String(newSoundColor.Blue));
             Serial.println("");
         }        
         lastRMSDeque.push_front(sampleRMS);
         if(lastRMSDeque.size() > MaxRMSCount) lastRMSDeque.pop_back();
 
-        return newSoundColor;
+        return frameTuple;
     }
 
     double SoundVisualization::collectSamples()
@@ -52,7 +51,7 @@ namespace Murli
         return sampleRMS;
     }
 
-    unsigned char SoundVisualization::getVolumeBrightness(const float sampleRMS) const
+    uint8_t SoundVisualization::getVolumeBrightness(const double sampleRMS) const
     {
         double minRMS = sampleRMS;
         double maxRMS = sampleRMS;
@@ -65,7 +64,7 @@ namespace Murli
         return map(sampleRMS, minRMS, maxRMS, 0, 255);
     }
 
-    unsigned short SoundVisualization::getDominantFrequency() 
+    uint16_t SoundVisualization::getDominantFrequency() 
     {
         ZeroFFT(fftData, FFTDataSize);
         unsigned short dominantFrequency = 0;
@@ -81,26 +80,5 @@ namespace Murli
             }
         }
         return dominantFrequency > MaxFrequency ? MaxFrequency : dominantFrequency;
-    }
-
-    Color SoundVisualization::getNewSoundColor(unsigned char volumeBrightness, unsigned short dominantFrequency)
-    {    
-        Color newColor = { 0, 0, 0};   
-        float volumeBrightnessFactor = (float)volumeBrightness / 255;
-        if(dominantFrequency < MidFrequency)
-        {
-            unsigned short mappedRed = map(dominantFrequency, 0, MidFrequency - 1, LowFreqColor.Red, MidFreqColor.Red);
-            unsigned short mappedGreen = map(dominantFrequency, 0, MidFrequency - 1, LowFreqColor.Green, MidFreqColor.Green);
-            unsigned short mappedBlue = map(dominantFrequency, 0, MidFrequency - 1, LowFreqColor.Blue, MidFreqColor.Blue);
-            newColor = { mappedRed * volumeBrightnessFactor, mappedGreen * volumeBrightnessFactor, mappedBlue * volumeBrightnessFactor };
-        }
-        else
-        {
-            unsigned short mappedRed = map(dominantFrequency, MidFrequency, MaxFrequency, MidFreqColor.Red, HighFreqColor.Red);
-            unsigned short mappedGreen = map(dominantFrequency, MidFrequency, MaxFrequency, MidFreqColor.Green, HighFreqColor.Green);
-            unsigned short mappedBlue = map(dominantFrequency, MidFrequency, MaxFrequency, MidFreqColor.Blue, HighFreqColor.Blue);
-            newColor = { mappedRed * volumeBrightnessFactor, mappedGreen * volumeBrightnessFactor, mappedBlue * volumeBrightnessFactor };
-        }
-        return newColor;
     }
 }

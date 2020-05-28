@@ -11,6 +11,12 @@ namespace Murli
         uint8_t Green;
         uint8_t Blue;
 
+        static Color fromHex(const uint32_t hexColor)
+        {
+            CRGB color = CRGB(hexColor);
+            return { color.r, color.g, color.b };  
+        }
+
         Color getFaded(const uint8_t value) 
         { 
             CRGB fadedColor = CRGB(Red, Green, Blue).fadeLightBy(value);
