@@ -1,2 +1,19 @@
-sCF(1, 0xFFFFFF)
+var r=0
+var g=0
+var b=0
+if(f<midF){
+r=0
+g=map(f,0,midF-1,0,255)
+b=map(f,0,midF-1,255,0)
+}else{
+r=map(f,midF,maxF,0,255)
+g=map(f,midF,maxF,255,0)
+b=0
+}
+
+r=map(v,0,100,0,r)<<16
+g=map(v,0,100,0,g)<<8
+b=map(v,0,100,0,b)
+
+sCF(1,r+g+b)
 print "TestMod"

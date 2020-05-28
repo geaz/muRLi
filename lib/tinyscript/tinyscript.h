@@ -74,10 +74,11 @@ typedef struct symbol {
     Val    value;  // symbol value, or string ptr
 } Sym;
 
-#define MAX_BUILTIN_PARAMS 4
+#define MAX_BUILTIN_PARAMS 5
 
-typedef Val (*Cfunc)(Val, Val, Val, Val);
+typedef Val (*Cfunc)(Val, Val, Val, Val, Val);
 typedef Val (*Opfunc)(Val, Val);
+typedef void (*Outfunc)(int);
 
 // structure to describe a user function
 typedef struct ufunc {
@@ -93,9 +94,9 @@ typedef struct ufunc {
 int TinyScript_Init(void *mem, int mem_size);
 int TinyScript_Define(const char *name, int toktype, Val value);
 int TinyScript_Run(const char *s, int saveStrings, int topLevel);
+void TinyScript_SetOutput(Outfunc value);
 
 // provided by our caller
 extern int inchar(void);
-extern void outchar(int c);
 
 #endif

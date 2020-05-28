@@ -44,6 +44,9 @@
 #include <stdlib.h>
 #include "tinyscript.h"
 
+// Output Func
+static Outfunc output = 0;
+
 // where our data is stored
 // value stack grows from the top of the area to the bottom
 // symbol stack grows from the bottom up
@@ -95,7 +98,7 @@ PrintString(TinyString s)
     unsigned len = StringGetLen(s);
     const char *ptr = (const char *)StringGetPtr(s);
     while (len > 0) {
-        outchar(*ptr);
+        if(output != 0) output(*ptr);
         ptr++;
         --len;
     }
@@ -105,7 +108,7 @@ PrintString(TinyString s)
 void
 Newline(void)
 {
-    outchar('\n');
+    if(output != 0) output('\n');
 }
 
 // print a number
@@ -121,7 +124,7 @@ PrintNumber(Val v)
     char buf[32];
     
     if (v < 0) {
-        outchar('-');
+        if(output != 0) output('-');
         x = -v;
     } else {
         x = v;
@@ -136,7 +139,7 @@ PrintNumber(Val v)
     // now output
     while (digits > 0) {
         --digits;
-        outchar(buf[digits]);
+        if(output != 0) output(buf[digits]);
     }
 }
 
@@ -160,7 +163,7 @@ static void
 outcstr(const char *ptr)
 {
     while (*ptr) {
-        outchar(*ptr++);
+        if(output != 0) output(*ptr++);
     }
 }
 
@@ -171,7 +174,7 @@ outcstr(const char *ptr)
 static int SyntaxError() {
     outcstr("syntax error before:");
     PrintString(parseptr);
-    outchar('\n');
+    if(output != 0) output('\n');
     return TS_ERR_SYNTAX;
 }
 static int ArgMismatch() {
@@ -662,7 +665,7 @@ ParseFuncCall(Cfunc op, Val *vp, UserFunc *uf)
         symptr = savesymptr;
         return err;
     } else {
-        *vp = op(fArgs[0], fArgs[1], fArgs[2], fArgs[3]);
+        *vp = op(fArgs[0], fArgs[1], fArgs[2], fArgs[3], fArgs[4]);
     }
     NextToken();
     return TS_ERR_OK;
@@ -1094,6 +1097,10 @@ static Val lt(Val x, Val y) { return x<y; }
 static Val le(Val x, Val y) { return x<=y; }
 static Val gt(Val x, Val y) { return x>y; }
 static Val ge(Val x, Val y) { return x>=y; }
+static Val tinyMap(Val x, Val in_min, Val in_max, Val out_min, Val out_max) 
+{
+    return round((float)(x-in_min)/(in_max-in_min)*(out_max-out_min)+out_min);
+}
 
 static struct def {
     const char *name;
@@ -1124,6 +1131,7 @@ static struct def {
     { "<=",    BINOP(4), (intptr_t)le },
     { ">",     BINOP(4), (intptr_t)gt },
     { ">=",    BINOP(4), (intptr_t)ge },
+    { "map",   CFUNC(5), (intptr_t)tinyMap },
 
     { NULL, 0, 0 }
 };
@@ -1150,4 +1158,10 @@ int
 TinyScript_Run(const char *buf, int saveStrings, int topLevel)
 {
     return ParseString(Cstring(buf), saveStrings, topLevel);
+}
+
+void
+TinyScript_SetOutput(Outfunc outputFunc)
+{
+    output = outputFunc;
 }
