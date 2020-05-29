@@ -30,6 +30,9 @@ namespace Murli
 
         TinyScript_SetOutput(ScriptContext::receiveModNameFunc);
         TinyScript_Define("sCF", CFUNC(2), (intptr_t)ScriptContext::setColorFrameFunc);
+
+        // Run Once with random values to 'test' the loaded script
+        run(50, 758);
     }
 
     void ScriptContext::run(uint8_t vol, uint16_t frequency)

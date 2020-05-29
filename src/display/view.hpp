@@ -5,12 +5,14 @@
 
 namespace Murli
 {
+    typedef U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI DisplayCtrl;
+    
     class View
     {
         public:
-            virtual void drawFrame(U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI& display) = 0;
+            virtual void drawFrame(DisplayCtrl& display) = 0;
 
-            void drawVHCenteredStr(U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI& display, const std::string& text)
+            void drawVHCenteredStr(DisplayCtrl& display, const std::string& text)
             {
                 display.setFontPosCenter();
                 u8g2_uint_t width = display.getStrWidth(text.c_str());

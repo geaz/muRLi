@@ -7,6 +7,8 @@
 
 namespace Murli
 {
+    typedef U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI DisplayCtrl;
+
     class Display
     {
         public:
@@ -20,8 +22,8 @@ namespace Murli
             void setRightStatus(const std::string& text);
 
         private:
+            DisplayCtrl _ctrl;
             std::shared_ptr<View> _currentView;
-            U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI _ctrl;
 
             std::string _leftStatusText = "";
             std::string _rightStatusText = "";

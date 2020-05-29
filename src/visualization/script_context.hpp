@@ -62,7 +62,7 @@ namespace Murli
 
         private:
             const std::string& _mod;
-            char _scriptArena[4096];
+            char _scriptArena[2048];
 
             std::string _modName;
             std::vector<char> _charBuffer;

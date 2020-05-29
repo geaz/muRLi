@@ -9,7 +9,7 @@ namespace Murli
     class ReadModView : public View
     {
         public:
-            void drawFrame(U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI& display) override
+            void drawFrame(DisplayCtrl& display) override
             {
                 display.setFontPosCenter();
                 uint8_t displayCenter = (display.getDisplayHeight() - 10) / 2;

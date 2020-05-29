@@ -9,7 +9,7 @@ namespace Murli
     class SplashView : public View
     {
         public:
-            void drawFrame(U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI& display) override
+            void drawFrame(DisplayCtrl& display) override
             {
                 display.setFont(u8g2_font_maniac_tf);
                 drawVHCenteredStr(display, "muRLi");

@@ -30,18 +30,14 @@ namespace Murli
                 else
                 {                        
                     std::string loadedMod((char*)&modChars[0]);
-
-                    // Test run the script with random values to check, if it is valid
-                    _scriptContext = std::make_shared<ScriptContext>(loadedMod);
-                    _scriptContext->run(50, 758);
+                    auto scriptContext = std::make_shared<ScriptContext>(loadedMod);
                     
-                    if(!_scriptContext->isFaulted()) context.currentState = std::make_shared<RunModState>();
+                    if(!scriptContext->isFaulted()) context.currentState = std::make_shared<RunModState>(scriptContext);
                     else context.currentState = std::make_shared<InvalidModState>();
                 }             
             }
 
         private:
-            std::shared_ptr<ScriptContext> _scriptContext;
             std::shared_ptr<ReadModView> _readModView;
     };
 }

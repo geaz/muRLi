@@ -9,7 +9,7 @@ namespace Murli
     class InsertModView : public View
     {
         public:
-            void drawFrame(U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI& display) override
+            void drawFrame(DisplayCtrl& display) override
             {
                 animateGlyph(display);
 
@@ -20,7 +20,7 @@ namespace Murli
                 display.setFontPosBaseline();                
             }
 
-            void animateGlyph(U8G2_SH1106_128X64_NONAME_F_4W_SW_SPI& display) 
+            void animateGlyph(DisplayCtrl& display) 
             {
                 if(_lastAnimate + 25 < millis())
                 {
