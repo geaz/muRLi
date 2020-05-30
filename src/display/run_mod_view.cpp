@@ -21,19 +21,19 @@ namespace Murli
 
                 if(!_strPosCalculated)
                 {
-                    uint8_t volStrWidth = display.getStrWidth("000");
+                    uint8_t volStrWidth = display.getStrWidth("-00.0dB");
                     _volStrXPos = display.getDisplayWidth() - volStrWidth;
-
-                    uint8_t freqStrWidth = display.getStrWidth("00000hz");
-                    _freqStrXPos = _volStrXPos - freqStrWidth - 8;
-
                     _strPosCalculated = true;
                 }       
-                     
-                display.drawStr(0, 0, modName.c_str());
-                display.drawStr(_freqStrXPos, 0, getPaddedNumberString(7, "%ihz", dominantFrequency, 7).c_str()); 
-                display.drawStr(_volStrXPos - 5, 0, "/");
-                display.drawStr(_volStrXPos, 0, getPaddedNumberString(4, "%i", volume, 3).c_str());
+                                    
+                char dBBuf[14]; 
+                char freqBuf[14];
+
+                std::sprintf(dBBuf, "%05.1fdB", decibel);
+                std::sprintf(freqBuf, "%05ihz", dominantFrequency);
+
+                display.drawStr(0, 0, freqBuf);
+                display.drawStr(_volStrXPos, 0, dBBuf);
                 display.drawHLine(0, 10, display.getDisplayWidth());
 
                 display.setFontPosBaseline();
@@ -48,7 +48,7 @@ namespace Murli
             }
            
             std::string modName = "";
-            uint8_t volume = 0;
+            float decibel = 0.0;
             uint16_t dominantFrequency = 0;
             std::vector<uint8_t> frequencyRange
                 = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -66,17 +66,6 @@ namespace Murli
                     uint8_t y = display.getDisplayHeight() - 17 /* bottom start (statusbar) */ - (i*4) /* gap and height */;
                     display.drawBox(x, y, 5, 2);
                 }
-            }
-
-            std::string getPaddedNumberString(uint8_t strLength, const char* format, uint16_t number, uint8_t padWidth)
-            {
-                char strBuf[strLength];
-                std::sprintf(strBuf, format, number);
-
-                std::string fmtStr(strBuf);
-                fmtStr.insert(fmtStr.begin(), padWidth-fmtStr.length(), '0');
-
-                return fmtStr;
             }
 
             bool _strPosCalculated = false;
