@@ -3,7 +3,7 @@
 namespace Murli
 {
     // Using Software SPI to be able to use D6 (MISO) as GPIO
-    Display::Display() : _ctrl(U8G2_R0,/*clock*/ D5,/*data*/ D7,/* cs=*/ D8,/* dc=*/ D0,/* reset=*/ D3) { }
+    Display::Display() : _ctrl(U8G2_R0,/* cs=*/ D8,/* dc=*/ D0,/* reset=*/ D3) { }
 
     void Display::init()
     {

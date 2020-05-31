@@ -22,6 +22,7 @@ namespace Murli
         
         _wifi.startMesh();
         
+        _display.setLeftStatus("WebSocket:");
         _display.setRightStatus("waiting");
     }
 
@@ -56,4 +57,5 @@ namespace Murli
     LED& MurliContext::getLed() { return _led; }
     Rom24LC32A& MurliContext::getRom() { return _rom; }
     Display& MurliContext::getDisplay() { return _display; }
+    SocketServer& MurliContext::getSocketServer() { return _socketServer; }
 }

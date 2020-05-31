@@ -44,33 +44,24 @@ namespace Murli
     class ScriptContext
     {
         public:
-            ScriptContext(const std::string& mod);
+            ScriptContext(const std::string mod);
             
-            void run(uint8_t vol, uint16_t frequency);
-            
-            ColorFrame getColorFrame();
-            std::string getModName();
-
-            void receiveModName(char c);
+            ColorFrame run(uint8_t volume, uint16_t frequency);
             void setColorFrame(uint8_t frame, uint32_t hexColor);
 
             bool isFaulted();
-            std::string getMessage();
 
-            static void receiveModNameFunc(int c);
+            static void receiveScriptOutput(int c);
             static void setColorFrameFunc(uint8_t frame, uint32_t hexColor);
 
         private:
-            const std::string& _mod;
-            char _scriptArena[2048];
+            const std::string _mod;
+            std::array<char, 2048> _scriptArena;
 
-            std::string _modName;
-            std::vector<char> _charBuffer;
+            std::array<Color, 3> _colors;
             uint32_t _lastFrequency = 0;
-            Color _colors[3] = { Color::fromHex(0x000000) };
 
             bool _faulted = false;
-            std::string _message;
     };
 
     // Pointer for TinyScript Callbacks

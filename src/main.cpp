@@ -10,11 +10,11 @@ void setup()
     Serial.println("Starting muRLi...");
     Wire.begin();
 
+    murliContext.setup();
+
     pinMode(A0, INPUT);                 // Mic Input
     pinMode(D6, INPUT);                 // Check if module inserted
     pinMode(Murli::LedDataPin, OUTPUT); // LED
-
-    murliContext.setup();
 }
 
 void loop() 

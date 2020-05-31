@@ -70,7 +70,6 @@ namespace Murli
 
         float signalRMSflt = sqrt(signalRMS / FFTDataSize);
         result.decibel = 20.0*log10(signalRMSflt / 512);
-        Serial.println(String(result.decibel));
     }
 
     void FrequencyAnalyzer::calculateDominantFrequency(AnalyzerResult& result) 

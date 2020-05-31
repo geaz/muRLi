@@ -23,6 +23,7 @@ namespace Murli
             LED& getLed();
             Rom24LC32A& getRom();
             Display& getDisplay();
+            SocketServer& getSocketServer();
 
             bool writeRequested = false;
             std::shared_ptr<State> currentState;
