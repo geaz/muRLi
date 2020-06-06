@@ -32,7 +32,7 @@ To flash the firmware onto the Wemos connect it to your PC and press the *Upload
 
 Aftererwards start the *Serial Monitor* and you should see some outputs like in the screenshot below. If you are able to see the output, the device is working and you are ready to build **muRLi**.
 
-![TableDisco - Serial](https://raw.githubusercontent.com/geaz/tableDisco/master/images/serial.png)
+![muRLi - Serial](https://raw.githubusercontent.com/geaz/muRLi/master/images/serial.png)
 
 ### Build
 
