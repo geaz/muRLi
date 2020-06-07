@@ -79,7 +79,7 @@ Here is a picture of mine. Not pretty, but it works.
 
 Take a bit of superglue and attach the DuPont connector to the cartridge shell. Make sure that the *ground pin* is orianted to the side of the shell **without the gap on the side**.
 
-![muRLi MOD](https://raw.githubusercontent.com/geaz/muRLi/master/img/MOD-Cartridge.jpg)
+![muRLi MOD](https://raw.githubusercontent.com/geaz/muRLi/master/img/MOD-Cart.jpg)
 
 Now just glue the two shell halves together and you are done.
 
