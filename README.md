@@ -1,4 +1,5 @@
-[![GPL3 licensed](https://img.shields.io/github/license/geaz/muRLi.svg)](https://raw.githubusercontent.com/geaz/muRLi/master/LICENSE.md)
+[![CC licensed](https://img.shields.io/badge/license-Creative%20Commons%20BY--NC--SA-orange)](https://raw.githubusercontent.com/geaz/muRLi/master/LICENSE.md)  
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/A0A01MQZP)
 
 # muRLi
 **muRLi** is a WiFi connected, programmable (mu)sic (R)eactive (Li)ght system. It supports custom *MOD* cartridges which contain executable scripts. These scripts are able to influence the light patterns produced by **muRLi**.
