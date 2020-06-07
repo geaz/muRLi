@@ -1,7 +1,9 @@
+[![GPL3 licensed](https://img.shields.io/github/license/geaz/muRLi.svg)](https://raw.githubusercontent.com/geaz/muRLi/master/LICENSE.md)
+
 # muRLi
 **muRLi** is a WiFi connected, programmable (mu)sic (R)eactive (Li)ght system. It supports custom *MOD* cartridges which contain executable scripts. These scripts are able to influence the light patterns produced by **muRLi**.
 
-Furthermore **muRLi** creates a native mesh including a *websocket*. **muRLiN**s (muRLi Nodes) are able to connect to this mesh and will create an additional access point and websocket for other nodes to connect to. This way nodes not in range of **muRLi** are also able to join the mesh as long as at least one **muRLiN** is in range. The nodes are able to receive *commands* created by **muRLi**. The *commands* are containing color information to which the **muRLiN**s will react.
+Furthermore **muRLi** creates a native mesh including a *websocket*. **muRLiN**s (muRLi Nodes) are able to connect to this mesh and will create an additional access point and websocket for other nodes to connect to. This way nodes not in range of **muRLi** are also able to join the mesh as long as at least one **muRLiN** is in range. The nodes are able to receive *commands* created by **muRLi**. The *commands* contain color information to which the **muRLiN**s will react.
 
 *Everything combined, it is possible to span a mesh of WiFi connected devices which are synchronously reacting to music.*
 
@@ -19,7 +21,7 @@ Furthermore **muRLi** creates a native mesh including a *websocket*. **muRLiN**s
     c) [Create MODs](#create-mods)  
     d) [Write MODs](#write-mods)
 4. [muRLiN](#murlin)  
-    a) [BOM (For one small battery powered muRLiN)](#node-bom)  
+    a) [BOM (for one small battery powered muRLiN)](#node-bom)  
     b) [Firmware](#node-firmware)  
     c) [Build](#node-build)  
     d) [OTA Updates](#node-ota)
