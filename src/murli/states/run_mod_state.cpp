@@ -11,6 +11,7 @@
 namespace Murli
 {
     static const int8_t MinDB = -20;
+    static const int32_t MinTimeSilence = 5000;
 
     class RunModState : public State
     {
@@ -28,28 +29,19 @@ namespace Murli
                 if(_lastUpdate + 50 < millis() && !_scriptContext->isFaulted())
                 {
                     AnalyzerResult result = _frequencyAnalyzer.loop();
-                    _runModView->decibel = result.decibel;
-                    if(result.decibel > MinDB)
+                    MurliCommand command = getCommand(context, result);
+                    Color newColor = command.getNewNodeColor(context.getLed().getColor());
+                    setView(result);
+
+                    if(_lastColor != newColor)
                     {
-                        _runModView->dominantFrequency = result.dominantFrequency;
-                        _runModView->frequencyRange = _frequencyAnalyzer.getFrequencyRange(result, 17, 9);
-
-                        uint8_t volume = map(result.decibel, MinDB, 0, 0, 100);
-                        ColorFrame colorFrame = _scriptContext->run(volume, result.dominantFrequency);
-
-                        Color newColor = colorFrame.first;
-                        String serverMessage = "set " + String(newColor.Red) + "," + String(newColor.Green) + "," + String(newColor.Blue);
-
-                        context.getDisplay().setRightStatus(serverMessage.c_str());
-                        context.getSocketServer().broadcast(serverMessage);
+                        context.getDisplay().setRightStatus(newColor.toString());
+                        context.getSocketServer().broadcast(command);
                         context.getSocketServer().loop();
                         context.getLed().setColor(newColor);
+                        _lastColor = newColor;
                     }
-                    else
-                    {
-                        _runModView->fadeFrequencyRange();
-                        _runModView->dominantFrequency = 0;
-                    }
+                    _lastDB= result.decibel;
                     _lastUpdate = millis();
                 }
                 else if(_scriptContext->isFaulted())
@@ -59,11 +51,59 @@ namespace Murli
             }
 
         private:
+            MurliCommand getCommand(MurliContext& context, AnalyzerResult& result)
+            {
+                MurliCommand command;
+
+                Color currentColor = context.getLed().getColor();
+                uint8_t volume = map(result.decibel < MinDB ? MinDB : result.decibel, MinDB, 0, 0, 100);
+                // If no sound was registered during the last 'MinTimeSilence' seconds,
+                // run the mod with parameters = 0
+                if(currentColor.isBlack() && volume == 0 && _lastTimeVolumeThreshold + MinTimeSilence < millis())
+                {
+                    command.colorFrame = _scriptContext->run(0, 0);
+                    command.command = SET;
+                }
+                // Otherwise, if the volume is above the last registered volume
+                // run the mod with the calculated parameters
+                else if(volume > 0 && result.decibel > _lastDB)
+                {
+                    command.colorFrame = _scriptContext->run(volume, result.dominantFrequency);
+                    command.command = SET;
+                    _lastTimeVolumeThreshold = millis();
+                }
+                // Otherwise just FADE the current color
+                else
+                {
+                    command.command = FADE;
+                }
+
+                return command;
+            }
+
+            void setView(AnalyzerResult& result)
+            {
+                _runModView->decibel = result.decibel;
+                if(result.decibel > MinDB && result.dominantFrequency > 0)
+                {
+                    _runModView->dominantFrequency = result.dominantFrequency;
+                    _runModView->frequencyRange = _frequencyAnalyzer.getFrequencyRange(result, 17, 9);
+                }
+                else
+                {
+                    _runModView->dominantFrequency = 0;
+                    _runModView->fadeFrequencyRange();
+                }
+            }
+
             FrequencyAnalyzer _frequencyAnalyzer;
             std::shared_ptr<RunModView> _runModView;
             std::shared_ptr<ScriptContext> _scriptContext;
 
+            float _lastDB;
+            Color _lastColor;
             uint64_t _lastUpdate = 0;
+            uint64_t _lastTimeVolumeThreshold = 0; 
     };
 }
 

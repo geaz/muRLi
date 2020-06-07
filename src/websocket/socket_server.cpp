@@ -13,8 +13,8 @@ namespace Murli
         webSocket.loop();
     }
 
-    void SocketServer::broadcast(String data)
+    void SocketServer::broadcast(MurliCommand command)
     {
-        webSocket.broadcastTXT(data);
+        webSocket.broadcastBIN((uint8_t*) &command, sizeof(command));
     }
 }

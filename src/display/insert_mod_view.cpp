@@ -22,7 +22,7 @@ namespace Murli
 
             void animateGlyph(DisplayCtrl& display) 
             {
-                if(_lastAnimate + 25 < millis())
+                if(_lastAnimate + 50 < millis())
                 {
                     if(_glyphY == (display.getDisplayHeight() - 30) && _lastAnimate + 250 < millis())
                     {
@@ -38,7 +38,7 @@ namespace Murli
 
                 display.setFontPosBottom();
                 display.setFont(u8g2_font_open_iconic_arrow_2x_t);
-                display.drawGlyph(10, _glyphY, 72);
+                display.drawGlyph(10, _glyphY, 75);
             }
         
         private:

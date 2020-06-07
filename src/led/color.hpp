@@ -17,21 +17,42 @@ namespace Murli
             return { color.r, color.g, color.b };  
         }
 
-        Color getFaded(const uint8_t value) 
+        static Color blend(const Color color1, const Color color2)
+        {
+            uint8_t blendedRed = (color1.Red + color2.Red) / 2;
+            uint8_t blendedGreen = (color1.Green + color2.Green) / 2;
+            uint8_t blendedBlue = (color1.Blue + color2.Blue) / 2;
+            return { blendedRed, blendedGreen, blendedBlue };
+        }
+
+        Color getFaded(const uint8_t value) const
         { 
             CRGB fadedColor = CRGB(Red, Green, Blue).fadeLightBy(value);
             return { fadedColor.r, fadedColor.g, fadedColor.b };  
         }
 
-        Color getFadedBlack(const uint8_t value) 
+        Color getFadedBlack(const uint8_t value) const
         { 
             CRGB fadedColor = CRGB(Red, Green, Blue).fadeToBlackBy(value);
             return { fadedColor.r, fadedColor.g, fadedColor.b };  
         }
 
+        std::string toString() const
+        {
+            std::array<char, 20> colorString;
+            std::sprintf(colorString.begin(), "%i,%i,%i", Red, Green, Blue);
+            return std::string(colorString.begin());
+        }
+
         bool isBlack() { return Red == 0 && Green == 0 && Blue == 0; }
         bool operator!=(const Color other) { return other.Red != Red || other.Green != Green || other.Blue != Blue; }
         bool operator==(const Color other) { return other.Red == Red || other.Green == Green || other.Blue == Blue; }
+    };
+    
+    struct ColorFrame
+    {
+        Color first;
+        Color second;
     };
 
     static const Color Black = { 0, 0, 0 };

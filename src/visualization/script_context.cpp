@@ -60,12 +60,12 @@ namespace Murli
             }
             _lastFrequency = frequency;
         }
-        return ColorFrame { _colors[0], _colors[1], _colors[2] };
+        return ColorFrame { _colors[0], _colors[1] };
     }
 
     void ScriptContext::setColorFrame(uint8_t frame, uint32_t hexColor)
     {
-        if(frame >= 0 && frame <= 2)
+        if(frame >= 0 && frame <= 1)
         {
             _colors[frame] = Color::fromHex(hexColor);
         }
