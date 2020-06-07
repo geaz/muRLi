@@ -1,4 +1,4 @@
-#ifdef BUILD_MURLICONSOLE
+#ifdef BUILD_MURLI
 
 #include "murli/murli_context.hpp"
 

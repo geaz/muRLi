@@ -1,8 +1,29 @@
 # muRLi
-**muRLi** is a WiFi connected, programmable (mu)sic (R)eactive (Li)ght system.
+**muRLi** is a WiFi connected, programmable (mu)sic (R)eactive (Li)ght system. It supports custom *MODs* which are cartridges with programmed scripts. These scripts are able to influence the light patterns produced by **muRLi**.
+
+Furthermore **muRLi** creates a native mesh including a *websocket*. **muRLiN**s (muRLi Nodes) are able to connect to this mesh to receive *commands* via the *websocket*. These *commands* include color information to which the **muRLiN**s will react. This way it is possible to span a mesh of WiFi connected devices which are synchronously reacting to music.
+
+[TODO PICTURE/VIDEO]
+
+# Table of Contents
+1. [3D Model](#3d-model)
+2. [muRLi](#murli)  
+    a) [BOM](#bom)  
+    b) [Firmware](#firmware)  
+    c) [Build](#build)
+3. [MODs](#mods)  
+    a) [BOM (for one MOD)](#BOM-for-one-MOD)  
+    b) [Build MOD](#mod-build)  
+    c) [Create MODs](#create-mods)  
+    d) [Write MODs](#write-mods)
+4. [muRLiN](#murlin)  
+    a) [BOM (For one small battery powered muRLiN)](#node-bom)  
+    b) [Firmware](#node-firmware)  
+    c) [Build](#node-build)  
+    d) [OTA Updates](#node-ota)
 
 ## 3D Model
-The model was designed in Fusion360. The STLs are included in the Thingiverse downloads and the Github repository. Furthermore there is an exported Fusion360 Archive File ready to download.
+The model was designed in Fusion 360. The exported STLs are included in the Github repository. Furthermore there is a Fusion360 archive file ready to download.
 
 ## muRLi
 
@@ -27,7 +48,7 @@ Before building **muRLi** you should flash the firmware onto the Wemos D1 Mini. 
 
 Open the project in [Visual Studio Code](https://code.visualstudio.com/). The project uses [PlatformIO](https://platformio.org/platformio-ide) to develop the firmware. Install the PlatformIO extension into Visual Studio Code, if not already done.
 
-To flash the firmware onto the Wemos connect it to your PC and press the *Upload* button in the status bar.
+To flash the firmware onto the Wemos connect it to your PC, make sure that the **-DBUILD_MURLI** build flag is active in the *platformio.ini* file and press the *Upload* button in the status bar.
 
 ![muRLi - Flash](https://raw.githubusercontent.com/geaz/muRLi/master/img/flash.png)
 
@@ -61,7 +82,7 @@ To diffuse the LEDs a bit, the *middle* part has a small slot for a paper insert
 
 [SET GAIN & FINISH MURLI]
 
-## murLi MOD
+## MODs
 
 ### BOM (for one MOD)
 
@@ -71,7 +92,7 @@ To diffuse the LEDs a bit, the *middle* part has a small slot for a paper insert
 - Superglue
 - Wire
 
-### Build
+### <a name="mod-build"></a> Build
 
 Building a MOD cartridge is quite easy. Just take a bit of wire, the *23LC32A* and the DuPont connector and solder it as shown in the schematics.
 
@@ -125,20 +146,20 @@ python writeMod.py COM4 simple.murli
 The script will tell you, if something went wrong. **muRLi** will show a *MOD saved*, if everything went well.
 If you run the script without any parameters, it will list all available COM ports.
 
-## muRLi Nodes
+## muRLiN
 
-**Nodes** are devices which are able to connect to a *websocket* provided by **muRLi** or a closer available other **node** via WiFi. Because every **node** is also an Access Point and a Websocket Server it is possible to span a pretty big mesh of **muRLi Nodes**.
+**muRLiN**s are devices which are able to connect to a *websocket* provided by **muRLi** or a closer available other **muRLiN** via WiFi. Because every **muRLiN** is also an Access Point and a Websocket Server it is possible to span a pretty big mesh of **muRLiN**.
 
-This repository provides a *naive* example for such a node in form of a battery powered device. But it is possible to create other devices like for example wall mounted LED devices which will connect to **muRLi** to create some nice color effects. Or desk lamp like devices. Just play with your imagination and come up with some cool devices. All you have to do is to take a *Wemos D1 Mini* connect some LEDs and flash the **muRLi** node firmware on it.
+This repository provides a *naive* example for a **muRLiN** in form of a battery powered device. But it is possible to create other devices like for example wall mounted LED devices which will connect to **muRLi** to create some nice color effects. Or desk lamp like devices. Just play with your imagination and come up with some cool devices. All you have to do is to take a *Wemos D1 Mini* connect some LEDs and flash the **muRLiN** firmware on it.
 
-### BOM (For one small battery powered muRLi node)
+### <a name="node-bom"></a> BOM (For one small battery powered muRLiN)
 
 - 3D Printed Parts (STL folder for models)
 - Wemos D1 Mini
 - TP4056 charging board (make sure you buy one rated for 1A and with integrated load protection)
 
-### Firmware
+### <a name="node-firmware"></a> Firmware
 
-### Build
+### <a name="node-build"></a> Build
 
-### OTA Update
+### <a name="node-ota"></a> OTA Update
