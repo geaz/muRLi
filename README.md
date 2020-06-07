@@ -14,8 +14,9 @@ The model was designed in Fusion360. The STLs are included in the Thingiverse do
 - Capacitor 680uF
 - MAX4466
 - [9x WS2812B LEDs (I used a strip and cut it)](https://www.amazon.de/dp/B01CDTED80)
-- 1x 1x5 Dupont Male
+- 1x 1x5 DuPont Male Connector
 - 4x M2x12mm screws
+- 4x M3x4mm screwsw
 - [Stripboard](https://www.amazon.com/dp/B00C9NXP94)
 - Wire
 - Hotglue & superglue
@@ -62,10 +63,25 @@ Take the *Top* part and the *Frame* and glue them together with the superglue. I
 
 - 3D Printed Parts (STL folder for models)
 - 1x 24LC32A
-- 1x 1x5 Dupont Female
-- Enameled copper wire
+- 1x 1x5 DuPont Female Connector
+- Superglue
+- Wire
 
 ### Build
+
+Building a MOD cartridge is quite easy. Just take a bit of wire, the *23LC32A* and the DuPont connector and solder it as shown in the schematics.
+
+![muRLi MOD - Schematics](https://raw.githubusercontent.com/geaz/muRLi/master/img/muRLI-circuit-mod.png)
+
+Here is a picture of mine. Not pretty, but it works.
+
+![muRLi MOD](https://raw.githubusercontent.com/geaz/muRLi/master/img/MOD-Chip.jpg)
+
+Take a bit of superglue and attach the DuPont connector to the cartridge shell. Make sure that the *ground pin* is orianted to the side of the shell **without the gap on the side**.
+
+![muRLi MOD](https://raw.githubusercontent.com/geaz/muRLi/master/img/MOD-Cartridge.jpg)
+
+Now just glue the two shell halves together and you are done.
 
 ### Create MODs
 
@@ -79,14 +95,17 @@ Every run the script will get some variables injected by **muRLi**.
 - **midF** *The middle frequency value - 1046hz -> Highest note reproducible by average female*
 - **maxF** *The highest frequency registered by muRLi - 3140 -> Between highest note on a flute and on a 88-key piano* 
 
-Scripts are able to return up to three different colors per run by calling the function *sCF*.
+The volume and frequency are zero, if **muRLi** recognized silence for at least five seconds. This way a MOD
+could calculate some abient lights for the silence phase.
+
+Scripts are able to return up to two different colors per run by calling the function *sCF*.
 The methods has the following signature:
 
-```sCF(int frame, int hexColor)```
+```sCF(int colorFrame, int hexColor)```
 
 A script which would never change the color would look like:
 
-```sCF(1, 0xFFFFFF)```
+```sCF(0, 0xFFFFFF)```
 
 For more advanced examples look into the *mods* folder.
 
