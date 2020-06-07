@@ -1,9 +1,9 @@
 # muRLi
 **muRLi** is a WiFi connected, programmable (mu)sic (R)eactive (Li)ght system. It supports custom *MOD* cartridges which contain executable scripts. These scripts are able to influence the light patterns produced by **muRLi**.
 
-Furthermore **muRLi** creates a native mesh including a *websocket*. **muRLiN**s (muRLi Nodes) are able to connect to this mesh and will create an additional access point and websocket for other **muRLiN**s to connect to. This way **muRLiN**s not in range of **muRLi** are also able to join the mesh as long as at least one **muRLiN** is in range. **muRLiN**s are able to receive *commands* created by **muRLi**. The *commands* are containing color information to which the **muRLiN**s will react. 
+Furthermore **muRLi** creates a native mesh including a *websocket*. **muRLiN**s (muRLi Nodes) are able to connect to this mesh and will create an additional access point and websocket for other nodes to connect to. This way nodes not in range of **muRLi** are also able to join the mesh as long as at least one **muRLiN** is in range. The nodes are able to receive *commands* created by **muRLi**. The *commands* are containing color information to which the **muRLiN**s will react.
 
-Everything combined, it is possible to span a mesh of WiFi connected devices which are synchronously reacting to music.
+*Everything combined, it is possible to span a mesh of WiFi connected devices which are synchronously reacting to music.*
 
 [TODO PICTURE/VIDEO]
 
