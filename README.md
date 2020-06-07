@@ -33,19 +33,23 @@ To flash the firmware onto the Wemos connect it to your PC and press the *Upload
 
 Aftererwards start the *Serial Monitor* and you should see some outputs like in the screenshot below. If you are able to see the output, the device is working and you are ready to build **muRLi**.
 
-![muRLi - Serial](https://raw.githubusercontent.com/geaz/muRLi/master/images/serial.png)
+![muRLi - Serial](https://raw.githubusercontent.com/geaz/muRLi/master/img/serial.png)
 
 ### Build
 
 Take the *Top* part and the *Frame* and glue them together with the superglue. I recommend to place something heavy on top to make sure that they bond well.
 
-[PICTURE GLUED]
+![muRLi - Frame Glued](https://raw.githubusercontent.com/geaz/muRLi/master/img/frame-glued.jpg)
 
 [PREPARE WIRES]
 
 [SOLDER & MOUNT DISPLAY]
 
-[SOLDER & MOUNT LED]
+To diffuse the LEDs a bit, the *middle* part has a small slot for a paper insert. Take a bit of paper and cut it into narrow stripe then insert it into the slot.
+
+![muRLi - LED Paper](https://raw.githubusercontent.com/geaz/muRLi/master/img/led-paper.jpg)
+
+![muRLi - LED Inserted](https://raw.githubusercontent.com/geaz/muRLi/master/img/led-paper-insert.jpg)
 
 [SOLDER & MOUND MOD CONECTOR]
 
