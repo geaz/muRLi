@@ -1,7 +1,9 @@
 # muRLi
-**muRLi** is a WiFi connected, programmable (mu)sic (R)eactive (Li)ght system. It supports custom *MODs* which are cartridges with programmed scripts. These scripts are able to influence the light patterns produced by **muRLi**.
+**muRLi** is a WiFi connected, programmable (mu)sic (R)eactive (Li)ght system. It supports custom *MOD* cartridges which contain executable scripts. These scripts are able to influence the light patterns produced by **muRLi**.
 
-Furthermore **muRLi** creates a native mesh including a *websocket*. **muRLiN**s (muRLi Nodes) are able to connect to this mesh to receive *commands* via the *websocket*. These *commands* include color information to which the **muRLiN**s will react. This way it is possible to span a mesh of WiFi connected devices which are synchronously reacting to music.
+Furthermore **muRLi** creates a native mesh including a *websocket*. **muRLiN**s (muRLi Nodes) are able to connect to this mesh and will create an additional access point and websocket for other **muRLiN**s to connect to. This way **muRLiN**s not in range of **muRLi** are also able to join the mesh as long as at least one **muRLiN** is in range. **muRLiN**s are able to receive *commands* created by **muRLi**. The *commands* are containing color information to which the **muRLiN**s will react. 
+
+Everything combined, it is possible to span a mesh of WiFi connected devices which are synchronously reacting to music.
 
 [TODO PICTURE/VIDEO]
 
@@ -23,24 +25,24 @@ Furthermore **muRLi** creates a native mesh including a *websocket*. **muRLiN**s
     d) [OTA Updates](#node-ota)
 
 ## 3D Model
-The model was designed in Fusion 360. The exported STLs are included in the Github repository. Furthermore there is a Fusion360 archive file ready to download.
+The models were designed in Fusion 360. The exported STLs are included in the Github repository (*stl* folder). Furthermore there is are Fusion 360 archive files ready to download (*cad* folder).
 
 ## muRLi
 
 ### BOM
 
-- 3D Printed Parts (STL folder for models)
-- Wemos D1 Mini
-- 1x Pull-Down Resistor (I used a 1K resistor)
-- Capacitor 680uF
-- MAX4466
-- [9x WS2812B LEDs (I used a strip and cut it)](https://www.amazon.de/dp/B01CDTED80)
+- 3D Printed Parts
+- 1x Wemos D1 Mini
+- 1x 1K Resistor
+- 1x Capacitor 680uF
+- 1x MAX4466
 - 1x 1x5 DuPont Male Connector
+- [9x WS2812B LEDs (I used a strip and cut it)](https://www.amazon.de/dp/B01CDTED80)
 - 4x M2x12mm screws
-- 4x M3x4mm screwsw
+- 4x M3x4mm screws
 - [Stripboard](https://www.amazon.com/dp/B00C9NXP94)
 - Wire
-- Hotglue & superglue
+- Hotglue & Superglue
 
 ### Firmware
 
@@ -52,7 +54,7 @@ To flash the firmware onto the Wemos connect it to your PC, make sure that the *
 
 ![muRLi - Flash](https://raw.githubusercontent.com/geaz/muRLi/master/img/flash.png)
 
-Aftererwards start the *Serial Monitor* and you should see some outputs like in the screenshot below. If you are able to see the output, the device is working and you are ready to build **muRLi**.
+Afterwards start the *serial monitor* and you should see some outputs like in the screenshot below. If you are able to see the output, the device is working and you are ready to build **muRLi**.
 
 ![muRLi - Serial](https://raw.githubusercontent.com/geaz/muRLi/master/img/serial.png)
 
@@ -66,7 +68,7 @@ Take the *Top* part and the *Frame* and glue them together with the superglue. I
 
 [SOLDER & MOUNT DISPLAY]
 
-To diffuse the LEDs a bit, the *middle* part has a small slot for a paper insert. Take a bit of paper and cut it into narrow stripe then insert it into the slot.
+To diffuse the LEDs a bit, the *middle* part has a small slot for a paper insert. Take a bit of paper and cut it into a narrow stripe and insert it into the slot.
 
 ![muRLi - LED Paper](https://raw.githubusercontent.com/geaz/muRLi/master/img/led-paper.jpg)
 
@@ -86,7 +88,7 @@ To diffuse the LEDs a bit, the *middle* part has a small slot for a paper insert
 
 ### BOM (for one MOD)
 
-- 3D Printed Parts (STL folder for models)
+- 3D Printed Parts
 - 1x 24LC32A
 - 1x 1x5 DuPont Female Connector
 - Superglue
@@ -98,11 +100,11 @@ Building a MOD cartridge is quite easy. Just take a bit of wire, the *23LC32A* a
 
 ![muRLi MOD - Schematics](https://raw.githubusercontent.com/geaz/muRLi/master/img/muRLI-circuit-mod.png)
 
-Here is a picture of mine. Not pretty, but it works.
+Here is a picture of my first one. Not pretty, but it works.
 
 ![muRLi MOD](https://raw.githubusercontent.com/geaz/muRLi/master/img/MOD-Chip.jpg)
 
-Take a bit of superglue and attach the DuPont connector to the cartridge shell. Make sure that the *ground pin* is orianted to the side of the shell **without the gap on the side**.
+Take a bit of superglue and attach the DuPont connector to the cartridge shell. Make sure that the *ground pin* is oriented to the side of the shell **without the gap on the side** and it sits in the middle of the gap! Otherwise you will have a hard time to insert it into the MOD slot.
 
 ![muRLi MOD](https://raw.githubusercontent.com/geaz/muRLi/master/img/MOD-Cart.jpg)
 
@@ -121,10 +123,10 @@ Every run the script will get some variables injected by **muRLi**.
 - **maxF** *The highest frequency registered by muRLi - 3140 -> Between highest note on a flute and on a 88-key piano* 
 
 The volume and frequency are zero, if **muRLi** recognized silence for at least five seconds. This way a MOD
-could calculate some abient lights for the silence phase.
+could calculate some ambient lights for the silence phase.
 
-Scripts are able to return up to two different colors per run by calling the function *sCF*.
-The methods has the following signature:
+Scripts are able to return up to two different colors per run by calling the *sCF* method.
+It has the following signature:
 
 ```sCF(int colorFrame, int hexColor)```
 
@@ -137,7 +139,7 @@ For more advanced examples look into the *mods* folder.
 ### Write MODs
 
 In the *mods* folder is a python script to write the mods onto the cartridges. Please make sure, that Python3 is installed.
-Connect **muRLi** to your machine and execute the script like this:
+Connect **muRLi** to your machine, insert a cartridge and execute the script like this:
 
 ```
 python writeMod.py COM4 simple.murli
@@ -148,15 +150,15 @@ If you run the script without any parameters, it will list all available COM por
 
 ## muRLiN
 
-**muRLiN**s are devices which are able to connect to a *websocket* provided by **muRLi** or a closer available other **muRLiN** via WiFi. Because every **muRLiN** is also an Access Point and a Websocket Server it is possible to span a pretty big mesh of **muRLiN**.
+**muRLiN**s are devices which are able to connect to the *websocket* provided by **muRLi** or a closer available other **muRLiN** via WiFi. Because every **muRLiN** is also an access point and a websocket server it is possible to span a pretty big mesh of **muRLiN**s.
 
 This repository provides a *naive* example for a **muRLiN** in form of a battery powered device. But it is possible to create other devices like for example wall mounted LED devices which will connect to **muRLi** to create some nice color effects. Or desk lamp like devices. Just play with your imagination and come up with some cool devices. All you have to do is to take a *Wemos D1 Mini* connect some LEDs and flash the **muRLiN** firmware on it.
 
 ### <a name="node-bom"></a> BOM (For one small battery powered muRLiN)
 
-- 3D Printed Parts (STL folder for models)
+- 3D Printed Parts
 - Wemos D1 Mini
-- TP4056 charging board (make sure you buy one rated for 1A and with integrated load protection)
+- TP4056 charging board (make sure you buy one with integrated load protection)
 
 ### <a name="node-firmware"></a> Firmware
 
