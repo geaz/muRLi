@@ -7,7 +7,7 @@
 
 namespace Murli
 {    
-    static const uint8_t LedCount = 8;
+    static const uint8_t LedCount = 9;
     static const uint8_t LedDataPin = D4;
 
     class LED
