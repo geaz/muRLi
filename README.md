@@ -2,9 +2,9 @@
 [![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/A0A01MQZP)
 
 # muRLi
-**muRLi** is a WiFi connected, programmable (mu)sic (R)eactive (Li)ght system. It supports custom *MOD* cartridges which contain executable scripts. These scripts are able to influence the light patterns produced by **muRLi**.
+**muRLi** is a WiFi connected and programmable (mu)sic (R)eactive (Li)ght system. It supports custom *MOD* cartridges which contain executable scripts. These scripts are able to influence the light patterns produced by **muRLi**.
 
-Furthermore **muRLi** creates a native mesh including a *websocket*. **muRLiN**s (muRLi Nodes) are able to connect to this mesh and will create an additional access point and websocket for other nodes to connect to. This way nodes not in range of **muRLi** are also able to join the mesh as long as at least one **muRLiN** is in range. The nodes are able to receive *commands* created by **muRLi**. The *commands* contain color information to which the **muRLiN**s will react.
+Furthermore **muRLi** creates a native mesh including a *websocket*. **muRLiN**s (muRLi nodes) are able to connect to this mesh and will create an additional access point and websocket for other nodes to connect to. This way nodes not in range of **muRLi** are also able to join the mesh as long as at least one **muRLiN** is in range. The nodes are able to receive *commands* created by **muRLi**. The *commands* contain color information to which the **muRLiN**s will react.
 
 *Everything combined, it is possible to span a mesh of WiFi connected devices which are synchronously reacting to music.*
 
@@ -28,7 +28,7 @@ Furthermore **muRLi** creates a native mesh including a *websocket*. **muRLiN**s
     d) [OTA Updates](#node-ota)
 
 ## 3D Model
-The models were designed in Fusion 360. The exported STLs are included in the Github repository (*stl* folder). Furthermore there is are Fusion 360 archive files ready to download (*cad* folder).
+The models were designed in Fusion 360. The exported STLs are included in the Github repository (*stl* folder). Furthermore there are Fusion 360 archive files ready to download (*cad* folder).
 
 ## muRLi
 
@@ -39,7 +39,7 @@ The models were designed in Fusion 360. The exported STLs are included in the Gi
 - 1x 1K Resistor
 - 1x Capacitor 680uF
 - 1x MAX4466
-- 1x 1x5 DuPont Male Connector
+- 1x 1x5 DuPont Male Pin Header
 - [9x WS2812B LEDs (I used a strip and cut it)](https://www.amazon.de/dp/B01CDTED80)
 - 4x M2x12mm screws
 - 4x M3x4mm screws
@@ -49,9 +49,7 @@ The models were designed in Fusion 360. The exported STLs are included in the Gi
 
 ### Firmware
 
-Before building **muRLi** you should flash the firmware onto the Wemos D1 Mini. This way you are able to make sure that it is functional.
-
-Open the project in [Visual Studio Code](https://code.visualstudio.com/). The project uses [PlatformIO](https://platformio.org/platformio-ide) to develop the firmware. Install the PlatformIO extension into Visual Studio Code, if not already done.
+Before building **muRLi** you should flash the firmware onto the Wemos D1 Mini. This way you are able to make sure that it is functional. Open the project in [Visual Studio Code](https://code.visualstudio.com/). The project uses [PlatformIO](https://platformio.org/platformio-ide) to develop the firmware. Install the PlatformIO extension into Visual Studio Code, if not already done. 
 
 To flash the firmware onto the Wemos connect it to your PC, make sure that the **-DBUILD_MURLI** build flag is active in the *platformio.ini* file and press the *Upload* button in the status bar.
 
@@ -63,13 +61,17 @@ Afterwards start the *serial monitor* and you should see some outputs like in th
 
 ### Build
 
-Take the *Top* part and the *Frame* and glue them together with the superglue. I recommend to place something heavy on top to make sure that they bond well.
+First of all, make yourself comfortable with the following schematics. It shows you all parts of **muRLi** which are necessary to connect to each other. We will use a piece of stripboard for each wire which is not directly connected to the Wemos D1 Mini. Mostly to provide power to each part.
+
+![muRLi - Schematics](https://raw.githubusercontent.com/geaz/muRLi/master/img/muRLI-circuit.png)
+
+Now that you made yourself comfortable with the wiring, take the *Top* part and the *Frame* and glue them together with the superglue. I recommend to place something heavy on top to make sure that they bond well.
 
 ![muRLi - Frame Glued](https://raw.githubusercontent.com/geaz/muRLi/master/img/frame-glued.jpg)
 
-[PREPARE WIRES]
+Solder wires to your display and mount it to the *Top* part.
 
-[SOLDER & MOUNT DISPLAY]
+![muRLi - Display](https://raw.githubusercontent.com/geaz/muRLi/master/img/display.jpg)
 
 To diffuse the LEDs a bit, the *middle* part has a small slot for a paper insert. Take a bit of paper and cut it into a narrow stripe and insert it into the slot.
 
@@ -77,15 +79,38 @@ To diffuse the LEDs a bit, the *middle* part has a small slot for a paper insert
 
 ![muRLi - LED Inserted](https://raw.githubusercontent.com/geaz/muRLi/master/img/led-paper-insert.jpg)
 
-[SOLDER & MOUND MOD CONECTOR]
+Solder three wires to your nine LED stripe and insert it into the *middle* part, too - **pay attention to the data line direction**. I bent the cables away from the back of the shell to avoid any possible interference between the microphone cables and the LEDs.
 
-[SOLCER & MOUNT MIC]
+![muRLi - LED Inserted](https://raw.githubusercontent.com/geaz/muRLi/master/img/led-insert.jpg)
 
-[SOLDER VEROBOARD]
+Solder three qires to your microphone and attach it with hotglue to the *Bottom* part of the shell.
 
-[SOLDER & MOUNT WEMOS]
+![muRLi - Mic](https://raw.githubusercontent.com/geaz/muRLi/master/img/mic.jpg)
 
-[SET GAIN & FINISH MURLI]
+At this point I advise you to build your first [MOD](#mods). A *MOD* will help to align the MOD connector correctly in the *bottom* shell.   
+
+**Playing jingle ...**
+
+Now that your fist **MOD** is done, take the stripboard and create one 4x7 and one 2x5 sized piece. Picture below as a reference - pay attention to the copper line directions.
+
+![muRLi - Stripboard](https://raw.githubusercontent.com/geaz/muRLi/master/img/stripboard.jpg)
+
+Solder the DuPont male pin header to one row of the 2x5 stripboard piece and five wires to the second row. The wires should be directed to the opposite side of the pin header and should sit flush. Otherwise the connector will not sit correctly in the cartridge slot. 
+
+Now insert the *MOD* connector into the slot of the *Bottom* part of the shell and try to insert your *MOD*. If they fit, hotglue the connector to the shell. This way the connector and the *MOD*s will align perfectly.
+
+![muRLi - MOD Connector](https://raw.githubusercontent.com/geaz/muRLi/master/img/mod-connector.jpg)
+
+Take the 4x7 stripboard you prepared before and solder all necessary components and wires as shown in the image below. The ground wires are only indicated (read the red comment) to keep the image tidy. Also solder every other wire like indicated in the above schematics.
+
+![muRLi - Veroboard](https://raw.githubusercontent.com/geaz/muRLi/master/img/murRLi-Veroboard.png)
+
+Mount the Wemos D1 Mini to the *Bottom* part of the shell.
+
+![muRLi - Mounted](https://raw.githubusercontent.com/geaz/muRLi/master/img/mounted.jpg)
+
+Power the Wemos and insert a *MOD*. You should see the *decibel* in the top right of the display. Set the gain of you microphone with a small screwdriver. It should float around -25dB in a silent room. If done, place the stripboard into the shell, place one of the *divider* parts on top of the *bottom* part, then place the *middle* part on top of it. Followed by an additional *divider* and the *top* part.
+Insert the *bolts* into the four holes and use the M2x12mm screws to close the shell.
 
 ## MODs
 
