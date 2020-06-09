@@ -4,11 +4,11 @@
 # muRLi
 **muRLi** is a WiFi connected and programmable (mu)sic (R)eactive (Li)ght system. It supports custom *MOD* cartridges which contain executable scripts. These scripts are able to influence the light patterns produced by **muRLi**.
 
-Furthermore **muRLi** creates a native mesh including a *websocket*. **muRLiN**s (muRLi nodes) are able to connect to this mesh and will create an additional access point and websocket for other nodes to connect to. This way nodes not in range of **muRLi** are also able to join the mesh as long as at least one **muRLiN** is in range. The nodes are able to receive *commands* created by **muRLi**. The *commands* contain color information to which the **muRLiN**s will react.
+Furthermore **muRLi** creates a naive mesh including a *websocket*. **muRLiN**s (muRLi nodes) are able to connect to this mesh and will create an additional access point and websocket for other nodes to connect to. This way nodes not in range of **muRLi** are also able to join the mesh as long as at least one **muRLiN** is in range. The nodes are able to receive *commands* created by **muRLi**. The *commands* contain color information to which the **muRLiN**s will react.
 
 *Everything combined, it is possible to span a mesh of WiFi connected devices which are synchronously reacting to music.*
 
-[TODO PICTURE/VIDEO]
+![muRLi](https://raw.githubusercontent.com/geaz/muRLi/master/img/cover.jpg)
 
 # Table of Contents
 1. [3D Model](#3d-model)
@@ -83,7 +83,7 @@ Solder three wires to your nine LED stripe and insert it into the *middle* part,
 
 ![muRLi - LED Inserted](https://raw.githubusercontent.com/geaz/muRLi/master/img/led-insert.jpg)
 
-Solder three qires to your microphone and attach it with hotglue to the *Bottom* part of the shell.
+Solder three wires to your microphone and attach it with hotglue to the *Bottom* part of the shell.
 
 ![muRLi - Mic](https://raw.githubusercontent.com/geaz/muRLi/master/img/mic.jpg)
 
@@ -132,7 +132,7 @@ Here is a picture of my first one. Not pretty, but it works.
 
 ![muRLi MOD](https://raw.githubusercontent.com/geaz/muRLi/master/img/MOD-Chip.jpg)
 
-Take a bit of superglue and attach the DuPont connector to the cartridge shell. Make sure that the *ground pin* is oriented to the side of the shell **without the gap on the side** and it sits in the middle of the gap! Otherwise you will have a hard time to insert it into the MOD slot.
+Take a bit of superglue and attach the DuPont connector to the cartridge shell. Make sure that the *ground pin* is oriented to the side of the shell **without the gap** and that it sits in the middle of the gap! Otherwise you will have a hard time to insert it into the MOD slot.
 
 ![muRLi MOD](https://raw.githubusercontent.com/geaz/muRLi/master/img/MOD-Cart.jpg)
 
