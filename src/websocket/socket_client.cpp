@@ -4,27 +4,30 @@ namespace Murli
 {
     SocketClient* SocketClientPointer = NULL;
 
-    SocketClient::SocketClient(LED& led) : led(led)
+    SocketClient::SocketClient(LED& led) : _led(led)
     {
         Murli::SocketClientPointer = this;
     }
 
     void SocketClient::start(String socketIp)
     {        
-        auto webSocketEvent = [](WStype_t type, uint8_t * payload, size_t length) 
+        auto webSocketEvent = [](WStype_t type, uint8_t* payload, size_t length) 
         {
             switch(type) 
             {
                 case WStype_DISCONNECTED:              
                     Serial.println("Disconnected from WebSocket!");  
-                    Murli::SocketClientPointer->led.blink(Murli::Red, 3);
+                    Murli::SocketClientPointer->_isConnected = false;
+                    Murli::SocketClientPointer->_led.blink(Murli::Red, 3);
                     break;
                 case WStype_CONNECTED:            
                     Serial.println("Connected to WebSocket!");
-                    Murli::SocketClientPointer->led.blink(Murli::Green, 1);
+                    Murli::SocketClientPointer->_isConnected = true;
+                    Murli::SocketClientPointer->_led.blink(Murli::Green, 3);
                     break;
-                case WStype_TEXT:
-                    Murli::SocketClientPointer->lastLoopReceivedText = String((char*)payload);
+                case WStype_BIN:
+                    memcpy(&Murli::SocketClientPointer->_newReceivedCommand, payload, length);
+                    Murli::SocketClientPointer->_hasNewCommand = true;
                     break;
                 default:
                     // Not interested in other cases
@@ -33,19 +36,29 @@ namespace Murli
         };
 
         Serial.println("Connecting to socket '" + socketIp + "' ...");
-        webSocket.begin(socketIp, 81, "/");
-        webSocket.onEvent(webSocketEvent);
-        webSocket.setReconnectInterval(5000);
+        _webSocket.begin(socketIp, 81, "/");
+        _webSocket.onEvent(webSocketEvent);
+        _webSocket.setReconnectInterval(5000);
     }
 
     void SocketClient::loop()
     {
-        lastLoopReceivedText = String("");
-        webSocket.loop();
+        _webSocket.loop();
     }
     
-    String SocketClient::getReceivedText() const
+    bool SocketClient::isConnected() const
     {
-        return lastLoopReceivedText;
+        return _isConnected;
+    }
+
+    bool SocketClient::hasNewCommand() const
+    {
+        return _hasNewCommand;
+    }
+    
+    MurliCommand SocketClient::getNewCommand()
+    {
+        _hasNewCommand = false;
+        return _newReceivedCommand;
     }
 }

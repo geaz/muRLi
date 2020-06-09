@@ -1,8 +1,8 @@
-#pragma once
 #ifndef SOCKETCLIENT_H
 #define SOCKETCLIENT_H
 
 #include <WebSocketsClient.h>
+#include "socket_server.hpp"
 #include "../led/led.hpp"
 
 namespace Murli
@@ -15,12 +15,17 @@ namespace Murli
             void start(String socketIp);
             void loop();
             
-            String getReceivedText() const;
+            bool isConnected() const;
+            bool hasNewCommand() const;
+            MurliCommand getNewCommand();
         
         private:
-            LED& led;
-            WebSocketsClient webSocket;
-            String lastLoopReceivedText;
+            LED& _led;
+            WebSocketsClient _webSocket;
+            MurliCommand _newReceivedCommand;
+            
+            bool _isConnected = false;
+            bool _hasNewCommand = false;
     };
 
     // SocketClient Pointer for Socket callbacks

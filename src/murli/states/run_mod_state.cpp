@@ -35,6 +35,7 @@ namespace Murli
 
                     if(_lastColor != newColor)
                     {
+                        context.getDisplay().setRightStatus(newColor.toString());
                         context.getSocketServer().broadcast(command);
                         context.getSocketServer().loop();
                         context.getLed().setColor(newColor);

@@ -15,6 +15,10 @@ namespace Murli
 
     void SocketServer::broadcast(MurliCommand command)
     {
-        webSocket.broadcastBIN((uint8_t*) &command, sizeof(command));
+        size_t commandSize = sizeof(command);
+        uint8_t serializedCommand[commandSize];
+        memcpy(&serializedCommand, &command, commandSize);
+
+        webSocket.broadcastBIN(&serializedCommand[0], commandSize);
     }
 }

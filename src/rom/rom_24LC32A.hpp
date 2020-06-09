@@ -12,6 +12,7 @@ namespace Murli
     {
         public:
             Rom24LC32A(const uint8_t deviceAddress);
+            
             uint8_t clear();
             uint8_t read(std::vector<uint8_t>& data, const uint16_t length);
             uint8_t write(const std::vector<uint8_t>& data);
@@ -19,7 +20,6 @@ namespace Murli
         private:
             void waitReady() const;
 
-        private:
             uint8_t _pageSize = 32;
             uint8_t _deviceAddress;
     };

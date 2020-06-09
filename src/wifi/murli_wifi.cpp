@@ -13,17 +13,22 @@ namespace Murli
     {
         Serial.println("Starting mesh ...");
 
-        ssid = SSID + " #1";
+        _ssid = SSID + " #1";
         WiFi.softAPConfig(
             IPAddress(192, 168, 1, 1), 
             IPAddress(0, 0, 0, 0), 
             IPAddress(255, 255, 255, 0));
-        WiFi.softAP(ssid, Password, 1, false, 8);
+        WiFi.softAP(_ssid, Password, 1, false, 8);
 
         Serial.println("Node AP IP: " + WiFi.softAPIP().toString());
         Serial.println("Node Local IP: " + WiFi.localIP().toString());
+    }
 
-      /*  Serial.println("Scanning for muRLi Nodes ...");
+    bool MurliWifi::tryJoinMesh()
+    {
+        bool connected = false;
+
+        Serial.println("Scanning for muRLi Nodes ...");
         unsigned char foundNetworkCount = WiFi.scanNetworks();
         unsigned char nodeNr = 1;
         short nearestNode = -1;
@@ -50,27 +55,29 @@ namespace Murli
                 Serial.print(".");
             }       
             Serial.println(" Connected!");
-            parentIp = IPAddress(192, 168, nodeNr - 1, 1);
-        }  
-        
-        ssid = SSID + " #" + String(nodeNr);
-        WiFi.softAPConfig(
-            IPAddress(192, 168, nodeNr, 1), 
-            IPAddress(0, 0, 0, 0), 
-            IPAddress(255, 255, 255, 0));
-        WiFi.softAP(ssid, Password, 1, false, 8);
+            _parentIp = IPAddress(192, 168, nodeNr - 1, 1);
 
-        Serial.println("Node AP IP: " + WiFi.softAPIP().toString());
-        Serial.println("Node Local IP: " + WiFi.localIP().toString());*/
+            _ssid = SSID + " #" + String(nodeNr);
+            WiFi.softAPConfig(
+                IPAddress(192, 168, nodeNr, 1), 
+                IPAddress(0, 0, 0, 0), 
+                IPAddress(255, 255, 255, 0));
+            WiFi.softAP(_ssid, Password, 1, false, 8);
+
+            Serial.println("Node AP IP: " + WiFi.softAPIP().toString());
+            Serial.println("Node Local IP: " + WiFi.localIP().toString());
+            connected = true;
+        }  
+        return connected;
     }
 
-    bool MurliWifi::isRootNode() 
-    { 
-        return ssid.endsWith(" #1"); 
+    bool MurliWifi::isConnected()
+    {
+        return WiFi.isConnected();
     }
 
     IPAddress MurliWifi::getParentIp()
     {
-        return parentIp;
+        return _parentIp;
     }
 }

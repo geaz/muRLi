@@ -46,8 +46,7 @@ namespace Murli
                     if(frequencyRange[i] > 0) frequencyRange[i]--;
                 }
             }
-           
-            std::string modName = "";
+            
             float decibel = 0.0;
             uint16_t dominantFrequency = 0;
             std::vector<uint8_t> frequencyRange

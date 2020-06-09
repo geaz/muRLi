@@ -18,12 +18,14 @@ namespace Murli
             void connectToUpdater();
             
             void startMesh();
-            bool isRootNode();
+            bool tryJoinMesh();
+
+            bool isConnected();
             IPAddress getParentIp();
 
         private:
-            String ssid = SSID;
-            IPAddress parentIp;
+            String _ssid = SSID;
+            IPAddress _parentIp;
     };
 }
 

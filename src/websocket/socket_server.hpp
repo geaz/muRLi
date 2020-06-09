@@ -1,4 +1,3 @@
-#pragma once
 #ifndef SOCKETSERVER_H
 #define SOCKETSERVER_H
 
@@ -16,7 +15,7 @@ namespace Murli
     struct MurliCommand
     {
         Command command;
-        ColorFrame colorFrame;
+        ColorFrame colorFrame = { Black, Black };
 
         Color getNewNodeColor(const Color currentColor)
         {
