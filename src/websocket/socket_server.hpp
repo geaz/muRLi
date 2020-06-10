@@ -15,19 +15,23 @@ namespace Murli
     struct MurliCommand
     {
         Command command;
-        ColorFrame colorFrame = { Black, Black };
+        ColorFrame colorFrame = { Instant, Black, Black };
 
-        Color getNewNodeColor(const Color currentColor)
+        Color getNewNodeColor(const Color currentColor, const bool isBase, const bool hasConnectedNodes)
         {
             Color newColor = currentColor.getFadedBlack(64);
-            if(command == SET && colorFrame.second.isBlack())
+            if(command == SET && (colorFrame.second.isBlack() || isBase))
             {
                 newColor = colorFrame.first;
             }
-            else if(command == SET)
+            else if(command == SET && hasConnectedNodes)
             {
                 newColor = Color::blend(colorFrame.first, colorFrame.second);
-                colorFrame = { newColor, colorFrame.second };
+                colorFrame = { colorFrame.mode, newColor, colorFrame.second };
+            }
+            else if(command == SET)
+            {
+                newColor = colorFrame.second;
             }
             return newColor;
         }

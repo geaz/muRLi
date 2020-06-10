@@ -16,6 +16,11 @@ namespace Murli
     {
         ScriptContextPointer->setColorFrame(frame, hexColor);
     }
+        
+    /* is static */ void ScriptContext::setColorModeFunc(ColorMode mode)
+    {
+        ScriptContextPointer->setColorMode(mode);
+    }
 
     ScriptContext::ScriptContext(const std::string mod) : _mod(mod)
     {
@@ -29,6 +34,7 @@ namespace Murli
 
         TinyScript_SetOutput(ScriptContext::receiveScriptOutput);
         TinyScript_Define("sCF", CFUNC(2), (intptr_t)ScriptContext::setColorFrameFunc);
+        TinyScript_Define("sM", CFUNC(1), (intptr_t)ScriptContext::setColorModeFunc);
 
         // Run Once with random values to 'test' the loaded script
         run(50, 758);
@@ -60,7 +66,7 @@ namespace Murli
             }
             _lastFrequency = frequency;
         }
-        return ColorFrame { _colors[0], _colors[1] };
+        return ColorFrame { _colorMode, _colors[0], _colors[1] };
     }
 
     void ScriptContext::setColorFrame(uint8_t frame, uint32_t hexColor)
@@ -69,6 +75,11 @@ namespace Murli
         {
             _colors[frame] = Color::fromHex(hexColor);
         }
+    }
+
+    void ScriptContext::setColorMode(ColorMode mode)
+    {
+        _colorMode = mode;
     }
 
     bool ScriptContext::isFaulted() { return _faulted; }

@@ -62,7 +62,8 @@ void loop()
     if(socketClient.isConnected() && socketClient.hasNewCommand())
     {
         Murli::MurliCommand currentCommand = socketClient.getNewCommand();
-        led.setColor(currentCommand.getNewNodeColor(led.getColor()));
+        
+        led.setColor(currentCommand.getNewNodeColor(led.getColor(), false, wifi.hasConnectedNodes()));
         socketServer.broadcast(currentCommand);
     }
     else if(!wifi.isConnected())

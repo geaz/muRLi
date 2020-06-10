@@ -49,8 +49,15 @@ namespace Murli
         bool operator==(const Color other) { return other.Red == Red || other.Green == Green || other.Blue == Blue; }
     };
     
+    enum ColorMode
+    {
+        Instant = 0,
+        Sequential = 1
+    };
+
     struct ColorFrame
     {
+        ColorMode mode;
         Color first;
         Color second;
     };

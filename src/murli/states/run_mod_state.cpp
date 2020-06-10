@@ -30,15 +30,25 @@ namespace Murli
                 {
                     AnalyzerResult result = _frequencyAnalyzer.loop();
                     MurliCommand command = getCommand(context, result);
-                    Color newColor = command.getNewNodeColor(context.getLed().getColor());
+                    Color newColor = command.getNewNodeColor(context.getLed().getColor(), true, context.hasConnectedNodes());
                     setView(result);
 
                     if(_lastColor != newColor)
                     {
-                        context.getDisplay().setRightStatus(newColor.toString());
-                        context.getSocketServer().broadcast(command);
-                        context.getSocketServer().loop();
-                        context.getLed().setColor(newColor);
+                        if(command.colorFrame.mode == Instant)
+                        {
+                            context.getDisplay().setRightStatus("INST " + newColor.toString());
+                            context.getSocketServer().broadcast(command);
+                            context.getSocketServer().loop();
+                            context.getLed().setColor(newColor);
+                        }
+                        else
+                        {                            
+                            //context.getLed().setColorSequential(newColor);
+                            context.getDisplay().setRightStatus("SEQ " + newColor.toString());
+                            context.getSocketServer().broadcast(command);
+                            context.getSocketServer().loop();
+                        }
                         _lastColor = newColor;
                     }
                     _lastDB= result.decibel;
@@ -55,11 +65,10 @@ namespace Murli
             {
                 MurliCommand command;
 
-                Color currentColor = context.getLed().getColor();
                 uint8_t volume = map(result.decibel < MinDB ? MinDB : result.decibel, MinDB, 0, 0, 100);
                 // If no sound was registered during the last 'MinTimeSilence' seconds,
                 // run the mod with parameters = 0
-                if(currentColor.isBlack() && volume == 0 && _lastTimeVolumeThreshold + MinTimeSilence < millis())
+                if(volume == 0 && _lastTimeVolumeThreshold + MinTimeSilence < millis())
                 {
                     command.colorFrame = _scriptContext->run(0, 0);
                     command.command = SET;
