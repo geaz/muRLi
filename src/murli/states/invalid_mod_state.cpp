@@ -3,7 +3,7 @@
 
 #include "../state.hpp"
 #include "../murli_context.hpp"
-#include "../../display/invalid_mod_view.cpp"
+#include "../../display/views/invalid_mod_view.cpp"
 
 namespace Murli
 {

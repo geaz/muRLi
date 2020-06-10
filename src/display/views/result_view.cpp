@@ -1,8 +1,8 @@
 #ifndef RESULTVIEW_H
 #define RESULTVIEW_H
 
-#include "view.hpp"
-#include "display.hpp"
+#include "../view.hpp"
+#include "../display.hpp"
 
 namespace Murli
 {

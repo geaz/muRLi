@@ -4,7 +4,7 @@
 #include "../state.hpp"
 #include "../murli_context.hpp"
 #include "invalid_mod_state.cpp"
-#include "../../display/run_mod_view.cpp"
+#include "../../display/views/run_mod_view.cpp"
 #include "../../visualization/script_context.hpp"
 #include "../../visualization/frequency_analyzer.hpp"
 

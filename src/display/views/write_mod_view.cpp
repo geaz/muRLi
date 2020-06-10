@@ -1,8 +1,8 @@
 #ifndef WRITEMODVIEW_H
 #define WRITEMODVIEW_H
 
-#include "view.hpp"
-#include "display.hpp"
+#include "../view.hpp"
+#include "../display.hpp"
 
 namespace Murli
 {

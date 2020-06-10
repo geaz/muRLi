@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 #include "murli_context.hpp"
-#include "../display/splash_view.cpp"
+#include "../display/views/splash_view.cpp"
 #include "states/no_mod_state.cpp"
 #include "states/receive_write_state.cpp"
 

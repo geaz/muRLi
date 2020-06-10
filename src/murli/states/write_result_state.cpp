@@ -4,7 +4,7 @@
 #include "no_mod_state.cpp"
 #include "../state.hpp"
 #include "../murli_context.hpp"
-#include "../../display/result_view.cpp"
+#include "../../display/views/result_view.cpp"
 
 namespace Murli
 {
