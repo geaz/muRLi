@@ -35,8 +35,6 @@ F 3 "~" H 2450 2900 50  0001 C CNN
 	1    2450 2900
 	1    0    0    -1  
 $EndComp
-Text Label 2400 3600 0    50   ~ 0
-VERO1
 Text Label 2400 3400 0    50   ~ 0
 VERO2
 Wire Wire Line
@@ -139,7 +137,7 @@ Wire Wire Line
 	2150 1600 2150 1150
 Wire Wire Line
 	1900 1600 2150 1600
-Text Label 1400 1100 0    50   ~ 0
+Text Label 1600 1100 0    50   ~ 0
 VERO1
 Wire Wire Line
 	1400 1300 1400 1100
@@ -209,4 +207,12 @@ F 3 "https://wiki.wemos.cc/products:d1:d1_mini#documentation" H -350 950 50  000
 	1    1500 2100
 	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	1600 1300 1600 1100
+Wire Wire Line
+	1400 1100 1200 1100
+Text Label 1200 1100 0    50   ~ 0
+LED_VCC
+Text Label 2400 3600 0    50   ~ 0
+LED_VCC
 $EndSCHEMATC
