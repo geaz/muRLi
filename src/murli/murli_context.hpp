@@ -19,7 +19,10 @@ namespace Murli
 
             void setup();
             void loop();
+
             bool isModInserted() const;
+            bool hasConnectedNodes() const;
+
             LED& getLed();
             Rom24LC32A& getRom();
             Display& getDisplay();
@@ -29,7 +32,7 @@ namespace Murli
             std::shared_ptr<State> currentState;
 
         private:
-            LED _led;
+            LED _led = LED(9);
             MurliWifi _wifi;
             Display _display;
             SocketServer _socketServer;

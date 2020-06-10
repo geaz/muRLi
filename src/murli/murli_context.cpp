@@ -54,6 +54,11 @@ namespace Murli
         return digitalRead(D6) == HIGH;
     }
 
+    bool MurliContext::hasConnectedNodes() const
+    { 
+        return _wifi.hasConnectedNodes();
+    }
+
     LED& MurliContext::getLed() { return _led; }
     Rom24LC32A& MurliContext::getRom() { return _rom; }
     Display& MurliContext::getDisplay() { return _display; }

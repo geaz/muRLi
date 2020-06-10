@@ -2,13 +2,13 @@
 
 namespace Murli
 {
-    LED::LED()
+    LED::LED(const uint8_t ledCount) : _ledCount(ledCount)
     {
-        for(uint8_t index = 0; index < LedCount; index++)
+        for(uint8_t index = 0; index < _ledCount; index++)
             _leds.push_back(CRGB::Black);
 
         FastLED
-            .addLeds<WS2812B, LedDataPin, GRB>(&_leds[0], LedCount)
+            .addLeds<WS2812B, LedDataPin, GRB>(&_leds[0], _ledCount)
             .setCorrection(TypicalLEDStrip);
         FastLED.setTemperature(Candle);
     }
@@ -67,7 +67,7 @@ namespace Murli
 
     void LED::setAllLeds(const Color color)
     {
-        for(uint16_t index = 0; index < LedCount; index++)
+        for(uint16_t index = 0; index < _ledCount; index++)
             _leds[index] = CRGB(color.Red, color.Green, color.Blue);     
         FastLED.show();
     }

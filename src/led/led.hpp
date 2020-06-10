@@ -7,13 +7,12 @@
 
 namespace Murli
 {    
-    static const uint8_t LedCount = 9;
     static const uint8_t LedDataPin = D4;
 
     class LED
     {    
         public:
-            LED();
+            LED(const uint8_t ledCount);
             
             void blink(const Color color, const uint8_t times = 3);
 
@@ -26,8 +25,10 @@ namespace Murli
         private:
             void setAllLeds(Color color);
 
+            uint8_t _ledCount;
             std::vector<CRGB> _leds;
             Color _currentColor = Murli::White;
+
             uint8_t _fadeAmount = 5;
             uint8_t _currentFade = 0;
             uint64_t _lastFade = 0;
