@@ -30,10 +30,18 @@ namespace Murli
                 else
                 {                        
                     std::string loadedMod((char*)&modChars[0]);
-                    auto scriptContext = std::make_shared<ScriptContext>(loadedMod);
-                    
-                    if(!scriptContext->isFaulted()) context.currentState = std::make_shared<RunModState>(scriptContext);
-                    else context.currentState = std::make_shared<InvalidModState>();
+                    bool isEmptyMod = true;
+                    for (int i = 1; i < loadedMod.length(); i++) 
+                        if (loadedMod[i] != loadedMod[0])
+                            isEmptyMod = false; 
+
+                    if(isEmptyMod) context.currentState = std::make_shared<InvalidModState>();
+                    else
+                    {
+                        auto scriptContext = std::make_shared<ScriptContext>(loadedMod);                    
+                        if(!scriptContext->isFaulted()) context.currentState = std::make_shared<RunModState>(scriptContext);
+                        else context.currentState = std::make_shared<InvalidModState>();
+                    }
                 }             
             }
 
