@@ -71,12 +71,17 @@ namespace Murli
         return connected;
     }
 
-    bool MurliWifi::isConnected()
+    bool MurliWifi::isConnected() const
     {
         return WiFi.isConnected();
     }
 
-    IPAddress MurliWifi::getParentIp()
+    bool MurliWifi::hasConnectedNodes() const
+    {
+        return WiFi.softAPgetStationNum() != 0;
+    }
+
+    IPAddress MurliWifi::getParentIp() const
     {
         return _parentIp;
     }

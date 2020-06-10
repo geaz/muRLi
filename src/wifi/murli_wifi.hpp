@@ -13,15 +13,13 @@ namespace Murli
     {
         public:
             MurliWifi();
-
-            bool isUpdaterAvailable();
-            void connectToUpdater();
             
             void startMesh();
             bool tryJoinMesh();
 
-            bool isConnected();
-            IPAddress getParentIp();
+            bool isConnected() const;
+            bool hasConnectedNodes() const;
+            IPAddress getParentIp() const;
 
         private:
             String _ssid = SSID;
