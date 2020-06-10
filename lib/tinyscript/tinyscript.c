@@ -1052,6 +1052,7 @@ ParseString(TinyString str, int saveStrings, int topLevel)
 {
     TinyString savepc = parseptr;
     Sym* savesymptr = symptr;
+    Val* savevalptr = valptr;
     int c;
     int r;
     
@@ -1075,6 +1076,7 @@ ParseString(TinyString str, int saveStrings, int topLevel)
     if (!topLevel) {
         // restore variable context
         symptr = savesymptr;
+        valptr = savevalptr;
     }
     return TS_ERR_OK;
 }
@@ -1113,8 +1115,8 @@ static struct def {
     { "while", TOK_WHILE, (intptr_t)ParseWhile },
     { "print", TOK_PRINT, (intptr_t)ParsePrint },
     { "var",   TOK_VARDEF, 0 },
-    { "func",  TOK_FUNCDEF, (intptr_t)ParseFuncDef },
-    { "return", TOK_RETURN, (intptr_t)ParseReturn },
+    { "fun",  TOK_FUNCDEF, (intptr_t)ParseFuncDef },
+    { "ret", TOK_RETURN, (intptr_t)ParseReturn },
     // operators
     { "*",     BINOP(1), (intptr_t)prod },
     { "/",     BINOP(1), (intptr_t)quot },
