@@ -26,14 +26,14 @@ namespace Murli
                     _strPosCalculated = true;
                 }       
                                     
-                char dBBuf[14]; 
-                char freqBuf[14];
+                std::array<char, 16> dBBuf; 
+                std::array<char, 16> freqBuf;
 
-                std::sprintf(dBBuf, "%05.1fdB", decibel);
-                std::sprintf(freqBuf, "%05ihz", dominantFrequency);
+                std::sprintf(dBBuf.data(), "%05.1fdB", decibel);
+                std::sprintf(freqBuf.data(), "%05ihz", dominantFrequency);
 
-                display.drawStr(0, 0, freqBuf);
-                display.drawStr(_volStrXPos, 0, dBBuf);
+                display.drawStr(0, 0, freqBuf.data());
+                display.drawStr(_volStrXPos, 0, dBBuf.data());
                 display.drawHLine(0, 10, display.getDisplayWidth());
 
                 display.setFontPosBaseline();
