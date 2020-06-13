@@ -26,7 +26,7 @@ namespace Murli
         _ctrl.sendBuffer();
     }
 
-    void Display::setView(std::shared_ptr<View> view)
+    void Display::setView(const std::shared_ptr<View> view)
     {
         _currentView = view;
     }

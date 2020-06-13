@@ -35,13 +35,13 @@ namespace Murli
                 _text = text;
             }
 
-            void setResult(const boolean success)
+            void setResult(const bool success)
             {
                 _success = success;
             }
         
         private:
-            boolean _success;
+            bool _success;
             std::string _text;
     };
 }

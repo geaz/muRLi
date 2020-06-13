@@ -17,7 +17,7 @@ namespace Murli
             void init();
             void loop();
 
-            void setView(std::shared_ptr<View> view);
+            void setView(const std::shared_ptr<View> view);
             void setLeftStatus(const std::string& text);
             void setRightStatus(const std::string& text);
 
