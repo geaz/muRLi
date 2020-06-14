@@ -1,0 +1,65 @@
+{
+  "id": "L5ROHHWVD0QKQAC3DGYIZB",
+  "name": "muRLi",
+  "thumbnail": "..\\simplyRetro-Z5\\images\\cover.jpg",
+  "readme": "README.md",
+  "status": 1,
+  "stlInfoList": [
+    {
+      "name": "1x Bottom.stl",
+      "color": "#F58026",
+      "status": 2,
+      "relativePath": "stl\\1x Bottom.stl",
+      "annotationList": []
+    },
+    {
+      "name": "1x Frame.stl",
+      "color": "#F58026",
+      "status": 2,
+      "relativePath": "stl\\1x Frame.stl",
+      "annotationList": []
+    },
+    {
+      "name": "1x Middle.stl",
+      "color": "#F58026",
+      "status": 2,
+      "relativePath": "stl\\1x Middle.stl",
+      "annotationList": []
+    },
+    {
+      "name": "1x Top.stl",
+      "color": "#F58026",
+      "status": 2,
+      "relativePath": "stl\\1x Top.stl",
+      "annotationList": []
+    },
+    {
+      "name": "2x Divider.stl",
+      "color": "#F58026",
+      "status": 2,
+      "relativePath": "stl\\2x Divider.stl",
+      "annotationList": []
+    },
+    {
+      "name": "4x Bolt.stl",
+      "color": "#F58026",
+      "status": 2,
+      "relativePath": "stl\\4x Bolt.stl",
+      "annotationList": []
+    },
+    {
+      "name": "Mod Bottom.stl",
+      "color": "#F58026",
+      "status": 2,
+      "relativePath": "stl\\Mod Bottom.stl",
+      "annotationList": []
+    },
+    {
+      "name": "Mod Top.stl",
+      "color": "#F58026",
+      "status": 2,
+      "relativePath": "stl\\Mod Top.stl",
+      "annotationList": []
+    }
+  ]
+}
