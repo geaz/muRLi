@@ -9,13 +9,9 @@ namespace Murli
      */
     AnalyzerResult FrequencyAnalyzer::loop()
     {
-        Serial.println("Test");
         AnalyzerResult result;
-        Serial.println("Test2");
-        collectSamples(result);     
-        Serial.println("Test3");              
+        collectSamples(result);                 
         calculateDominantFrequency(result);
-        Serial.println("Test4");
 
         return result;
     }    
