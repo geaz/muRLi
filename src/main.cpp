@@ -12,9 +12,9 @@ void setup()
 
     murliContext.setup();
 
-    pinMode(A0, INPUT);                 // Mic Input
-    pinMode(D6, INPUT);                 // Check if module inserted
-    pinMode(Murli::LedDataPin, OUTPUT); // LED
+    pinMode(A0, INPUT);         // Mic Input
+    pinMode(D6, INPUT);         // Check if module inserted
+    pinMode(LED_PIN, OUTPUT);   // LED
 }
 
 void loop() 

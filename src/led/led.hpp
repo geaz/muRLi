@@ -7,14 +7,6 @@
 
 namespace Murli
 {    
-    static const uint8_t LedDataPin = D4;
-
-    struct LedPattern
-    {
-        Color color;
-        uint8_t pattern;
-    }
-
     class LED
     {    
         public:

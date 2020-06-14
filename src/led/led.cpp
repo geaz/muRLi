@@ -8,7 +8,7 @@ namespace Murli
             _leds[index] = CRGB::Black;
 
         FastLED
-            .addLeds<WS2812B, LedDataPin, GRB>(_leds.data(), _leds.size())
+            .addLeds<WS2812B, LED_PIN, GRB>(_leds.data(), _leds.size())
             .setCorrection(TypicalLEDStrip);
         FastLED.setTemperature(Candle);
     }
