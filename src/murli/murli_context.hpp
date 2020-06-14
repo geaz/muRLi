@@ -32,7 +32,7 @@ namespace Murli
             std::shared_ptr<State> currentState;
 
         private:
-            LED _led = LED(9);
+            LED _led;
             MurliWifi _wifi;
             Display _display;
             SocketServer _socketServer;
