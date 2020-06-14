@@ -5,7 +5,7 @@
 
 namespace Murli
 {    
-    static const unsigned short FFTDataSize = 256;
+    static const unsigned short FFTDataSize = 128;
 
     // https://en.wikipedia.org/wiki/Audio_frequency
     static const short MinFrequency = 130;  // Lowest note for viola, mandola
@@ -17,7 +17,8 @@ namespace Murli
         float decibel;
         uint32_t sampleRate;
         uint16_t dominantFrequency;
-        int16_t fftData[FFTDataSize];
+        float fftReal[FFTDataSize];
+        float fftImg[FFTDataSize];
     };
 
     class FrequencyAnalyzer

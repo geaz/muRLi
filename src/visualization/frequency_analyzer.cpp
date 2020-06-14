@@ -1,4 +1,4 @@
-#include "Adafruit_ZeroFFT.h"
+#include <arduinoFFT.h>
 #include "frequency_analyzer.hpp"
 
 namespace Murli
@@ -9,9 +9,13 @@ namespace Murli
      */
     AnalyzerResult FrequencyAnalyzer::loop()
     {
+        Serial.println("Test");
         AnalyzerResult result;
-        collectSamples(result);                   
+        Serial.println("Test2");
+        collectSamples(result);     
+        Serial.println("Test3");              
         calculateDominantFrequency(result);
+        Serial.println("Test4");
 
         return result;
     }    
@@ -26,16 +30,16 @@ namespace Murli
      */
     std::vector<uint8_t> FrequencyAnalyzer::getFrequencyRange(const AnalyzerResult& result, const uint8_t buckets, const uint8_t maxValue) const
     {
-        std::vector<uint8_t> combinedBuckets;        
+        std::vector<uint8_t> combinedBuckets;
         
         // only check buckets between our min and max frequency
-        uint8_t minFreqIndex = FFT_INDEX(MinFrequency, result.sampleRate, FFTDataSize);
-        uint8_t maxFreqIndex = FFT_INDEX(MaxFrequency, result.sampleRate, FFTDataSize);
+        uint8_t minFreqIndex = (uint8_t)((float)MinFrequency / ((float)result.sampleRate / (float)FFTDataSize));
+        uint8_t maxFreqIndex = (uint8_t)((float)MaxFrequency / ((float)result.sampleRate / (float)FFTDataSize));
 
-        int16_t originalMaxValue = 0;
+        float originalMaxValue = 0;
         for(uint8_t i = minFreqIndex; i < maxFreqIndex; i++)
         {
-            originalMaxValue = max(originalMaxValue, result.fftData[i]);
+            originalMaxValue = max(originalMaxValue, result.fftReal[i]);
         }
         
         uint8_t splitSize = (maxFreqIndex - minFreqIndex + 1) / buckets;
@@ -44,7 +48,7 @@ namespace Murli
             uint32_t combinedValue = 0;
             for(uint8_t j = 0; j < splitSize; j++)
             {
-                combinedValue += result.fftData[j + (i * splitSize) + minFreqIndex /* offset */];
+                combinedValue += result.fftReal[j + (i * splitSize) + minFreqIndex /* offset */];
             }
             
             uint8_t newMaxValue = map(combinedValue/splitSize, 0, originalMaxValue, 0, maxValue);
@@ -61,7 +65,8 @@ namespace Murli
         for (int i = 0; i < FFTDataSize; i++)
         {
             unsigned short sample = analogRead(A0);
-            result.fftData[i] = sample;
+            result.fftReal[i] = sample;
+            result.fftImg[i] = 0;
 
             sample = abs(sample - 512);
             signalRMS += sample * sample;
@@ -74,21 +79,23 @@ namespace Murli
 
     void FrequencyAnalyzer::calculateDominantFrequency(AnalyzerResult& result) 
     {
+        auto fft = ArduinoFFT<float>(result.fftReal, result.fftImg, FFTDataSize, result.sampleRate);
+        fft.compute(FFTDirection::Forward);
+        fft.complexToMagnitude();
+
         // only check buckets between our min and max frequency
-        uint8_t minFreqIndex = FFT_INDEX(MinFrequency, result.sampleRate, FFTDataSize);
-        uint8_t maxFreqIndex = FFT_INDEX(MaxFrequency, result.sampleRate, FFTDataSize);
-        
-        ZeroFFT(result.fftData, FFTDataSize);
+        uint8_t minFreqIndex = (uint8_t)((float)MinFrequency / ((float)result.sampleRate / (float)FFTDataSize));
+        uint8_t maxFreqIndex = (uint8_t)((float)MaxFrequency / ((float)result.sampleRate / (float)FFTDataSize));
+
         unsigned short dominantFrequency = 0;
         short dominantFrequencyData = 0;
 
-        // data is only meaningful up to sample rate/2, discard the other half
         for(unsigned short i = minFreqIndex; i < maxFreqIndex; i++)
         {
-            if(result.fftData[i] > dominantFrequencyData)
+            if(result.fftReal[i] > dominantFrequencyData)
             {
-                dominantFrequency = FFT_BIN(i, result.sampleRate, FFTDataSize);
-                dominantFrequencyData = result.fftData[i];
+                dominantFrequency = ((i * 1.0 * result.sampleRate) / FFTDataSize);
+                dominantFrequencyData = result.fftReal[i];
             }
         }
         result.dominantFrequency = dominantFrequency > MaxFrequency ? MaxFrequency : dominantFrequency;
