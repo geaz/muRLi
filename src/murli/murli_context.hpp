@@ -21,23 +21,27 @@ namespace Murli
             void loop();
 
             bool isModInserted() const;
-            bool hasConnectedNodes() const;
 
             LED& getLed();
             Rom24LC32A& getRom();
             Display& getDisplay();
+            uint16_t getMeshLedCount();
             SocketServer& getSocketServer();
 
             bool writeRequested = false;
             std::shared_ptr<State> currentState;
 
         private:
+            void checkModuleInserted();
+            void checkWriteRequest();
+
             LED _led;
             MurliWifi _wifi;
             Display _display;
             SocketServer _socketServer;
             Rom24LC32A _rom = Rom24LC32A(0x50);
 
+            uint16_t _meshLedCount = LED_COUNT;
             std::shared_ptr<State> _noModState;
     };
 }

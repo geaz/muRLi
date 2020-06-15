@@ -17,7 +17,7 @@ namespace Murli
 
             void run(MurliContext& context)
             {
-                context.getLed().setColor(Murli::Red);
+                context.getLed().setAllLeds(Murli::Red);
                 context.getDisplay().setView(_invalidModView);
             }
 

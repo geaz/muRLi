@@ -1,19 +1,29 @@
-var r=0
-var g=0
-var b=0
+let h=0;
+let s=0;
+let v=0;
+let time=0;
+let newColor=false;
 
-if(f<midF){
-    r=0
-    g=map(f,0,midF-1,0,255)
-    b=map(f,0,midF-1,255,0)
-}else{
-    r=map(f,midF,maxF,0,255)
-    g=map(f,midF,maxF,255,0)
-    b=0
+function onAnalyzerUpdate(){
+    if(freq === lFreq || vol === 0){
+        newColor=false;
+    } else {
+        h=map(freq,0,maxF,240,0);
+        s=1;
+        v=map(vol,0,100,0,1);
+        newColor=true;
+    }
 }
 
-r=map(v,0,100,0,r)<<16
-g=map(v,0,100,0,g)<<8
-b=map(v,0,100,0,b)
+function onLedUpdate(delta){
+    time+=delta;
+    if(!newColor && time > 25){
+        if(v > 0.1){ v-=0.1; }
+        else{ v=0; }
+        time = 0;
+    }
+}
 
-sCF(0,r+g+b)
+function updateLed(index){
+    return xhsv(h,s,v);
+}

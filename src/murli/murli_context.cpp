@@ -3,7 +3,7 @@
 #include "murli_context.hpp"
 #include "../display/views/splash_view.cpp"
 #include "states/no_mod_state.cpp"
-#include "states/receive_write_state.cpp"
+#include "states/receive_length_state.cpp"
 
 namespace Murli
 {
@@ -21,9 +21,6 @@ namespace Murli
         _display.loop();
         
         _wifi.startMesh();
-        
-        _display.setLeftStatus("WebSocket:");
-        _display.setRightStatus("waiting");
     }
 
     void MurliContext::loop()
@@ -32,20 +29,12 @@ namespace Murli
         itoa(ESP.getFreeHeap(), heapString, 10);
         _display.setLeftStatus(heapString);
 
-        if(Serial.available() > 0
-            && !writeRequested
-            && isModInserted())
-        {
-            currentState = std::make_shared<ReceiveWriteState>();
-        }
-        // Reset state, if no MOD inserted
-        else if(!isModInserted())
-        {
-            currentState = _noModState;
-        }
+        checkModuleInserted();
+        checkWriteRequest();
         
         currentState->run(*this);
         _socketServer.loop();
+        _led.loop();
         _display.loop();
     }
 
@@ -54,13 +43,37 @@ namespace Murli
         return digitalRead(D6) == HIGH;
     }
 
-    bool MurliContext::hasConnectedNodes() const
-    { 
-        return _wifi.hasConnectedNodes();
+    void MurliContext::checkModuleInserted()
+    {
+        if(!isModInserted())
+        {
+            currentState = _noModState;
+        }
+    }
+
+    void MurliContext::checkWriteRequest()
+    {
+        if(Serial.available() > 0
+            && !writeRequested
+            && isModInserted())
+        {
+            int incomingByte = Serial.read();
+            if(incomingByte == 30)
+            {
+                Serial.write(30);
+                writeRequested = true;
+                currentState = std::make_shared<ReceiveLengthState>();
+            }
+            else
+            {
+                currentState = std::make_shared<NoModState>();
+            }
+        }
     }
 
     LED& MurliContext::getLed() { return _led; }
     Rom24LC32A& MurliContext::getRom() { return _rom; }
     Display& MurliContext::getDisplay() { return _display; }
+    uint16_t MurliContext::getMeshLedCount() { return _meshLedCount; }
     SocketServer& MurliContext::getSocketServer() { return _socketServer; }
 }

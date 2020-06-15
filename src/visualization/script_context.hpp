@@ -1,37 +1,37 @@
 #ifndef JSCONTEXT_H
 #define JSCONTEXT_H
 
-#include "../led/color.hpp"
+#include <mjs.h>
+#include "../led/led.hpp"
+#include "frequency_analyzer.hpp"
 
 namespace Murli
 {
     class ScriptContext
     {
         public:
-            ScriptContext(const std::string mod);
+            ScriptContext(LED& led, const std::string& mod);
+            ~ScriptContext();
             
-            ColorFrame run(uint8_t volume, uint16_t frequency);
-            void setColorMode(ColorMode mode);
-            void setColorFrame(uint8_t frame, uint32_t hexColor);
+            void run(uint16_t previousLedCount, uint16_t meshLedCount, uint32_t delta);
+            void updateAnalyzerResult(AnalyzerResult result);
 
             bool isFaulted();
 
-            static void receiveScriptOutput(int c);
-            static void setColorModeFunc(ColorMode mode);
-            static void setColorFrameFunc(uint8_t frame, uint32_t hexColor);
-
         private:
-            const std::string _mod;
-            std::array<char, 2048> _scriptArena;
+            void saveJsExec(const char* script, const char* errMessage);
+            void saveJsGetFunc(mjs_val_t& saveToVal, const char* funcName, const char* errMessage);
+
+            mjs* _mjs;
+            mjs_val_t _updateMeshLedCountFunc;
+            mjs_val_t _updateAnalyzerValuesFunc;
+            mjs_val_t _onAnalyzerUpdateFunc;
+            mjs_val_t _onLedUpdateFunc;
+            mjs_val_t _updateLed;
             bool _faulted = false;
 
-            std::array<Color, 2> _colors;    
-            ColorMode _colorMode = Instant;
-            uint32_t _lastFrequency = 0;
+            LED& _led;
     };
-
-    // Pointer for TinyScript Callbacks
-    extern ScriptContext* ScriptContextPointer;
 }
 
 #endif // JSCONTEXT_H

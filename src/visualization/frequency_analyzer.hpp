@@ -1,7 +1,7 @@
 #ifndef FREQUENCYANALYZER_H
 #define FREQUENCYANALYZER_H
 
-#include <deque>
+#include <vector>
 
 namespace Murli
 {    
@@ -11,10 +11,12 @@ namespace Murli
     static const short MinFrequency = 130;  // Lowest note for viola, mandola
     static const short MidFrequency = 1046; // 1046 Highest note reproducible by average female
     static const short MaxFrequency = 3140; // 3140 Between highest note on a flute and on a 88-key piano
+    static const int8_t MinDB = -21;
 
     struct AnalyzerResult
     {
         float decibel;
+        uint8_t volume;
         uint32_t sampleRate;
         uint16_t dominantFrequency;
         float fftReal[FFTDataSize];

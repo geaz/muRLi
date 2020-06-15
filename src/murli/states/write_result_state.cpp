@@ -22,8 +22,8 @@ namespace Murli
             {      
                 context.getDisplay().setView(_resultView);
                 
-                if(_success) context.getLed().setColor(Murli::Green);
-                else context.getLed().setColor(Murli::Red);
+                if(_success) context.getLed().setAllLeds(Murli::Green);
+                else context.getLed().setAllLeds(Murli::Red);
 
                 if(_started + 2000 < millis())
                 {

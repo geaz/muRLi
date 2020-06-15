@@ -20,7 +20,7 @@ namespace Murli
 
             void run(MurliContext& context)
             {          
-                context.getLed().setColor(Murli::Cyan);
+                context.getLed().setAllLeds(Murli::Cyan);
                 context.getDisplay().setView(_writeModView);
                 context.getDisplay().loop();
                                 

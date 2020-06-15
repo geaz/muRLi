@@ -71,6 +71,7 @@ namespace Murli
 
         float signalRMSflt = sqrt(signalRMS / FFTDataSize);
         result.decibel = 20.0*log10(signalRMSflt / 512);
+        result.volume = map(result.decibel < MinDB ? MinDB : result.decibel, MinDB, 0, 0, 100);
     }
 
     void FrequencyAnalyzer::calculateDominantFrequency(AnalyzerResult& result) 

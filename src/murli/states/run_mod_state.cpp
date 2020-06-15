@@ -10,7 +10,6 @@
 
 namespace Murli
 {
-    static const int8_t MinDB = -20;
     static const int32_t MinTimeSilence = 5000;
 
     class RunModState : public State
@@ -24,72 +23,25 @@ namespace Murli
             void run(MurliContext& context)
             {                         
                 context.getDisplay().setView(_runModView);
-                
-                // Add a delay of 50ms (Lower would be possible too maybe). Otherwise the WiFi connection will be unstable!
-                if(_lastUpdate + 50 < millis() && !_scriptContext->isFaulted())
-                {
-                    AnalyzerResult result = _frequencyAnalyzer.loop();
-                    MurliCommand command = getCommand(context, result);
-                    Color newColor = command.getNewNodeColor(context.getLed().getColor(), true, context.hasConnectedNodes());
-                    setView(result);
-
-                    if(_lastColor != newColor)
-                    {
-                        if(command.colorFrame.mode == Instant)
-                        {
-                            context.getDisplay().setRightStatus("INST " + newColor.toString());
-                            context.getSocketServer().broadcast(command);
-                            context.getSocketServer().loop();
-                            context.getLed().setColor(newColor);
-                        }
-                        else
-                        {                            
-                            //context.getLed().setColorSequential(newColor);
-                            context.getDisplay().setRightStatus("SEQ " + newColor.toString());
-                            context.getSocketServer().broadcast(command);
-                            context.getSocketServer().loop();
-                        }
-                        _lastColor = newColor;
-                    }
-                    _lastDB= result.decibel;
-                    _lastUpdate = millis();
-                }
-                else if(_scriptContext->isFaulted())
+                if(_scriptContext->isFaulted())
                 {
                     context.currentState = std::make_shared<InvalidModState>();
+                    return;
                 }
+
+                if(_lastFreqUpdate + 50 < millis())
+                {
+                    AnalyzerResult result = _frequencyAnalyzer.loop();
+                    _scriptContext->updateAnalyzerResult(result);
+                    _lastFreqUpdate = millis();
+
+                    setView(result);
+                }
+                _scriptContext->run(0, context.getMeshLedCount(), millis() - _lastLedUpdate);
+                _lastLedUpdate = millis();
             }
 
         private:
-            MurliCommand getCommand(MurliContext& context, AnalyzerResult& result)
-            {
-                MurliCommand command;
-
-                uint8_t volume = map(result.decibel < MinDB ? MinDB : result.decibel, MinDB, 0, 0, 100);
-                // If no sound was registered during the last 'MinTimeSilence' seconds,
-                // run the mod with parameters = 0
-                if(volume == 0 && _lastTimeVolumeThreshold + MinTimeSilence < millis())
-                {
-                    command.colorFrame = _scriptContext->run(0, 0);
-                    command.command = SET;
-                }
-                // Otherwise, if the volume is above the last registered volume
-                // run the mod with the calculated parameters
-                else if(volume > 0 && result.decibel > _lastDB)
-                {
-                    command.colorFrame = _scriptContext->run(volume, result.dominantFrequency);
-                    command.command = SET;
-                    _lastTimeVolumeThreshold = millis();
-                }
-                // Otherwise just FADE the current color
-                else
-                {
-                    command.command = FADE;
-                }
-
-                return command;
-            }
-
             void setView(AnalyzerResult& result)
             {
                 _runModView->decibel = result.decibel;
@@ -109,10 +61,8 @@ namespace Murli
             std::shared_ptr<RunModView> _runModView;
             std::shared_ptr<ScriptContext> _scriptContext;
 
-            float _lastDB;
-            Color _lastColor;
-            uint64_t _lastUpdate = 0;
-            uint64_t _lastTimeVolumeThreshold = 0; 
+            uint32_t _lastFreqUpdate = 0;
+            uint32_t _lastLedUpdate = millis();
     };
 }
 

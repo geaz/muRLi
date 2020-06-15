@@ -11,19 +11,35 @@ namespace Murli
             .addLeds<WS2812B, LED_PIN, GRB>(_leds.data(), _leds.size())
             .setCorrection(TypicalLEDStrip);
         FastLED.setTemperature(Candle);
+        FastLED.show();
+    }
+
+    void LED::loop()
+    {        
+        FastLED.show();
+    }
+    
+    void LED::setLed(const uint32_t index, const Color color)
+    {
+        _leds[index] = color;
+    }
+
+    void LED::setAllLeds(const Color color)
+    {
+        for(uint16_t index = 0; index < _leds.size(); index++)
+            _leds[index] = CRGB(color.Red, color.Green, color.Blue);
     }
 
     void LED::blink(const Color blinkColor, const uint8_t times)
     {
         for(uint8_t blinkCount = 0; blinkCount < times; blinkCount++)
         {        
-            setAllLeds(blinkColor);      
+            setAllLeds(blinkColor);
             delay(200);
 
-            setAllLeds(Murli::Black);    
+            setAllLeds(Murli::Black);
             delay(200);
         }
-        setAllLeds(_currentColor);
     }
 
     void LED::fadeLoop(Color startColor, const uint8_t speed)
@@ -46,29 +62,5 @@ namespace Murli
         _lastFade = 0;
         _fadeAmount = 5;
         _currentFade = 0;
-        setAllLeds(_currentColor);
-    }
-
-    Color LED::getColor() const
-    {
-        Color currentColor;
-        currentColor.Red = _leds[0].r;
-        currentColor.Green = _leds[0].g;
-        currentColor.Blue = _leds[0].b;
-        
-        return currentColor; 
-    }
-
-    void LED::setColor(const Color newColor)
-    {
-        _currentColor = newColor;
-        setAllLeds(_currentColor); 
-    }
-
-    void LED::setAllLeds(const Color color)
-    {
-        for(uint16_t index = 0; index < _leds.size(); index++)
-            _leds[index] = CRGB(color.Red, color.Green, color.Blue);     
-        FastLED.show();
     }
 }

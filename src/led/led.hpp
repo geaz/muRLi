@@ -12,19 +12,16 @@ namespace Murli
         public:
             LED();
             
-            void blink(const Color color, const uint8_t times = 3);
+            void loop();
+            void setLed(const uint32_t index, const Color color);
+            void setAllLeds(Color color);
 
+            void blink(const Color color, const uint8_t times = 3);
             void fadeLoop(const Color fadeColor, const uint8_t speed = 50);
             void stopFadeLoop();
 
-            Color getColor() const;
-            void setColor(Color color);
-
         private:
-            void setAllLeds(Color color);
-
-            std::array<CRGB, NUM_PIXELS> _leds;
-            Color _currentColor = Murli::White;
+            std::array<CRGB, LED_COUNT> _leds;
 
             uint8_t _fadeAmount = 5;
             uint8_t _currentFade = 0;

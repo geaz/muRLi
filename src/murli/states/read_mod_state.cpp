@@ -20,7 +20,7 @@ namespace Murli
 
             void run(MurliContext& context)
             {                         
-                context.getLed().setColor(Murli::Yellow);
+                context.getLed().setAllLeds(Murli::Yellow);
                 context.getDisplay().setView(_readModView);
                 context.getDisplay().loop();
 
@@ -30,11 +30,11 @@ namespace Murli
                 if(result == 0 && !isEmptyMod(modChars))
                 {
                     std::string loadedMod((char*)&modChars[0]);
-                    auto scriptContext = std::make_shared<ScriptContext>(loadedMod);                    
+                    auto scriptContext = std::make_shared<ScriptContext>(context.getLed(), loadedMod);                    
                     if(!scriptContext->isFaulted()) context.currentState = std::make_shared<RunModState>(scriptContext);
                     else context.currentState = std::make_shared<InvalidModState>();
                 }
-                else context.currentState = std::make_shared<InvalidModState>();            
+                else context.currentState = std::make_shared<InvalidModState>();     
             }
 
         private:
