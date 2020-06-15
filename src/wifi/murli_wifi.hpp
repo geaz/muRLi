@@ -23,7 +23,7 @@ namespace Murli
 
         private:
             String _ssid = SSID;
-            IPAddress _parentIp;
+            IPAddress _parentIp = IPAddress(0, 0, 0, 0);
     };
 }
 
