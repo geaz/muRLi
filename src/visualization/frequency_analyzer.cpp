@@ -77,6 +77,7 @@ namespace Murli
     void FrequencyAnalyzer::calculateDominantFrequency(AnalyzerResult& result) 
     {
         auto fft = ArduinoFFT<float>(result.fftReal, result.fftImg, FFTDataSize, result.sampleRate);
+        fft.windowing(FFTWindow::Hamming, FFTDirection::Forward);
         fft.compute(FFTDirection::Forward);
         fft.complexToMagnitude();
 
