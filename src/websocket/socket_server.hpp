@@ -2,40 +2,12 @@
 #define SOCKETSERVER_H
 
 #include <WebSocketsServer.h>
-#include "../led/color.hpp"
+#include "murli_command.hpp"
 
 namespace Murli
 {
-    enum Command
-    {
-        SET,
-        FADE
-    };
-
-    struct MurliCommand
-    {
-        Command command;
-        ColorFrame colorFrame = { Instant, Black, Black };
-
-        Color getNewNodeColor(const Color currentColor, const bool isBase, const bool hasConnectedNodes)
-        {
-            Color newColor = currentColor.getFadedBlack(64);
-            if(command == SET && (colorFrame.second.isBlack() || isBase))
-            {
-                newColor = colorFrame.first;
-            }
-            else if(command == SET && hasConnectedNodes)
-            {
-                newColor = Color::blend(colorFrame.first, colorFrame.second);
-                colorFrame = { colorFrame.mode, newColor, colorFrame.second };
-            }
-            else if(command == SET)
-            {
-                newColor = colorFrame.second;
-            }
-            return newColor;
-        }
-    };
+    typedef std::function<void()> MeshConnectionEvent;
+    typedef std::function<void(MurliCommand command)> MeshCommandEvent;
 
     class SocketServer
     {
@@ -44,9 +16,17 @@ namespace Murli
             
             void loop();
             void broadcast(MurliCommand command);
+            void onCommandReceived(MeshCommandEvent event);
+            void onMeshConnection(MeshConnectionEvent event);
+
+            uint32_t connectedClients();
         
         private:
-            WebSocketsServer webSocket = WebSocketsServer(81);
+            void serverEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length);
+
+            MeshCommandEvent _meshCommandEvent = NULL;
+            MeshConnectionEvent _meshConnectionEvent = NULL;
+            WebSocketsServer _webSocket = WebSocketsServer(81);
     };
 }
 

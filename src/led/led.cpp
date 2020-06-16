@@ -15,12 +15,14 @@ namespace Murli
     }
 
     void LED::loop()
-    {        
+    {   
+        checkBlink();
         FastLED.show();
     }
     
     void LED::setLed(const uint32_t index, const Color color)
     {
+        _blink = NULL;
         _leds[index] = color;
     }
 
@@ -30,37 +32,25 @@ namespace Murli
             _leds[index] = CRGB(color.Red, color.Green, color.Blue);
     }
 
-    void LED::blink(const Color blinkColor, const uint8_t times)
+    void LED::blink(const Color color, const uint8_t speed)
     {
-        for(uint8_t blinkCount = 0; blinkCount < times; blinkCount++)
-        {        
-            setAllLeds(blinkColor);
-            delay(200);
-
-            setAllLeds(Murli::Black);
-            delay(200);
-        }
+        _blink = std::make_shared<LedBlink>();
+        _blink->color = color;
+        _blink->lastColor = color;
+        _blink->speed = speed;
+        _blink->lastBlink = 0;
     }
 
-    void LED::fadeLoop(Color startColor, const uint8_t speed)
+    void LED::checkBlink()
     {
-        if(_lastFade + speed < millis())
-        {            
-            setAllLeds(startColor.getFaded(_currentFade));
-
-            _currentFade += _fadeAmount;
-            if(_currentFade <= 0 || _currentFade >= 255)
+        if(_blink != NULL && _blink->lastBlink + _blink->speed < millis())
+        {
+            if(_blink->lastColor == Murli::Black)
             {
-                _fadeAmount = -_fadeAmount;
-            }            
-            _lastFade = millis();
-        }      
-    }   
-
-    void LED::stopFadeLoop()
-    {
-        _lastFade = 0;
-        _fadeAmount = 5;
-        _currentFade = 0;
+                setAllLeds(_blink->color);
+            }
+            else setAllLeds(Murli::Black);
+            _blink->lastBlink = millis();          
+        }
     }
 }

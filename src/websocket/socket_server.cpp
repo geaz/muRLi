@@ -4,13 +4,14 @@ namespace Murli
 {
     SocketServer::SocketServer()
     {
-        webSocket.begin();
-        webSocket.enableHeartbeat(2000, 1500, 1);
+        _webSocket.begin();
+        _webSocket.enableHeartbeat(2000, 1500, 1);
+        _webSocket.onEvent([this](uint8_t num, WStype_t type, uint8_t * payload, size_t length){ serverEvent(num, type, payload, length); });
     }
 
     void SocketServer::loop()
     {
-        webSocket.loop();
+        _webSocket.loop();
     }
 
     void SocketServer::broadcast(MurliCommand command)
@@ -19,6 +20,46 @@ namespace Murli
         uint8_t serializedCommand[commandSize];
         memcpy(&serializedCommand, &command, commandSize);
 
-        webSocket.broadcastBIN(&serializedCommand[0], commandSize);
+        _webSocket.broadcastBIN(&serializedCommand[0], commandSize);
+    }
+
+    void SocketServer::onCommandReceived(MeshCommandEvent event)
+    {
+        _meshCommandEvent = event;
+    }
+
+    void SocketServer::onMeshConnection(MeshConnectionEvent event)
+    {
+        _meshConnectionEvent = event;
+    }
+
+    uint32_t SocketServer::connectedClients()
+    {
+        return _webSocket.connectedClients();
+    }
+
+    void SocketServer::serverEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length)
+    {
+        IPAddress remoteIp = _webSocket.remoteIP(num);
+        switch(type) 
+        {
+            case WStype_DISCONNECTED:              
+                Serial.println("Client disconnected!");
+                if(_meshConnectionEvent != NULL) _meshConnectionEvent();
+                break;
+            case WStype_CONNECTED:        
+                Serial.println("Connection from: " + remoteIp.toString());
+                if(_meshConnectionEvent != NULL) _meshConnectionEvent();
+                break;
+            case WStype_BIN:
+                Serial.println("Server receiving command ...");
+                MurliCommand receivedCommand;
+                memcpy(&receivedCommand, payload, length);
+                if(_meshCommandEvent != NULL) _meshCommandEvent(receivedCommand);
+                break;
+            default:
+                // Not interested in other cases
+                break;
+        }
     }
 }
