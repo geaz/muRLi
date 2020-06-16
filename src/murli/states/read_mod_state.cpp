@@ -5,7 +5,7 @@
 #include "invalid_mod_state.cpp"
 #include "../state.hpp"
 #include "../murli_context.hpp"
-#include "../../display/views/read_mod_view.cpp"
+#include "../../display/views/icon_text_view.cpp"
 #include "../../visualization/script_context.hpp"
 
 namespace Murli
@@ -15,7 +15,7 @@ namespace Murli
         public:
             ReadModState()
             {
-                _readModView = std::make_shared<ReadModView>();
+                _readModView = std::make_shared<IconTextView>("Reading MOD ...", u8g2_font_open_iconic_thing_2x_t, 74);
             }
 
             void run(MurliContext& context)
@@ -43,7 +43,7 @@ namespace Murli
                 // A factory ROM will return the same char for the
                 // whole memory - if the mod is empty, it is invalid
                 bool isEmptyMod = true;
-                for (int i = 1; i < modChars.size(); i++)
+                for (uint32_t i = 1; i < modChars.size(); i++)
                 {
                     if (modChars[i] != modChars[0])
                     {
@@ -54,7 +54,7 @@ namespace Murli
                 return isEmptyMod;
             }
 
-            std::shared_ptr<ReadModView> _readModView;
+            std::shared_ptr<IconTextView> _readModView;
     };
 }
 

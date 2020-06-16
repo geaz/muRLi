@@ -26,7 +26,7 @@ namespace Murli
         bool isBlack() { return Red == 0 && Green == 0 && Blue == 0; }
         operator CRGB() const { return CRGB(Red, Green, Blue); }
         bool operator!=(const Color other) { return other.Red != Red || other.Green != Green || other.Blue != Blue; }
-        bool operator==(const Color other) { return other.Red == Red || other.Green == Green || other.Blue == Blue; }
+        bool operator==(const Color other) { return other.Red == Red && other.Green == Green && other.Blue == Blue; }
     };
 
     static const Color Black = { 0, 0, 0 };

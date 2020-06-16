@@ -1,6 +1,8 @@
 #ifndef STATE_H
 #define STATE_H
 
+#include <string>
+
 namespace Murli
 {
     class MurliContext;

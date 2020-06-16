@@ -13,8 +13,8 @@ namespace Murli
         mjs_set(_mjs, global, "xhsv", ~0, mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)xhsv));
 
         saveJsExec("let minF=130; let midF=1046; let maxF=3140; let mLedC=0; let lVol=0;let lFreq=0;let vol=0;let freq=0;", "Set variables error!");         
-        saveJsExec("function updateMeshLedCount(meshLedCount){ mLedC=meshLedCount; }", "Set 'updateMeshLedCount' func error!");
-        saveJsExec("function updateAnalyzerValues(newVol, newFreq){ lVol=vol;lFreq=freq;vol=newVol;freq=newFreq; }", "Set 'updateAnalyzerValues' func error!");
+        saveJsExec("function updateMeshLedCount(meshLedCount){ mLedC=meshLedCount; }", "Set 'updateMeshLedCount' error!");
+        saveJsExec("function updateAnalyzerValues(newVol, newFreq){ lVol=vol;lFreq=freq;vol=newVol;freq=newFreq; }", "Set 'updateAnalyzerValues' error!");
         saveJsExec(mod.c_str(), "MOD script error!");
 
         saveJsGetFunc(_updateMeshLedCountFunc, "updateMeshLedCount", "Get 'updateMeshLedCount' func error!");

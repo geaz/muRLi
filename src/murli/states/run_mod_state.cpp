@@ -45,7 +45,7 @@ namespace Murli
             void setView(AnalyzerResult& result)
             {
                 _runModView->decibel = result.decibel;
-                if(result.decibel > MinDB && result.dominantFrequency > 0)
+                if(result.volume > 0 && result.dominantFrequency > 0)
                 {
                     _runModView->dominantFrequency = result.dominantFrequency;
                     _runModView->frequencyRange = _frequencyAnalyzer.getFrequencyRange(result, 17, 9);

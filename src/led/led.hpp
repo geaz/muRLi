@@ -1,21 +1,15 @@
 #ifndef LED_H
 #define LED_H
 
+#define FASTLED_INTERNAL
+#include <array>
 #include <memory>
-#include <vector>
 #include <FastLED.h>
+#include "led_pattern.hpp"
 #include "color.hpp"
 
 namespace Murli
-{    
-    struct LedBlink
-    {
-        Color color;
-        Color lastColor;
-        uint8_t speed;
-        uint32_t lastBlink;
-    };
-
+{
     class LED
     {    
         public:
@@ -24,13 +18,13 @@ namespace Murli
             void loop();
             void setLed(const uint32_t index, const Color color);
             void setAllLeds(Color color);
-            void blink(const Color color, const uint8_t speed = 100);
+            void setPattern(std::shared_ptr<LedPattern> pattern);
 
         private:
-            void checkBlink();
+            void checkPattern();
 
             std::array<CRGB, LED_COUNT> _leds;
-            std::shared_ptr<LedBlink> _blink = NULL;
+            std::shared_ptr<LedPattern> _pattern = nullptr;
     };
 }
 

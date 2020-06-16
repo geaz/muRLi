@@ -1,4 +1,5 @@
 #include "socket_client.hpp"
+#include "../led/patterns/led_blink_pattern.cpp"
 
 namespace Murli
 {
@@ -13,17 +14,18 @@ namespace Murli
     {        
         auto webSocketEvent = [](WStype_t type, uint8_t* payload, size_t length) 
         {
+            std::shared_ptr<LedBlinkPattern> blinkPattern = nullptr;
             switch(type) 
             {
                 case WStype_DISCONNECTED:              
                     Serial.println("Disconnected from WebSocket!");  
                     Murli::SocketClientPointer->_isConnected = false;
-                    Murli::SocketClientPointer->_led.blink(Murli::Red, 3);
+                    blinkPattern = std::make_shared<LedBlinkPattern>(Murli::Red, 3);
                     break;
                 case WStype_CONNECTED:            
                     Serial.println("Connected to WebSocket!");
-                    Murli::SocketClientPointer->_isConnected = true;
-                    Murli::SocketClientPointer->_led.blink(Murli::Green, 3);
+                    Murli::SocketClientPointer->_isConnected = true;                    
+                    blinkPattern = std::make_shared<LedBlinkPattern>(Murli::Green, 3);
                     break;
                 case WStype_BIN:
                     memcpy(&Murli::SocketClientPointer->_newReceivedCommand, payload, length);
@@ -33,6 +35,7 @@ namespace Murli
                     // Not interested in other cases
                     break;
             }
+            Murli::SocketClientPointer->_led.setPattern(std::move(blinkPattern));
         };
 
         Serial.println("Connecting to socket '" + socketIp + "' ...");

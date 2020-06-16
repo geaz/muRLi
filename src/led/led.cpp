@@ -16,13 +16,12 @@ namespace Murli
 
     void LED::loop()
     {   
-        checkBlink();
+        checkPattern();
         FastLED.show();
     }
     
     void LED::setLed(const uint32_t index, const Color color)
     {
-        _blink = NULL;
         _leds[index] = color;
     }
 
@@ -32,25 +31,21 @@ namespace Murli
             _leds[index] = CRGB(color.Red, color.Green, color.Blue);
     }
 
-    void LED::blink(const Color color, const uint8_t speed)
-    {
-        _blink = std::make_shared<LedBlink>();
-        _blink->color = color;
-        _blink->lastColor = color;
-        _blink->speed = speed;
-        _blink->lastBlink = 0;
+    void LED::setPattern(std::shared_ptr<LedPattern> pattern)
+    {        
+        if(pattern == nullptr)
+        {
+            _pattern = nullptr;
+            setAllLeds(Murli::Black);
+        }
+        else _pattern = std::move(pattern);
     }
 
-    void LED::checkBlink()
+    void LED::checkPattern()
     {
-        if(_blink != NULL && _blink->lastBlink + _blink->speed < millis())
+        if(_pattern != nullptr)
         {
-            if(_blink->lastColor == Murli::Black)
-            {
-                setAllLeds(_blink->color);
-            }
-            else setAllLeds(Murli::Black);
-            _blink->lastBlink = millis();          
+            _pattern->loop(*this);       
         }
     }
 }

@@ -6,6 +6,12 @@
 
 namespace Murli
 {
+    /**
+     * @brief Maps a value in a specific range to a value in another range.
+     * This function is used by mJS and takes five parameters.
+     * 
+     * @param mjs The mJS instance to use
+     */
     void doubleMap(struct mjs *mjs) {
         mjs_val_t arg_x =       mjs_arg(mjs, 0);
         mjs_val_t arg_in_min =  mjs_arg(mjs, 1);
@@ -22,6 +28,12 @@ namespace Murli
         mjs_return(mjs, mjs_mk_number(mjs, (x-in_min)/(in_max-in_min)*(out_max-out_min)+out_min));
     }
 
+    /**
+     * @brief Converts a RGB value to it coressponding HEX Color value.
+     * This function is used by mJS and takes three parameters.
+     * 
+     * @param mjs The mJS instance to use 
+     */
     void xrgb(struct mjs *mjs)
     {
         mjs_val_t arg_r = mjs_arg(mjs, 0);
@@ -35,6 +47,13 @@ namespace Murli
         mjs_return(mjs, mjs_mk_number(mjs, (r<<16) + (g<<8) + b));
     }
 
+    /**
+     * @brief Converts a HSV value to it coressponding HEX Color value.
+     * Code was taken from https://gist.github.com/fairlight1337/4935ae72bcbcc1ba5c72
+     * It was adapted a bit for the muRLi use case.
+     * 
+     * @param mjs The mJS instance to use
+     */
     void xhsv(struct mjs *mjs)
     {
         mjs_val_t arg_h = mjs_arg(mjs, 0);

@@ -4,7 +4,7 @@
 #include "write_result_state.cpp"
 #include "../state.hpp"
 #include "../murli_context.hpp"
-#include "../../display/views/write_mod_view.cpp"
+#include "../../display/views/icon_text_view.cpp"
 
 namespace Murli
 {
@@ -13,8 +13,7 @@ namespace Murli
         public:
             WriteModState(const std::vector<uint8_t> receivedMod) : _receivedMod(receivedMod)
             { 
-                _writeModView = std::make_shared<WriteModView>();
-                _writeModView->setText("Writing MOD ...");
+                _writeModView = std::make_shared<IconTextView>("Writing MOD ...", u8g2_font_open_iconic_embedded_2x_t, 69);
             }
 
             void run(MurliContext& context)
@@ -40,7 +39,7 @@ namespace Murli
         
         private:
             const std::vector<uint8_t> _receivedMod;
-            std::shared_ptr<WriteModView> _writeModView;
+            std::shared_ptr<IconTextView> _writeModView;
     };
 }
 

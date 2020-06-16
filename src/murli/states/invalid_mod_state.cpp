@@ -3,7 +3,7 @@
 
 #include "../state.hpp"
 #include "../murli_context.hpp"
-#include "../../display/views/invalid_mod_view.cpp"
+#include "../../display/views/icon_text_view.cpp"
 
 namespace Murli
 {
@@ -12,7 +12,7 @@ namespace Murli
         public:
             InvalidModState()
             {
-                _invalidModView = std::make_shared<InvalidModView>();
+                _invalidModView = std::make_shared<IconTextView>("Invalid MOD ...", u8g2_font_open_iconic_check_2x_t, 66);
             }
 
             void run(MurliContext& context)
@@ -22,7 +22,7 @@ namespace Murli
             }
 
         private:
-            std::shared_ptr<InvalidModView> _invalidModView;
+            std::shared_ptr<IconTextView> _invalidModView;
     };
 }
 

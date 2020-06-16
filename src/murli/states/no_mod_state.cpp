@@ -1,9 +1,11 @@
 #ifndef NOMODSTATE_H
 #define NOMODSTATE_H
 
+#include <memory>
 #include "read_mod_state.cpp"
 #include "../state.hpp"
 #include "../murli_context.hpp"
+#include "../../led/patterns/led_fade_pattern.cpp"
 #include "../../display/views/insert_mod_view.cpp"
 
 namespace Murli
@@ -14,25 +16,22 @@ namespace Murli
             NoModState()
             {
                 _insertModView = std::make_shared<InsertModView>();
+                _fadePattern = std::make_shared<LedFadePattern>(Murli::Yellow);
             }
 
             void run(MurliContext& context)
             {
-                if(_firstRun)
-                {
-                    context.getLed().blink(Murli::Yellow);
-                    _firstRun = false;
-                }
-                
+                context.getLed().setPattern(_fadePattern);
                 context.getDisplay().setView(_insertModView);
                 if(context.isModInserted())
                 {
+                    context.getLed().setPattern(nullptr);
                     context.currentState = std::make_shared<ReadModState>();
                 }
             }
 
         private:
-            bool _firstRun = true;
+            std::shared_ptr<LedFadePattern> _fadePattern;
             std::shared_ptr<InsertModView> _insertModView;
     };
 }
