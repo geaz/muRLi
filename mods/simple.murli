@@ -1,27 +1,17 @@
 let h=0;
 let s=0;
 let v=0;
-let time=0;
-let newColor=false;
 
-function onAnalyzerUpdate(){
-    if(freq === lFreq || vol === 0){
-        newColor=false;
-    } else {
-        h=map(freq,0,maxF,240,0);
-        s=1;
-        v=map(vol,0,100,0,1);
-        newColor=true;
-    }
-}
-
-function onLedUpdate(delta){
-    time+=delta;
-    if(!newColor && time > 25){
+function onAnalyzerUpdate(delta){
+    if(vol === 0 || freq === 0 || vol < lVol || freq === lFreq){
         if(v > 0.1){ v-=0.1; }
         else{ v=0; }
-        time = 0;
+    } else {
+        h=map(freq,0,maxF,180,0);
+        s=1;
+        v=map(vol,0,100,0,1);
     }
+    print(delta);
 }
 
 function updateLed(index){

@@ -12,7 +12,7 @@ namespace Murli
      * 
      * @param mjs The mJS instance to use
      */
-    void doubleMap(struct mjs *mjs) {
+    void mjsMap(struct mjs *mjs) {
         mjs_val_t arg_x =       mjs_arg(mjs, 0);
         mjs_val_t arg_in_min =  mjs_arg(mjs, 1);
         mjs_val_t arg_in_max =  mjs_arg(mjs, 2);
@@ -26,6 +26,19 @@ namespace Murli
         double out_max = mjs_get_double(mjs, arg_out_max);
 
         mjs_return(mjs, mjs_mk_number(mjs, (x-in_min)/(in_max-in_min)*(out_max-out_min)+out_min));
+    }
+
+    /**
+     * @brief Rounds a decimal to the next full integer.
+     * This function is used by mJS and takes one paramter.
+     * 
+     * @param mjs The mJS instance to use
+     */
+    void mjsRound(struct mjs *mjs) {
+        mjs_val_t arg_x =       mjs_arg(mjs, 0);
+        double x = mjs_get_double(mjs, arg_x);
+
+        mjs_return(mjs, mjs_mk_number(mjs, round(x)));
     }
 
     /**

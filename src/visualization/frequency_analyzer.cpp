@@ -90,7 +90,6 @@ namespace Murli
 
     void FrequencyAnalyzer::calculateDominantFrequency(AnalyzerResult& result) 
     {
-        unsigned long start = millis();
         auto fft = ArduinoFFT<float>(result.fftReal, result.fftImg, FFTDataSize, SampleRate);
         fft.windowing(FFTWindow::Hamming, FFTDirection::Forward);
         fft.compute(FFTDirection::Forward);
@@ -112,7 +111,6 @@ namespace Murli
             }
         }
         result.dominantFrequency = dominantFrequency > MaxFrequency ? MaxFrequency : dominantFrequency;
-        Serial.println(millis() - start);
     }
 
     float FrequencyAnalyzer::butterBandPass(const float value)

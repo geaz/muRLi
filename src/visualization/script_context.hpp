@@ -13,8 +13,8 @@ namespace Murli
             ScriptContext(LED& led, const std::string& mod);
             ~ScriptContext();
             
-            void run(uint16_t previousLedCount, uint16_t meshLedCount, uint32_t delta);
-            void updateAnalyzerResult(AnalyzerResult result);
+            void run(uint16_t previousLedCount, uint16_t meshLedCount);
+            void updateAnalyzerResult(AnalyzerResult result, uint32_t delta);
 
             bool isFaulted();
 
@@ -26,7 +26,6 @@ namespace Murli
             mjs_val_t _updateMeshLedCountFunc;
             mjs_val_t _updateAnalyzerValuesFunc;
             mjs_val_t _onAnalyzerUpdateFunc;
-            mjs_val_t _onLedUpdateFunc;
             mjs_val_t _updateLed;
             bool _faulted = false;
 

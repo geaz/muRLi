@@ -32,8 +32,8 @@ namespace Murli
                 AnalyzerResult result = _frequencyAnalyzer.loop();
                 setView(result);
 
-                _scriptContext->updateAnalyzerResult(result);
-                _scriptContext->run(0, context.getMeshLedCount(), millis() - _lastLedUpdate);
+                _scriptContext->updateAnalyzerResult(result, millis() - _lastLedUpdate);
+                _scriptContext->run(0, context.getMeshLedCount());
                 _lastLedUpdate = millis();
             }
 

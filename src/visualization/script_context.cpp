@@ -8,7 +8,8 @@ namespace Murli
         _mjs = mjs_create();
         
         mjs_val_t global = mjs_get_global(_mjs);
-        mjs_set(_mjs, global, "map", ~0, mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)doubleMap));
+        mjs_set(_mjs, global, "map", ~0, mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)mjsMap));
+        mjs_set(_mjs, global, "round", ~0, mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)mjsRound));
         mjs_set(_mjs, global, "xrgb", ~0, mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)xrgb));
         mjs_set(_mjs, global, "xhsv", ~0, mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)xhsv));
 
@@ -20,10 +21,9 @@ namespace Murli
         saveJsGetFunc(_updateMeshLedCountFunc, "updateMeshLedCount", "Get 'updateMeshLedCount' func error!");
         saveJsGetFunc(_updateAnalyzerValuesFunc, "updateAnalyzerValues", "Get 'updateAnalyzerValues' func error!");
         saveJsGetFunc(_onAnalyzerUpdateFunc, "onAnalyzerUpdate", "Get 'onAnalyzerUpdate' func error!");
-        saveJsGetFunc(_onLedUpdateFunc, "onLedUpdate", "Get 'onLedUpdate' func error!");
         saveJsGetFunc(_updateLed, "updateLed", "Get 'updateLed' func error!");
         
-        run(0, LED_COUNT, 0);
+        run(0, LED_COUNT);
     }
 
     ScriptContext::~ScriptContext()
@@ -31,26 +31,31 @@ namespace Murli
         mjs_destroy(_mjs);
     }
 
-    void ScriptContext::updateAnalyzerResult(AnalyzerResult result)
+    void ScriptContext::updateAnalyzerResult(AnalyzerResult result, uint32_t delta)
     {
         mjs_val_t global = mjs_get_global(_mjs);
+        mjs_own(_mjs, &global);
+
         mjs_val_t a1 = mjs_mk_number(_mjs, result.volume);
         mjs_val_t a2 = mjs_mk_number(_mjs, result.dominantFrequency);
         if(mjs_call(_mjs, NULL, _updateAnalyzerValuesFunc, global, 2, a1, a2) != MJS_OK)
         {
             _faulted = true;
-            Serial.println("Error on 'updateAnalyzerValues'!");
+            Serial.println("Error on 'updateAnalyzerValues'!");       
+            mjs_disown(_mjs, &global);
             return;
         }
 
-        if(mjs_call(_mjs, NULL, _onAnalyzerUpdateFunc, global, 0) != MJS_OK)
+        a1 = mjs_mk_number(_mjs, delta);
+        if(mjs_call(_mjs, NULL, _onAnalyzerUpdateFunc, global, 1, a1) != MJS_OK)
         {
             _faulted = true;
             Serial.println("Error on 'onAnalyzerUpdate'!");
-        }
+        }       
+        mjs_disown(_mjs, &global);
     }
 
-    void ScriptContext::run(uint16_t previousLedCount, uint16_t meshLedCount, uint32_t delta)
+    void ScriptContext::run(uint16_t previousLedCount, uint16_t meshLedCount)
     {  
         mjs_val_t global = mjs_get_global(_mjs);
         mjs_own(_mjs, &global);
@@ -60,15 +65,6 @@ namespace Murli
         {
             _faulted = true;
             Serial.println("Error on 'updateMeshLedCount'!");            
-            mjs_disown(_mjs, &global);
-            return;
-        }
-
-        a1 = mjs_mk_number(_mjs, delta);
-        if(mjs_call(_mjs, NULL, _onLedUpdateFunc, global, 1, a1) != MJS_OK)
-        {
-            _faulted = true;
-            Serial.println("Error on 'onLedUpdate'!");            
             mjs_disown(_mjs, &global);
             return;
         }
