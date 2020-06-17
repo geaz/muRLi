@@ -29,14 +29,10 @@ namespace Murli
                     return;
                 }
 
-                if(_lastFreqUpdate + 50 < millis())
-                {
-                    AnalyzerResult result = _frequencyAnalyzer.loop();
-                    _scriptContext->updateAnalyzerResult(result);
-                    _lastFreqUpdate = millis();
+                AnalyzerResult result = _frequencyAnalyzer.loop();
+                setView(result);
 
-                    setView(result);
-                }
+                _scriptContext->updateAnalyzerResult(result);
                 _scriptContext->run(0, context.getMeshLedCount(), millis() - _lastLedUpdate);
                 _lastLedUpdate = millis();
             }
@@ -60,9 +56,7 @@ namespace Murli
             FrequencyAnalyzer _frequencyAnalyzer;
             std::shared_ptr<RunModView> _runModView;
             std::shared_ptr<ScriptContext> _scriptContext;
-
-            uint32_t _lastFreqUpdate = 0;
-            uint32_t _lastLedUpdate = millis();
+            uint64_t _lastLedUpdate = millis();
     };
 }
 

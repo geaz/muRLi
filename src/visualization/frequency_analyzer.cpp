@@ -11,6 +11,7 @@ namespace Murli
     {
         AnalyzerResult result;
         collectSamples(result);                 
+        calculateVolumeAndBandPass(result);
         calculateDominantFrequency(result);
 
         return result;
@@ -29,8 +30,8 @@ namespace Murli
         std::vector<uint8_t> combinedBuckets;
         
         // only check buckets between our min and max frequency
-        uint8_t minFreqIndex = (uint8_t)((float)MinFrequency / ((float)result.sampleRate / (float)FFTDataSize));
-        uint8_t maxFreqIndex = (uint8_t)((float)MaxFrequency / ((float)result.sampleRate / (float)FFTDataSize));
+        uint8_t minFreqIndex = (uint8_t)((float)MinFrequency / ((float)SampleRate / (float)FFTDataSize));
+        uint8_t maxFreqIndex = (uint8_t)((float)MaxFrequency / ((float)SampleRate / (float)FFTDataSize));
 
         float originalMaxValue = 0;
         for(uint8_t i = minFreqIndex; i < maxFreqIndex; i++)
@@ -55,19 +56,32 @@ namespace Murli
 
     void FrequencyAnalyzer::collectSamples(AnalyzerResult& result)
     {
-        unsigned long signalRMS = 0;
-        unsigned long startMillis = millis();    
-
+        unsigned long startMicros = micros();
         for (int i = 0; i < FFTDataSize; i++)
         {
-            unsigned short sample = analogRead(A0);
-            result.fftReal[i] = sample;
+            result.fftReal[i] = analogRead(A0);
             result.fftImg[i] = 0;
 
-            sample = abs(sample - 512);
-            signalRMS += sample * sample;
+            while(micros() - startMicros < SamplePerioduSec){
+                //empty loop
+            }
+            startMicros += SamplePerioduSec;
         }
-        result.sampleRate = FFTDataSize * 1000 / (millis() - startMillis);
+    }
+
+    void FrequencyAnalyzer::calculateVolumeAndBandPass(AnalyzerResult& result)
+    {
+        unsigned long signalRMS = 0;
+        unsigned short sample = 0;
+        unsigned short absSample = 0;
+        for (int i = 0; i < FFTDataSize; i++)
+        {
+            sample = result.fftReal[i];            
+            result.fftReal[i] = butterBandPass(sample);
+            
+            absSample = abs(sample - 512);
+            signalRMS += absSample * absSample;
+        }
 
         float signalRMSflt = sqrt(signalRMS / FFTDataSize);
         result.decibel = 20.0*log10(signalRMSflt / 512);
@@ -76,14 +90,15 @@ namespace Murli
 
     void FrequencyAnalyzer::calculateDominantFrequency(AnalyzerResult& result) 
     {
-        auto fft = ArduinoFFT<float>(result.fftReal, result.fftImg, FFTDataSize, result.sampleRate);
+        unsigned long start = millis();
+        auto fft = ArduinoFFT<float>(result.fftReal, result.fftImg, FFTDataSize, SampleRate);
         fft.windowing(FFTWindow::Hamming, FFTDirection::Forward);
         fft.compute(FFTDirection::Forward);
         fft.complexToMagnitude();
 
         // only check buckets between our min and max frequency
-        uint8_t minFreqIndex = (uint8_t)((float)MinFrequency / ((float)result.sampleRate / (float)FFTDataSize));
-        uint8_t maxFreqIndex = (uint8_t)((float)MaxFrequency / ((float)result.sampleRate / (float)FFTDataSize));
+        uint8_t minFreqIndex = (uint8_t)((float)MinFrequency / ((float)SampleRate / (float)FFTDataSize));
+        uint8_t maxFreqIndex = (uint8_t)((float)MaxFrequency / ((float)SampleRate / (float)FFTDataSize));
 
         unsigned short dominantFrequency = 0;
         short dominantFrequencyData = 0;
@@ -92,10 +107,25 @@ namespace Murli
         {
             if(result.fftReal[i] > dominantFrequencyData)
             {
-                dominantFrequency = ((i * 1.0 * result.sampleRate) / FFTDataSize);
+                dominantFrequency = ((i * 1.0 * SampleRate) / FFTDataSize);
                 dominantFrequencyData = result.fftReal[i];
             }
         }
         result.dominantFrequency = dominantFrequency > MaxFrequency ? MaxFrequency : dominantFrequency;
+        Serial.println(millis() - start);
+    }
+
+    float FrequencyAnalyzer::butterBandPass(const float value)
+    {
+        _bandPassValues[0] = _bandPassValues[1];
+        _bandPassValues[1] = _bandPassValues[2];
+		_bandPassValues[2] = _bandPassValues[3];
+		_bandPassValues[3] = _bandPassValues[4];
+		_bandPassValues[4] = (4.146985469705365968e-1 * value)
+		    + (-0.20667198516656454244 * _bandPassValues[0])
+			+ (-0.02794930525906139107 * _bandPassValues[1])
+			+ (-0.18114773810038770074 * _bandPassValues[2])
+			+ (1.40897920655145059143 * _bandPassValues[3]);
+        return (_bandPassValues[0] + _bandPassValues[4]) - 2 * _bandPassValues[2];
     }
 }
