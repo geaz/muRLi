@@ -38,7 +38,7 @@ namespace Murli
         
         private:
             boolean _success;
-            uint32_t _started = millis();       
+            uint64_t _started = millis();       
             std::shared_ptr<IconTextView> _resultView;
     };
 }

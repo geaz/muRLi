@@ -43,7 +43,7 @@ namespace Murli
         
         private:
             uint8_t _glyphY = 25;
-            uint32_t _lastAnimate = 0;
+            uint64_t _lastAnimate = 0;
     };
 }
 

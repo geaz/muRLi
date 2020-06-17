@@ -14,7 +14,7 @@ namespace Murli
             ~ScriptContext();
             
             void run(uint16_t previousLedCount, uint16_t meshLedCount);
-            void updateAnalyzerResult(AnalyzerResult result, uint32_t delta);
+            void updateAnalyzerResult(AnalyzerResult result, uint8_t delta);
 
             bool isFaulted();
 

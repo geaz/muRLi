@@ -31,7 +31,7 @@ namespace Murli
         mjs_destroy(_mjs);
     }
 
-    void ScriptContext::updateAnalyzerResult(AnalyzerResult result, uint32_t delta)
+    void ScriptContext::updateAnalyzerResult(AnalyzerResult result, uint8_t delta)
     {
         mjs_val_t global = mjs_get_global(_mjs);
         mjs_own(_mjs, &global);
