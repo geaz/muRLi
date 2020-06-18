@@ -4,7 +4,7 @@ let v=0;
 
 function onAnalyzerUpdate(delta){
     if(vol === 0 || freq === 0 || vol < lVol || freq === lFreq){
-        if(v > 0.1){ v-=0.1; }
+        if(v > 0.05){ v-=0.05; }
         else{ v=0; }
     } else {
         h=map(freq,0,maxF,180,0);

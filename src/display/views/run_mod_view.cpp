@@ -55,7 +55,7 @@ namespace Murli
         private:
             /**
              * Max index = 16 starting at 0
-             * Max height = 9 starting at 0
+             * Max height = 8 starting at 0
              **/
             void drawFrequencyBar(DisplayCtrl& display, uint8_t index, uint8_t height)
             {
