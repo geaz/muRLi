@@ -11,7 +11,7 @@ void setup()
     Wire.begin();
 
     murliContext.setup();
-
+    
     pinMode(A0, INPUT);         // Mic Input
     pinMode(D6, INPUT);         // Check if module inserted
     pinMode(LED_PIN, OUTPUT);   // LED

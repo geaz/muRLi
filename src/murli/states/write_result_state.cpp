@@ -11,7 +11,7 @@ namespace Murli
     class WriteResultState : public State
     {
         public:
-            WriteResultState(bool success, std::string text) : _success(success)
+            WriteResultState(const bool success, const std::string text) : _success(success)
             { 
                 if(success)
                 {
@@ -37,9 +37,9 @@ namespace Murli
             }
         
         private:
-            boolean _success;
-            uint64_t _started = millis();       
+            const boolean _success;     
             std::shared_ptr<IconTextView> _resultView;
+            uint64_t _started = millis();  
     };
 }
 

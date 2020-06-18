@@ -57,7 +57,7 @@ namespace Murli
              * Max index = 16 starting at 0
              * Max height = 8 starting at 0
              **/
-            void drawFrequencyBar(DisplayCtrl& display, uint8_t index, uint8_t height)
+            void drawFrequencyBar(DisplayCtrl& display, const uint8_t index, const uint8_t height)
             {
                 for(uint8_t i = 0; i <= height; i++)
                 {                        

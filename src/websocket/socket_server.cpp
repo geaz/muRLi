@@ -45,17 +45,17 @@ namespace Murli
         {
             case WStype_DISCONNECTED:              
                 Serial.println("Client disconnected!");
-                if(_meshConnectionEvent != NULL) _meshConnectionEvent();
+                if(_meshConnectionEvent != nullptr) _meshConnectionEvent();
                 break;
             case WStype_CONNECTED:        
                 Serial.println("Connection from: " + remoteIp.toString());
-                if(_meshConnectionEvent != NULL) _meshConnectionEvent();
+                if(_meshConnectionEvent != nullptr) _meshConnectionEvent();
                 break;
             case WStype_BIN:
                 Serial.println("Server receiving command ...");
                 MurliCommand receivedCommand;
                 memcpy(&receivedCommand, payload, length);
-                if(_meshCommandEvent != NULL) _meshCommandEvent(receivedCommand);
+                if(_meshCommandEvent != nullptr) _meshCommandEvent(receivedCommand);
                 break;
             default:
                 // Not interested in other cases

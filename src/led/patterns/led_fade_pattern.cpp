@@ -28,8 +28,8 @@ namespace Murli
             };
 
         private:
-            Color _color;
-            uint8_t _speed;
+            const Color _color;
+            const uint8_t _speed;
             
             uint8_t _fadeAmount = 5;
             uint8_t _currentFade = 0;

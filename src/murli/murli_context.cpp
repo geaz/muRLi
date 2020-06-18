@@ -45,10 +45,7 @@ namespace Murli
 
     void MurliContext::checkModuleInserted()
     {
-        if(!isModInserted())
-        {
-            currentState = _noModState;
-        }
+        if(!isModInserted()) currentState = _noModState;
     }
 
     void MurliContext::checkWriteRequest()
@@ -64,10 +61,7 @@ namespace Murli
                 writeRequested = true;
                 currentState = std::make_shared<ReceiveLengthState>();
             }
-            else
-            {
-                currentState = std::make_shared<NoModState>();
-            }
+            else currentState = std::make_shared<NoModState>();
         }
     }
 

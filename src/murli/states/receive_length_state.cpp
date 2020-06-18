@@ -23,8 +23,8 @@ namespace Murli
                 context.getDisplay().setView(_writeModView);
                 context.getDisplay().loop();
                                 
-                byte buffer[sizeof(int)] = { 0 };
-                Serial.readBytes(buffer, sizeof(int));
+                std::array<byte, sizeof(int)> buffer = { { 0 } };
+                Serial.readBytes(buffer.data(), sizeof(int));
 
                 uint16_t length = 0;
                 length  = buffer[3] << 24;

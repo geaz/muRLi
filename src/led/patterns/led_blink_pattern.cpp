@@ -10,8 +10,8 @@ namespace Murli
     class LedBlinkPattern : public LedPattern
     {
         public:
-            LedBlinkPattern(Color color, int8_t times = -1, uint8_t speed = 200) :
-                _color(color), _times(times), _speed(speed) { }
+            LedBlinkPattern(const Color color, const int8_t times = -1, const uint8_t speed = 200) :
+                _color(color), _speed(speed), _times(times)  { }
 
             void loop(LED& led) override
             {
@@ -34,9 +34,9 @@ namespace Murli
             };
 
         private:
-            Color _color;
+            const Color _color;
+            const uint8_t _speed;
             int8_t _times;
-            uint8_t _speed;
             
             Color _lastColor = Murli::Black;
             uint64_t _lastUpdate = 0;

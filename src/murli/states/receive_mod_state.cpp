@@ -12,7 +12,7 @@ namespace Murli
     class ReceiveModState : public State
     {
         public:
-            ReceiveModState(uint16_t modSize) : _modSize(modSize)
+            ReceiveModState(const uint16_t modSize) : _modSize(modSize)
             {
                 _writeModView = std::make_shared<IconTextView>("Receiving MOD ...", u8g2_font_open_iconic_embedded_2x_t, 69);
             }

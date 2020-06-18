@@ -38,7 +38,7 @@ namespace Murli
             }
 
         private:
-            bool isEmptyMod(std::vector<uint8_t>& modChars)
+            bool isEmptyMod(const std::vector<uint8_t>& modChars) const
             {
                 // A factory ROM will return the same char for the
                 // whole memory - if the mod is empty, it is invalid

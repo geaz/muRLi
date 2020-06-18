@@ -3,7 +3,7 @@
 
 namespace Murli
 {
-    SocketClient* SocketClientPointer = NULL;
+    SocketClient* SocketClientPointer = nullptr;
 
     SocketClient::SocketClient(LED& led) : _led(led)
     {

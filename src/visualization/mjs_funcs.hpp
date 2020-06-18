@@ -53,9 +53,9 @@ namespace Murli
         mjs_val_t arg_g = mjs_arg(mjs, 1);
         mjs_val_t arg_b = mjs_arg(mjs, 2);
 
-        uint8_t r = mjs_get_double(mjs, arg_r);
-        uint8_t g = mjs_get_double(mjs, arg_g);
-        uint8_t b = mjs_get_double(mjs, arg_b);
+        uint32_t r = mjs_get_double(mjs, arg_r);
+        uint32_t g = mjs_get_double(mjs, arg_g);
+        uint32_t b = mjs_get_double(mjs, arg_b);
 
         mjs_return(mjs, mjs_mk_number(mjs, (r<<16) + (g<<8) + b));
     }
@@ -117,9 +117,9 @@ namespace Murli
         g += m;
         b += m;
 
-        uint8_t normR = r*255;
-        uint8_t normG = g*255;
-        uint8_t normB = b*255;
+        uint32_t normR = r*255;
+        uint32_t normG = g*255;
+        uint32_t normB = b*255;
 
         mjs_return(mjs, mjs_mk_number(mjs, (normR<<16) + (normG<<8) + normB));
     }

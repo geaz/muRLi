@@ -26,18 +26,7 @@ namespace Murli
         _ctrl.sendBuffer();
     }
 
-    void Display::setView(const std::shared_ptr<View> view)
-    {
-        _currentView = view;
-    }
-
-    void Display::setLeftStatus(const std::string& text)
-    {
-        _leftStatusText = text;
-    }
-
-    void Display::setRightStatus(const std::string& text)
-    {
-        _rightStatusText = text;
-    }
+    void Display::setView(const std::shared_ptr<View> view) { _currentView = view; }
+    void Display::setLeftStatus(const std::string& text) { _leftStatusText = text; }
+    void Display::setRightStatus(const std::string& text) { _rightStatusText = text; }
 }

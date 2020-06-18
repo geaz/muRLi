@@ -24,8 +24,8 @@ namespace Murli
         private:
             void serverEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length);
 
-            MeshCommandEvent _meshCommandEvent = NULL;
-            MeshConnectionEvent _meshConnectionEvent = NULL;
+            MeshCommandEvent _meshCommandEvent = nullptr;
+            MeshConnectionEvent _meshConnectionEvent = nullptr;
             WebSocketsServer _webSocket = WebSocketsServer(81);
     };
 }
