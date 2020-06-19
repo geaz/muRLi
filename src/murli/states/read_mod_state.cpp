@@ -1,7 +1,7 @@
 #ifndef READMODSTATE_H
 #define READMODSTATE_H
 
-#include "run_mod_state.cpp"
+#include "broadcast_mod_state.cpp"
 #include "invalid_mod_state.cpp"
 #include "../state.hpp"
 #include "../murli_context.hpp"
@@ -31,7 +31,7 @@ namespace Murli
                 {
                     std::string loadedMod((char*)&modChars[0]);
                     auto scriptContext = std::make_shared<ScriptContext>(context.getLed(), loadedMod);                    
-                    if(!scriptContext->isFaulted()) context.currentState = std::make_shared<RunModState>(scriptContext);
+                    if(!scriptContext->isFaulted()) context.currentState = std::make_shared<BroadcastModState>(loadedMod);
                     else context.currentState = std::make_shared<InvalidModState>();
                 }
                 else context.currentState = std::make_shared<InvalidModState>();     

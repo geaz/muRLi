@@ -7,6 +7,7 @@
 namespace Murli
 {
     typedef std::function<void()> MeshConnectionEvent;
+    typedef std::function<void()> MeshModDistributedEvent;
     typedef std::function<void(MurliCommand command)> MeshCommandEvent;
 
     class SocketServer
@@ -16,8 +17,10 @@ namespace Murli
             
             void loop();
             void broadcast(MurliCommand command);
+            void broadcastMod(std::string& mod);
             void onCommandReceived(MeshCommandEvent event);
             void onMeshConnection(MeshConnectionEvent event);
+            void onModDistributed(MeshModDistributedEvent event);
 
             uint32_t connectedClients();
         
@@ -26,6 +29,7 @@ namespace Murli
 
             MeshCommandEvent _meshCommandEvent = nullptr;
             MeshConnectionEvent _meshConnectionEvent = nullptr;
+            MeshModDistributedEvent _meshModDistributedEvent = nullptr;
             WebSocketsServer _webSocket = WebSocketsServer(81);
     };
 }

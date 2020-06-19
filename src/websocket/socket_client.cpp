@@ -3,8 +3,6 @@
 
 namespace Murli
 {
-    SocketClient::SocketClient(LED& led) : _led(led) { }
-
     void SocketClient::start(String socketIp)
     { 
         Serial.println("Connecting to socket '" + socketIp + "' ...");
@@ -44,18 +42,15 @@ namespace Murli
 
     void SocketClient::clientEvent(WStype_t type, uint8_t* payload, size_t length)
     {
-        std::shared_ptr<LedBlinkPattern> blinkPattern = nullptr;
         switch(type)
         {
             case WStype_DISCONNECTED:              
                 Serial.println("Disconnected from WebSocket!");  
                 _isConnected = false;
-                blinkPattern = std::make_shared<LedBlinkPattern>(Murli::Red, 3);
                 break;
             case WStype_CONNECTED:            
                 Serial.println("Connected to WebSocket!");
-                _isConnected = true;                    
-                blinkPattern = std::make_shared<LedBlinkPattern>(Murli::Green, 3);
+                _isConnected = true;
                 break;
             case WStype_BIN:
                 MurliCommand receivedCommand;
@@ -69,6 +64,5 @@ namespace Murli
                 // Not interested in other cases
                 break;
         }
-        _led.setPattern(std::move(blinkPattern));
     }
 }

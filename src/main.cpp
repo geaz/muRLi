@@ -38,7 +38,7 @@ uint32_t lastUpdate = millis();
 
 Murli::LED led;
 Murli::MurliWifi wifi;
-Murli::SocketClient socketClient(led);
+Murli::SocketClient socketClient;
 Murli::SocketServer socketServer;
 
 Murli::MurliCountData currentCountData = { {}, {}, 0, false };
@@ -166,6 +166,12 @@ void onSocketClientModReceived(std::string mod)
 {
     Serial.println("Received new mod. Creating new ScriptContext ...");
     scriptContext = std::make_shared<Murli::ScriptContext>(led, mod);
+    if(socketServer.connectedClients() == 0)
+    {
+        Serial.println("End of route - Sending MOD_DISTRIBUTED");
+        Murli::MurliCommand command = { millis(), Murli::MOD_DISTRIBUTED, 0, 0, 0, 0 };
+        socketClient.sendCommand(command);
+    }
 }
 
 #endif

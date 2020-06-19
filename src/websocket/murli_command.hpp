@@ -8,6 +8,7 @@ namespace Murli
         MESH_CONNECTION,
         MESH_COUNT,
         MESH_UPDATE,
+        MOD_DISTRIBUTED,
         ANALYZER_UPDATE
     };
 

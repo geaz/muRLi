@@ -110,6 +110,11 @@ namespace Murli
                 // if we retrieved answers of all clients
                 if(_countData.answers == _socketServer.connectedClients())
                 {
+                    if(_meshLedCount < _countData.updateCommand.meshLEDCount)
+                    {
+                        Serial.println("New node connected. Resetting state ...");
+                        currentState = std::make_shared<NoModState>();
+                    }
                     _meshLedCount = _countData.updateCommand.meshLEDCount;
                     _countData = { {}, {}, 0, false };
 
@@ -117,7 +122,7 @@ namespace Murli
                 }
                 break;
             default:
-                // The socket server will never retrieve ANALYZER_UPDATE or MESH_COUNT events
+                // The socket server will never retrieve ANALYZER_UPDATE or MESH_COUNT events - MOD_DISTRIBUTED is handled in BraodcastModState
                 break;
         }
     }

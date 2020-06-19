@@ -22,6 +22,11 @@ namespace Murli
         _webSocket.broadcastBIN(&serializedCommand[0], commandSize);
     }
 
+    void SocketServer::broadcastMod(std::string& mod)
+    {
+        _webSocket.broadcastTXT(mod.c_str(), mod.length());
+    }
+
     void SocketServer::onCommandReceived(MeshCommandEvent event)
     {
         _meshCommandEvent = event;
@@ -30,6 +35,11 @@ namespace Murli
     void SocketServer::onMeshConnection(MeshConnectionEvent event)
     {
         _meshConnectionEvent = event;
+    }
+    
+    void SocketServer::onModDistributed(MeshModDistributedEvent event)
+    {
+        _meshModDistributedEvent = event;
     }
 
     uint32_t SocketServer::connectedClients()
@@ -54,7 +64,10 @@ namespace Murli
                 Serial.println("Server receiving command ...");
                 MurliCommand receivedCommand;
                 memcpy(&receivedCommand, payload, length);
-                if(_meshCommandEvent != nullptr) _meshCommandEvent(receivedCommand);
+                if(receivedCommand.command == Murli::MOD_DISTRIBUTED && _meshModDistributedEvent != nullptr)
+                    _meshModDistributedEvent();
+                else if(receivedCommand.command != Murli::MOD_DISTRIBUTED && _meshCommandEvent != nullptr)
+                    _meshCommandEvent(receivedCommand);
                 break;
             default:
                 // Not interested in other cases

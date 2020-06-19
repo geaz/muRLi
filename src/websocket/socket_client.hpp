@@ -13,8 +13,6 @@ namespace Murli
     class SocketClient
     {
         public:
-            SocketClient(LED& led);
-
             void start(String socketIp);
             void loop();
             void sendCommand(MurliCommand command);
@@ -26,7 +24,6 @@ namespace Murli
         private:
             void clientEvent(WStype_t type, uint8_t* payload, size_t length);
 
-            LED& _led;
             WebSocketsClient _webSocket;            
             MeshModEvent _meshModEvent = nullptr;
             MeshCommandEvent _meshCommandEvent = nullptr;
