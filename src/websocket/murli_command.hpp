@@ -13,10 +13,20 @@ namespace Murli
 
     struct MurliCommand
     {
+        uint64_t id;
         Command command;
-        float decibel;
+        uint8_t volume;
         uint16_t frequency;
         uint16_t meshLEDCount;
+        uint16_t previousLEDCount;
+    };
+
+    struct MurliCountData
+    {
+        MurliCommand countCommand;        
+        MurliCommand updateCommand;
+        uint32_t answers;
+        bool active;
     };
 }
 

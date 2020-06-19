@@ -35,12 +35,17 @@ namespace Murli
             void checkModuleInserted();
             void checkWriteRequest();
 
+            void startMeshCount();
+            void onSocketServerMeshConnection();
+            void onSocketServerCommandReceived(Murli::MurliCommand command);
+
             LED _led;
             MurliWifi _wifi;
             Display _display;
             SocketServer _socketServer;
             Rom24LC32A _rom = Rom24LC32A(0x50);
 
+            MurliCountData _countData = { {}, {}, 0, false };
             uint16_t _meshLedCount = LED_COUNT;
             std::shared_ptr<State> _noModState;
     };

@@ -7,6 +7,9 @@
 
 namespace Murli
 {
+    
+    typedef std::function<void(std::string mod)> MeshModEvent;
+
     class SocketClient
     {
         public:
@@ -14,22 +17,21 @@ namespace Murli
 
             void start(String socketIp);
             void loop();
-            
+            void sendCommand(MurliCommand command);
+
+            void onModReceived(MeshModEvent event);
+            void onCommandReceived(MeshCommandEvent event);
             bool isConnected() const;
-            bool hasNewCommand() const;
-            MurliCommand getNewCommand();
         
         private:
-            LED& _led;
-            WebSocketsClient _webSocket;
-            MurliCommand _newReceivedCommand;
-            
-            bool _isConnected = false;
-            bool _hasNewCommand = false;
-    };
+            void clientEvent(WStype_t type, uint8_t* payload, size_t length);
 
-    // SocketClient Pointer for Socket callbacks
-    extern SocketClient* SocketClientPointer;
+            LED& _led;
+            WebSocketsClient _webSocket;            
+            MeshModEvent _meshModEvent = nullptr;
+            MeshCommandEvent _meshCommandEvent = nullptr;
+            bool _isConnected = false;
+    };
 }
 
 #endif // SOCKETCLIENT_H

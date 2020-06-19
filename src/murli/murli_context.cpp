@@ -20,6 +20,9 @@ namespace Murli
         _display.setLeftStatus("Starting Mesh...");
         _display.loop();
         
+        _socketServer.onCommandReceived([this](MurliCommand command) { onSocketServerCommandReceived(command); });
+        _socketServer.onMeshConnection([this]() { onSocketServerMeshConnection(); });
+
         _wifi.startMesh();
     }
 
@@ -62,6 +65,60 @@ namespace Murli
                 currentState = std::make_shared<ReceiveLengthState>();
             }
             else currentState = std::make_shared<NoModState>();
+        }
+    }
+
+    void MurliContext::startMeshCount()
+    {
+        Serial.println("Connection state changed. Starting MESH_COUNT ...");
+        if(_socketServer.connectedClients() == 0)
+        {
+            Serial.println("No clients connected!");
+            Serial.printf("muRLi alone with %d LEDs :(\n", LED_COUNT);
+            _meshLedCount = LED_COUNT;
+        }
+        else
+        {
+            MurliCommand command = { millis(), Murli::MESH_COUNT, 0, 0, LED_COUNT, 0 };
+
+            _countData = { command, {}, 0, false };
+            _socketServer.broadcast(command);
+        }        
+    }
+
+    void MurliContext::onSocketServerMeshConnection()
+    {
+        startMeshCount();
+    }
+
+    void MurliContext::onSocketServerCommandReceived(Murli::MurliCommand command)
+    {
+        switch (command.command)
+        {
+            case Murli::MESH_CONNECTION:
+                startMeshCount();
+                break;
+            case Murli::MESH_UPDATE:
+                Serial.println("Got MESH_UPDATE!");
+                _countData.answers++;
+                // Save the retrieved MESH_UPDATE, if it is the first one or, if it has a larger LED count route
+                if(_countData.answers == 1 || _countData.updateCommand.meshLEDCount < command.meshLEDCount)
+                {
+                    _countData.updateCommand = command;
+                }
+                // Send the MESH_UPDATE with the largest LED count/route to the parent,
+                // if we retrieved answers of all clients
+                if(_countData.answers == _socketServer.connectedClients())
+                {
+                    _meshLedCount = _countData.updateCommand.meshLEDCount;
+                    _countData = { {}, {}, 0, false };
+
+                    Serial.printf("MESH_UPDATE done with %d LEDs on the longest route.\n", _meshLedCount);
+                }
+                break;
+            default:
+                // The socket server will never retrieve ANALYZER_UPDATE or MESH_COUNT events
+                break;
         }
     }
 

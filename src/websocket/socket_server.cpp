@@ -5,7 +5,6 @@ namespace Murli
     SocketServer::SocketServer()
     {
         _webSocket.begin();
-        _webSocket.enableHeartbeat(2000, 1500, 1);
         _webSocket.onEvent([this](uint8_t num, WStype_t type, uint8_t * payload, size_t length){ serverEvent(num, type, payload, length); });
     }
 

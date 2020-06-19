@@ -31,13 +31,13 @@ namespace Murli
         mjs_destroy(_mjs);
     }
 
-    void ScriptContext::updateAnalyzerResult(AnalyzerResult result, uint8_t delta)
+    void ScriptContext::updateAnalyzerResult(const uint8_t volume, const uint16_t dominantFrequency, const uint8_t delta)
     {
         mjs_val_t global = mjs_get_global(_mjs);
         mjs_own(_mjs, &global);
 
-        mjs_val_t a1 = mjs_mk_number(_mjs, result.volume);
-        mjs_val_t a2 = mjs_mk_number(_mjs, result.dominantFrequency);
+        mjs_val_t a1 = mjs_mk_number(_mjs, volume);
+        mjs_val_t a2 = mjs_mk_number(_mjs, dominantFrequency);
         if(mjs_call(_mjs, NULL, _updateAnalyzerValuesFunc, global, 2, a1, a2) != MJS_OK)
         {
             _faulted = true;
@@ -55,7 +55,7 @@ namespace Murli
         mjs_disown(_mjs, &global);
     }
 
-    void ScriptContext::run(uint16_t previousLedCount, uint16_t meshLedCount)
+    void ScriptContext::run(const uint16_t previousLedCount, const uint16_t meshLedCount)
     {  
         mjs_val_t global = mjs_get_global(_mjs);
         mjs_own(_mjs, &global);

@@ -30,9 +30,11 @@ namespace Murli
                 }
 
                 AnalyzerResult result = _frequencyAnalyzer.loop();
+                MurliCommand analyzerCommand = { millis(), ANALYZER_UPDATE, result.volume, result.dominantFrequency, context.getMeshLedCount(), LED_COUNT};            
+                context.getSocketServer().broadcast(analyzerCommand);
                 setView(result);
 
-                _scriptContext->updateAnalyzerResult(result, millis() - _lastLedUpdate);
+                _scriptContext->updateAnalyzerResult(result.volume, result.dominantFrequency, millis() - _lastLedUpdate);
                 _scriptContext->run(0, context.getMeshLedCount());
                 _lastLedUpdate = millis();
             }
