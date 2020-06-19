@@ -10,8 +10,6 @@
 
 namespace Murli
 {
-    static const int32_t MinTimeSilence = 5000;
-
     class RunModState : public State
     {
         public:
@@ -34,8 +32,9 @@ namespace Murli
                 context.getSocketServer().broadcast(analyzerCommand);
                 setView(result);
 
+                _scriptContext->updateLedInfo(0, context.getMeshLedCount());
                 _scriptContext->updateAnalyzerResult(result.volume, result.dominantFrequency, millis() - _lastLedUpdate);
-                _scriptContext->run(0, context.getMeshLedCount());
+                _scriptContext->run();
                 _lastLedUpdate = millis();
             }
 

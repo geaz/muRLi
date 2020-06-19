@@ -8,7 +8,7 @@ namespace Murli
 {    
     // We want recognize 3140hz max - setting the sample rate to 8000 will provide us with bins up to 4000 hz
     // The ESP8266 is able to sample up to a rate of ~10000
-    static const uint16_t SampleRate = 8000;
+    static const uint16_t SampleRate = 9000;
     static const uint64_t SamplePerioduSec = round(1000000*(1.0 / SampleRate)); // micro seconds between to samples
     static const unsigned short FFTDataSize = 128;
 
@@ -16,7 +16,9 @@ namespace Murli
     static const short MinFrequency = 130;  // Lowest note for viola, mandola
     static const short MidFrequency = 1046; // 1046 Highest note reproducible by average female
     static const short MaxFrequency = 3140; // 3140 Between highest note on a flute and on a 88-key piano
-    static const int8_t MinDB = -21;
+
+    static const float EfAlpha = 0.4;
+    static const int8_t MinDB = -30;
 
     struct AnalyzerResult
     {
@@ -39,6 +41,7 @@ namespace Murli
             void calculateDominantFrequency(AnalyzerResult& result);
             float butterBandPass(const float value);
     
+            float _lastDominantFrequency = 0;
             std::array<float, 5> _bandPassValues = { { 0, 0, 0, 0, 0 } };
     };
 }

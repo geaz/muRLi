@@ -12,8 +12,9 @@ namespace Murli
         AnalyzerResult result;
         collectSamples(result);                 
         calculateVolumeAndBandPass(result);
-        calculateDominantFrequency(result);
-
+        if(result.volume > 0) calculateDominantFrequency(result);
+        else result.dominantFrequency = 0;
+        
         return result;
     }    
 
@@ -71,16 +72,13 @@ namespace Murli
 
     void FrequencyAnalyzer::calculateVolumeAndBandPass(AnalyzerResult& result)
     {
-        unsigned long signalRMS = 0;
-        unsigned short sample = 0;
-        unsigned short absSample = 0;
+        float signalRMS = 0;
+        float sample = 0;
         for (int i = 0; i < FFTDataSize; i++)
         {
-            sample = result.fftReal[i];            
-            result.fftReal[i] = butterBandPass(sample);
-            
-            absSample = abs(sample - 512);
-            signalRMS += absSample * absSample;
+            sample = butterBandPass(result.fftReal[i]);
+            result.fftReal[i] = sample;
+            signalRMS += sample * sample;
         }
 
         float signalRMSflt = sqrt(signalRMS / FFTDataSize);
@@ -95,24 +93,16 @@ namespace Murli
         fft.compute(FFTDirection::Forward);
         fft.complexToMagnitude();
 
-        // only check buckets between our min and max frequency
-        uint8_t minFreqIndex = (uint8_t)((float)MinFrequency / ((float)SampleRate / (float)FFTDataSize));
-        uint8_t maxFreqIndex = (uint8_t)((float)MaxFrequency / ((float)SampleRate / (float)FFTDataSize));
+        // Exonential Smoothing fo the frequencies
+        // To flatten frequency peaks
+        float dominantFrequency = EfAlpha * fft.majorPeak() + (1 - EfAlpha) * _lastDominantFrequency;
+        _lastDominantFrequency = dominantFrequency;
 
-        unsigned short dominantFrequency = 0;
-        short dominantFrequencyData = 0;
-
-        for(unsigned short i = minFreqIndex; i < maxFreqIndex; i++)
-        {
-            if(result.fftReal[i] > dominantFrequencyData)
-            {
-                dominantFrequency = ((i * 1.0 * SampleRate) / FFTDataSize);
-                dominantFrequencyData = result.fftReal[i];
-            }
-        }
         result.dominantFrequency = dominantFrequency > MaxFrequency ? MaxFrequency : dominantFrequency;
     }
 
+    // Band Pass Filter for <=100 >= 3500
+    // http://www.schwietering.com/jayduino/filtuino/index.php
     float FrequencyAnalyzer::butterBandPass(const float value)
     {
         _bandPassValues[0] = _bandPassValues[1];
