@@ -7,6 +7,17 @@
 
 namespace Murli
 {
+    static const char* MjsMinFrequency = "minF";
+    static const char* MjsMidFrequency = "midF";
+    static const char* MjsMaxFrequency = "maxF";
+    static const char* MjsPreviosLedCount = "pLedC";
+    static const char* MjsNodeLedCount = "nLedC";
+    static const char* MjsMeshLedCount = "mLedC";
+    static const char* MjsLastVolume = "lVol";
+    static const char* MjsLastFrequency = "lFreq";
+    static const char* MjsVolume = "vol";
+    static const char* MjsFrequency = "freq";
+
     class ScriptContext
     {
         public:
@@ -14,24 +25,29 @@ namespace Murli
             ~ScriptContext();
             
             void updateLedInfo(const uint16_t previousLedCount, const uint16_t meshLedCount);
-            void updateAnalyzerResult(const uint8_t volume, const uint16_t dominantFrequency, const uint8_t delta);
-            void run();
+            void updateAnalyzerResult(const uint8_t volume, const uint16_t dominantFrequency);
+            void run(const uint8_t delta);
 
             bool isFaulted();
+            void setLed(uint32_t index, Color color);
 
         private:
             void saveJsExec(const char* script, const char* errMessage);
-            void saveJsGetFunc(mjs_val_t& saveToVal, const char* funcName, const char* errMessage);
+            void saveJsSet(const char* mjsVarName, mjs_val_t value, const char* errMessage);
+            void saveJsGet(const char* mjsVarName, mjs_val_t& saveToVal, const char* errMessage);
 
             mjs* _mjs;
-            mjs_val_t _updateMeshLedCountFunc;
-            mjs_val_t _updateAnalyzerValuesFunc;
-            mjs_val_t _onAnalyzerUpdateFunc;
-            mjs_val_t _updateLed;
+            mjs_val_t _mjsGlobal;
+            mjs_val_t _updateFunc;
+            uint8_t _lastVolume = 0;
+            uint16_t _lastFrequency = 0;
             bool _faulted = false;
 
             LED& _led;
     };
+
+    // Pointer for some mJS Callbacks
+    extern ScriptContext* ScriptContextPointer;
 }
 
 #endif // JSCONTEXT_H

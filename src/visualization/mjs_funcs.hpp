@@ -6,6 +6,17 @@
 
 namespace Murli
 {
+    void mjsSetLed(struct mjs *mjs)
+    {
+        mjs_val_t arg_index = mjs_arg(mjs, 0);
+        mjs_val_t arg_color = mjs_arg(mjs, 1);
+
+        double ledIndex = mjs_get_double(mjs, arg_index);
+        double hexColor = mjs_get_double(mjs, arg_color);
+
+        ScriptContextPointer->setLed(ledIndex, Color::fromHex(hexColor));
+    }
+
     /**
      * @brief Maps a value in a specific range to a value in another range.
      * This function is used by mJS and takes five parameters.
