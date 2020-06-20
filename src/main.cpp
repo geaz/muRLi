@@ -147,13 +147,15 @@ void onSocketClientCommandReceived(Murli::MurliCommand command)
         case Murli::ANALYZER_UPDATE:
             if(scriptContext != nullptr)
             {
-                scriptContext->updateAnalyzerResult(command.volume, command.frequency, millis() - lastUpdate);
-                scriptContext->run(command.previousLEDCount, command.meshLEDCount);
+                uint32_t delta = millis() - lastUpdate;
+                lastUpdate = millis();
+
+                scriptContext->updateLedInfo(command.previousLEDCount, command.meshLEDCount);
+                scriptContext->updateAnalyzerResult(command.volume, command.frequency);
+                scriptContext->run(delta);
 
                 command.previousLEDCount += LED_COUNT;
                 socketServer.broadcast(command);
-
-                lastUpdate = millis();
             }
             break;
         default:

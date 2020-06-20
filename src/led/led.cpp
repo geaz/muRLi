@@ -22,7 +22,7 @@ namespace Murli
     
     void LED::setLed(const uint32_t index, const Color color)
     {
-        _leds[index] = color;
+        if(index >= 0 && index <= LED_COUNT-1) _leds[index] = color;
     }
 
     void LED::setAllLeds(const Color color)

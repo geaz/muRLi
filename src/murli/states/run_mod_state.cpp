@@ -32,10 +32,12 @@ namespace Murli
                 context.getSocketServer().broadcast(analyzerCommand);
                 setView(result);
 
-                _scriptContext->updateLedInfo(0, context.getMeshLedCount());
-                _scriptContext->updateAnalyzerResult(result.volume, result.dominantFrequency, millis() - _lastLedUpdate);
-                _scriptContext->run();
+                 uint32_t delta = millis() - _lastLedUpdate;
                 _lastLedUpdate = millis();
+
+                _scriptContext->updateLedInfo(0, context.getMeshLedCount());
+                _scriptContext->updateAnalyzerResult(result.volume, result.dominantFrequency);
+                _scriptContext->run(delta);
             }
 
         private:

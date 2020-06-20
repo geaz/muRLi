@@ -16,11 +16,12 @@ namespace Murli
         saveJsSet("xrgb", mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)xrgb), "Set 'xrgb' error!");
         saveJsSet("xhsv", mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)xhsv), "Set 'xhsv' error!");
         saveJsSet("setLed", mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)mjsSetLed), "Set 'setLed' error!");
+        saveJsSet("setDelay", mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)mjsSetDelay), "Set 'setDelay' error!");
 
-        saveJsSet(MjsMinFrequency, mjs_mk_number(_mjs, MinFrequency), "Set 'minF' error!");
-        saveJsSet(MjsMidFrequency, mjs_mk_number(_mjs, MidFrequency), "Set 'midF' error!");
-        saveJsSet(MjsMaxFrequency, mjs_mk_number(_mjs, MaxFrequency), "Set 'maxF' error!");
-        saveJsSet(MjsNodeLedCount, mjs_mk_number(_mjs, LED_COUNT), "Set 'nLedC' error!");
+        saveJsSet("minF", mjs_mk_number(_mjs, MinFrequency), "Set 'minF' error!");
+        saveJsSet("midF", mjs_mk_number(_mjs, MidFrequency), "Set 'midF' error!");
+        saveJsSet("maxF", mjs_mk_number(_mjs, MaxFrequency), "Set 'maxF' error!");
+        saveJsSet("nLedC", mjs_mk_number(_mjs, LED_COUNT), "Set 'nLedC' error!");
 
         saveJsExec(mod.c_str(), "MOD script error!");
         saveJsGet("update", _updateFunc, "Get 'update' func error!");
@@ -39,21 +40,38 @@ namespace Murli
     void ScriptContext::updateLedInfo(const uint16_t previousLedCount, const uint16_t meshLedCount)
     {
         if(isFaulted()) return;
-        saveJsSet(MjsPreviosLedCount, mjs_mk_number(_mjs, previousLedCount), "Set 'pLedC' error!");
-        saveJsSet(MjsMeshLedCount, mjs_mk_number(_mjs, meshLedCount), "Set 'mLedC' error!");
+        saveJsSet("pLedC", mjs_mk_number(_mjs, previousLedCount), "Set 'pLedC' error!");
+        saveJsSet("mLedC", mjs_mk_number(_mjs, meshLedCount), "Set 'mLedC' error!");
     }
 
     void ScriptContext::updateAnalyzerResult(const uint8_t volume, const uint16_t dominantFrequency)
     {
         if(isFaulted()) return;
 
-        saveJsSet(MjsLastVolume, mjs_mk_number(_mjs, _lastVolume), "Set 'lVol' error!");
-        saveJsSet(MjsLastFrequency, mjs_mk_number(_mjs, _lastFrequency), "Set 'lFreq' error!");
-        saveJsSet(MjsVolume, mjs_mk_number(_mjs, volume), "Set 'vol' error!");
-        saveJsSet(MjsFrequency, mjs_mk_number(_mjs, dominantFrequency), "Set 'freq' error!");
+        bool updateResult = true;
+        std::tuple<uint8_t, uint16_t> result = std::make_tuple(volume, dominantFrequency);
 
-        _lastVolume = volume;
-        _lastFrequency = dominantFrequency;
+        if(_delay > 0)
+        {
+            _resultDeque.push_back(result);
+            if(_resultDeque.size() > _delay)
+            {
+                result = _resultDeque.front();
+                _resultDeque.pop_front();
+            }
+            else updateResult = false;
+        }
+
+        if(updateResult)
+        {
+            saveJsSet("lVol", mjs_mk_number(_mjs, _lastVolume), "Set 'lVol' error!");
+            saveJsSet("lFreq", mjs_mk_number(_mjs, _lastFrequency), "Set 'lFreq' error!");
+            saveJsSet("vol", mjs_mk_number(_mjs, std::get<0>(result)), "Set 'vol' error!");
+            saveJsSet("freq", mjs_mk_number(_mjs, std::get<1>(result)), "Set 'freq' error!");
+
+            _lastVolume = std::get<0>(result);
+            _lastFrequency = std::get<1>(result);
+        }
     }
 
     void ScriptContext::run(const uint8_t delta)
@@ -68,6 +86,7 @@ namespace Murli
 
     bool ScriptContext::isFaulted() { return _faulted; }
     void ScriptContext::setLed(uint32_t index, Color color) { _led.setLed(index, color); }
+    void ScriptContext::setDelay(uint32_t delay) { if(_delay == 0) _delay = delay; }
     
     void ScriptContext::saveJsExec(const char* script, const char* errMessage)
     {

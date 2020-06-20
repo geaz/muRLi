@@ -2,7 +2,7 @@ let h=0;
 let s=0;
 let v=0;
 
-function onAnalyzerUpdate(delta){
+function update(delta){
     if(vol === 0 || freq === 0 || vol < lVol){
         if(v > 0.05){ v-=0.05; }
         else{ v=0; }
@@ -11,8 +11,8 @@ function onAnalyzerUpdate(delta){
         s=1;
         v=map(vol,0,100,0,1);
     }
-}
-
-function updateLed(index){
-    return xhsv(h,s,v);
+    let color=xhsv(h,s,v);
+    for(let i=0; i<nLedC;i++){
+        setLed(i, color);
+    }
 }

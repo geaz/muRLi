@@ -1,23 +1,14 @@
 #ifndef JSCONTEXT_H
 #define JSCONTEXT_H
 
+#include <tuple>
+#include <deque>
 #include <mjs.h>
 #include "../led/led.hpp"
 #include "frequency_analyzer.hpp"
 
 namespace Murli
 {
-    static const char* MjsMinFrequency = "minF";
-    static const char* MjsMidFrequency = "midF";
-    static const char* MjsMaxFrequency = "maxF";
-    static const char* MjsPreviosLedCount = "pLedC";
-    static const char* MjsNodeLedCount = "nLedC";
-    static const char* MjsMeshLedCount = "mLedC";
-    static const char* MjsLastVolume = "lVol";
-    static const char* MjsLastFrequency = "lFreq";
-    static const char* MjsVolume = "vol";
-    static const char* MjsFrequency = "freq";
-
     class ScriptContext
     {
         public:
@@ -30,6 +21,7 @@ namespace Murli
 
             bool isFaulted();
             void setLed(uint32_t index, Color color);
+            void setDelay(uint32_t delay);
 
         private:
             void saveJsExec(const char* script, const char* errMessage);
@@ -39,9 +31,13 @@ namespace Murli
             mjs* _mjs;
             mjs_val_t _mjsGlobal;
             mjs_val_t _updateFunc;
+            bool _faulted = false;
+
             uint8_t _lastVolume = 0;
             uint16_t _lastFrequency = 0;
-            bool _faulted = false;
+
+            uint32_t _delay = 0;
+            std::deque<std::tuple<uint8_t, uint16_t>> _resultDeque;
 
             LED& _led;
     };

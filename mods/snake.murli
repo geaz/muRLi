@@ -1,19 +1,14 @@
 let h=0;
 let s=0;
 let v=0;
+let newColor=0;
 
-let firstRun=true;
 let colors=[];
-let newColor={h:0,s:0,v:0};
+for(let i=0;i<nLedC;i++){
+    colors[i]=0;
+}
 
 function update(delta){
-    if(firstRun) {
-        for(let i=0;i<nLedC;i++){
-            colors[i]=0;
-        }
-        firstRun=false;
-    }
-
     if(vol === 0 || freq === 0 || vol < lVol){
         if(v > 0.05){ v-=0.05; }
         else{ v=0; }

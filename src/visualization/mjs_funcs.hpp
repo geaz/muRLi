@@ -6,6 +6,14 @@
 
 namespace Murli
 {
+    void mjsSetDelay(struct mjs *mjs)
+    {
+        mjs_val_t arg_delay = mjs_arg(mjs, 0);
+        double delay = mjs_get_double(mjs, arg_delay);
+
+        ScriptContextPointer->setDelay(delay);
+    }
+
     void mjsSetLed(struct mjs *mjs)
     {
         mjs_val_t arg_index = mjs_arg(mjs, 0);
