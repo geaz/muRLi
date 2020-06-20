@@ -1,5 +1,3 @@
-#include <Arduino.h>
-
 #include "murli_context.hpp"
 #include "../display/views/splash_view.cpp"
 #include "states/no_mod_state.cpp"

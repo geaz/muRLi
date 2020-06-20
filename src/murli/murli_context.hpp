@@ -2,7 +2,6 @@
 #define MURLICONTEXT_H
 
 #include <memory>
-
 #include "state.hpp"
 #include "../led/led.hpp"
 #include "../wifi/murli_wifi.hpp"
