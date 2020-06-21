@@ -140,33 +140,40 @@ Now just glue the two shell halves together and you are done.
 
 ### Create MODs
 
-**murli** uses a modified version of [TinyScript](https://github.com/totalspectrum/tinyscript) to execute the MODs.
-Every run the script will get some variables injected by **muRLi**.
+**murli** uses [mJS](https://github.com/cesanta/mjs/) to execute the MODs.
+On every loop the scripts will get some variables injected by **muRLi**.
 
-- **v** *The calculated volume is a value between 0 and 100*
-- **f** *The dominant frequency of the current loop*
-- **lf** *The dominant frequency of the last loop*
+- **vol** *The calculated volume is a value between 0 and 100*
+- **freq** *The dominant frequency of the current loop*
+- **lVol** *The volume of the last loop*
+- **lFreq** *The dominant frequency of the last loop*
 - **minF** *The lowest frequency registered by muRLi - 130hz -> Lowest note for viola, mandola*
 - **midF** *The middle frequency value - 1046hz -> Highest note reproducible by average female*
 - **maxF** *The highest frequency registered by muRLi - 3140 -> Between highest note on a flute and on a 88-key piano* 
+- **mLedC** *The total number of LEDs in the longest mesh route*
+- **pLedC** *Number of LEDs prior of the current executing node*
+- **nLedC** *Number of LEDs of the current executing node*
 
-The volume and frequency are zero, if **muRLi** recognized silence for at least five seconds. This way a MOD
-could calculate some ambient lights for the silence phase.
+Every script has to implement the *update* method:
 
-Scripts are able to return up to two different colors per run by calling the *sCF* method.
-It has the following signature:
+```
+function update(delta) {}
+```
 
-```sCF(int colorFrame, int hexColor)```
+The script API exposes some methods to work with:
 
-A script which would never change the color would look like:
+- **map(x, in_min, in_max, out_min, out_max)** *Maps a number in a certain range to the corresponding number in the output range*
+- **round(number)** *Rounds a number to the next whole integer*
+- **xrgb(r, g, b)** *Returns the hex representation of the given RGB color*
+- **xhsv(h, s, v)** *Returns the hex representation of the given HSV color*
+- **setDelay(count)** *If set to a value >0 the script engine will delay the frequency updates. For example with a value of '1', the script engine would delay the frequency updates by one other frequency update.*
+- **setLed(index, hexColor)** *Set the LED with the given index to the given hex color*
 
-```sCF(0, 0xFFFFFF)```
-
-For more advanced examples look into the *mods* folder.
+Look into the *mod* folder for some examples.
 
 ### Write MODs
 
-In the *mods* folder is a python script to write the mods onto the cartridges. Please make sure, that Python3 is installed.
+In the *mods* folder is a python script to write the mods onto the cartridges. Please make sure, that Python 3 is installed.
 Connect **muRLi** to your machine, insert a cartridge and execute the script like this:
 
 ```
