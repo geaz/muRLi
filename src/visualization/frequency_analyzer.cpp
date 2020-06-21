@@ -76,7 +76,7 @@ namespace Murli
         float sample = 0;
         for (int i = 0; i < FFTDataSize; i++)
         {
-            sample = butterBandPass(result.fftReal[i]);
+            sample = butterBandPass(result.fftReal[i]-512);
             result.fftReal[i] = sample;
             signalRMS += sample * sample;
         }

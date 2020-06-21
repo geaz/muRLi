@@ -9,6 +9,8 @@ for(let i=0;i<nLedC;i++){
 }
 
 function update(delta){
+    setDelay(pLedC);
+    
     if(vol === 0 || freq === 0 || vol < lVol){
         if(v > 0.05){ v-=0.05; }
         else{ v=0; }

@@ -62,7 +62,6 @@ namespace Murli
                 writeRequested = true;
                 currentState = std::make_shared<ReceiveLengthState>();
             }
-            else currentState = std::make_shared<NoModState>();
         }
     }
 
