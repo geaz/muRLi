@@ -109,7 +109,7 @@ Mount the Wemos D1 Mini to the *Bottom* part of the shell.
 
 ![muRLi - Mounted](https://raw.githubusercontent.com/geaz/muRLi/master/img/mounted.jpg)
 
-Power the Wemos and insert a *MOD*. You should see the *decibel* in the top right of the display. Set the gain of you microphone with a small screwdriver. It should float between -24 and -25dB in a silent room. If done, place the stripboard into the shell, place one of the *divider* parts on top of the *bottom* part, then place the *middle* part on top of it. Followed by an additional *divider* and the *top* part.
+Power the Wemos and insert a *MOD*. You should see the *decibel* in the top right of the display. Set the gain of you microphone with a small screwdriver. It should float between -40 and -43dB in a silent room. If done, place the stripboard into the shell, place one of the *divider* parts on top of the *bottom* part, then place the *middle* part on top of it. Followed by an additional *divider* and the *top* part.
 Insert the *bolts* into the four holes and use the M2x12mm screws to close the shell.
 
 ## MODs
@@ -153,6 +153,7 @@ On every loop the scripts will get some variables injected by **muRLi**.
 - **mLedC** *The total number of LEDs in the longest mesh route*
 - **pLedC** *Number of LEDs prior of the current executing node*
 - **nLedC** *Number of LEDs of the current executing node*
+- **pNodeC** *Number of previous nodes in route*
 
 Every script has to implement the *update* method:
 

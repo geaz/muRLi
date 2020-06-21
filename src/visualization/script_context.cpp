@@ -27,7 +27,7 @@ namespace Murli
         saveJsGet("update", _updateFunc, "Get 'update' func error!");
         
         // Testrun the script
-        updateLedInfo(0, LED_COUNT);
+        updateLedInfo(0, 0, LED_COUNT);
         updateAnalyzerResult(0, 0);
         run(0);
     }
@@ -37,9 +37,10 @@ namespace Murli
         mjs_destroy(_mjs);
     }
 
-    void ScriptContext::updateLedInfo(const uint16_t previousLedCount, const uint16_t meshLedCount)
+    void ScriptContext::updateLedInfo(const uint16_t previousNodeCount, const uint32_t previousLedCount, const uint32_t meshLedCount)
     {
         if(isFaulted()) return;
+        saveJsSet("pNodeC", mjs_mk_number(_mjs, previousNodeCount), "Set 'pNodeC' error!");
         saveJsSet("pLedC", mjs_mk_number(_mjs, previousLedCount), "Set 'pLedC' error!");
         saveJsSet("mLedC", mjs_mk_number(_mjs, meshLedCount), "Set 'mLedC' error!");
     }

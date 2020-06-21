@@ -40,10 +40,6 @@ void setup()
 
 void loop()
 {
-    char heapString[10];
-    itoa(ESP.getFreeHeap(), heapString, 10);
-    Serial.println(heapString);
-
     murlinContext.loop();
 }
 

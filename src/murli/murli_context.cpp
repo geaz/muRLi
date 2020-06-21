@@ -76,7 +76,7 @@ namespace Murli
         }
         else
         {
-            MurliCommand command = { millis(), Murli::MESH_COUNT, 0, 0, LED_COUNT, 0 };
+            MurliCommand command = { millis(), Murli::MESH_COUNT, 0, 0, LED_COUNT, 0, 1 };
 
             _countData = { command, {}, 0, false };
             _socketServer.broadcast(command);
@@ -99,7 +99,7 @@ namespace Murli
                 Serial.println("Got MESH_UPDATE!");
                 _countData.answers++;
                 // Save the retrieved MESH_UPDATE, if it is the first one or, if it has a larger LED count route
-                if(_countData.answers == 1 || _countData.updateCommand.meshLEDCount < command.meshLEDCount)
+                if(_countData.answers == 1 || _countData.updateCommand.meshLedCount < command.meshLedCount)
                 {
                     _countData.updateCommand = command;
                 }
@@ -107,12 +107,12 @@ namespace Murli
                 // if we retrieved answers of all clients
                 if(_countData.answers == _socketServer.connectedClients())
                 {
-                    if(_meshLedCount < _countData.updateCommand.meshLEDCount)
+                    if(_meshLedCount < _countData.updateCommand.meshLedCount)
                     {
                         Serial.println("New node connected. Resetting state ...");
                         currentState = std::make_shared<NoModState>();
                     }
-                    _meshLedCount = _countData.updateCommand.meshLEDCount;
+                    _meshLedCount = _countData.updateCommand.meshLedCount;
                     _countData = { {}, {}, 0, false };
 
                     Serial.printf("MESH_UPDATE done with %d LEDs on the longest route.\n", _meshLedCount);
@@ -127,6 +127,6 @@ namespace Murli
     LED& MurliContext::getLed() { return _led; }
     Rom24LC32A& MurliContext::getRom() { return _rom; }
     Display& MurliContext::getDisplay() { return _display; }
-    uint16_t MurliContext::getMeshLedCount() { return _meshLedCount; }
+    uint32_t MurliContext::getMeshLedCount() { return _meshLedCount; }
     SocketServer& MurliContext::getSocketServer() { return _socketServer; }
 }

@@ -30,10 +30,13 @@ namespace Murli
             SocketServer _socketServer;
             SocketClient _socketClient;
 
+            uint32_t _previousLedCount = 0;
+            uint32_t _previousNodeCount = 0;
+            uint64_t _lastUpdate = millis();            
+            MurliCountData _currentCountData = { {}, {}, 0, false };
+
             bool _newMod = false;
             std::string _currentMod;
-            uint32_t _lastUpdate = millis();            
-            MurliCountData _currentCountData = { {}, {}, 0, false };
             std::unique_ptr<ScriptContext> _scriptContext = nullptr;
     };
 }

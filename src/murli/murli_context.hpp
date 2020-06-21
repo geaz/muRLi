@@ -24,7 +24,7 @@ namespace Murli
             LED& getLed();
             Rom24LC32A& getRom();
             Display& getDisplay();
-            uint16_t getMeshLedCount();
+            uint32_t getMeshLedCount();
             SocketServer& getSocketServer();
 
             bool writeRequested = false;
@@ -45,7 +45,7 @@ namespace Murli
             Rom24LC32A _rom = Rom24LC32A(0x50);
 
             MurliCountData _countData = { {}, {}, 0, false };
-            uint16_t _meshLedCount = LED_COUNT;
+            uint32_t _meshLedCount = LED_COUNT;
             std::shared_ptr<State> _noModState;
     };
 }

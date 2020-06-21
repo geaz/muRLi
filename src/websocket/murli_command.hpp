@@ -18,15 +18,16 @@ namespace Murli
         Command command;
         uint8_t volume;
         uint16_t frequency;
-        uint16_t meshLEDCount;
-        uint16_t previousLEDCount;
+        uint32_t meshLedCount;
+        uint32_t previousLedCount;
+        uint32_t previousNodeCount;
     };
 
     struct MurliCountData
     {
         MurliCommand countCommand;        
         MurliCommand updateCommand;
-        uint32_t answers;
+        uint16_t answers;
         bool active;
     };
 }

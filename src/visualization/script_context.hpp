@@ -15,7 +15,7 @@ namespace Murli
             ScriptContext(LED& led, const std::string& mod);
             ~ScriptContext();
             
-            void updateLedInfo(const uint16_t previousLedCount, const uint16_t meshLedCount);
+            void updateLedInfo(const uint16_t previousNodeCount, const uint32_t previousLedCount, const uint32_t meshLedCount);
             void updateAnalyzerResult(const uint8_t volume, const uint16_t dominantFrequency);
             void run(const uint8_t delta);
 

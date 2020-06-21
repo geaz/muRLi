@@ -32,6 +32,7 @@ namespace Murli
         {
             Serial.println("Websocket and WiFi disconnected! Going to sleep ...");
             _led.setAllLeds(Murli::Black);
+            _led.loop();
             ESP.deepSleep(SleepSeconds * 1000000);
         }
     }
@@ -63,7 +64,7 @@ namespace Murli
             case Murli::MESH_UPDATE:
                 _currentCountData.answers++;
                 // Save the retrieved MESH_UPDATE, if it is the first one or, if it has a larger LED count route
-                if(_currentCountData.answers == 1 || _currentCountData.updateCommand.meshLEDCount < command.meshLEDCount)
+                if(_currentCountData.answers == 1 || _currentCountData.updateCommand.meshLedCount < command.meshLedCount)
                 {
                     _currentCountData.updateCommand = command;
                 }
@@ -86,7 +87,7 @@ namespace Murli
         switch (command.command)
         {
             case Murli::MESH_COUNT:
-                command.meshLEDCount += LED_COUNT;
+                command.meshLedCount += LED_COUNT;
                 // If the current node is the last one (no clients connected)
                 // Send the LED count back to the parent
                 if(_socketServer.connectedClients() == 0)
@@ -109,11 +110,12 @@ namespace Murli
                     uint32_t delta = millis() - _lastUpdate;
                     _lastUpdate = millis();
 
-                    _scriptContext->updateLedInfo(command.previousLEDCount, command.meshLEDCount);
+                    _scriptContext->updateLedInfo(command.previousNodeCount, command.previousLedCount, command.meshLedCount);
                     _scriptContext->updateAnalyzerResult(command.volume, command.frequency);
                     _scriptContext->run(delta);
 
-                    command.previousLEDCount += LED_COUNT;
+                    command.previousLedCount += LED_COUNT;
+                    command.previousNodeCount++;
                     _socketServer.broadcast(command);
                 }
                 break;
