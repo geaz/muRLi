@@ -6,8 +6,10 @@ namespace Murli
     enum Command
     {
         MESH_CONNECTION,
-        MESH_COUNT,
+        MESH_COUNT_REQUEST,
+        MESH_COUNTED,
         MESH_UPDATE,
+        MESH_UPDATED,
         MOD_DISTRIBUTED,
         ANALYZER_UPDATE
     };
@@ -21,14 +23,6 @@ namespace Murli
         uint32_t meshLedCount;
         uint32_t previousLedCount;
         uint32_t previousNodeCount;
-    };
-
-    struct MurliCountData
-    {
-        MurliCommand countCommand;        
-        MurliCommand updateCommand;
-        uint16_t answers;
-        bool active;
     };
 }
 

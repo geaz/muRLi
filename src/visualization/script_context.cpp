@@ -26,6 +26,7 @@ namespace Murli
         saveJsSet("nLedC", mjs_mk_number(_mjs, LED_COUNT), "Set 'nLedC' error!");
 
         saveJsExec(mod.c_str(), "MOD script error!");
+        saveJsGet("init", _initFunc, "Get 'init' func error!");
         saveJsGet("update", _updateFunc, "Get 'update' func error!");
         
         // Testrun the script
@@ -45,6 +46,15 @@ namespace Murli
         saveJsSet("pNodeC", mjs_mk_number(_mjs, previousNodeCount), "Set 'pNodeC' error!");
         saveJsSet("pLedC", mjs_mk_number(_mjs, previousLedCount), "Set 'pLedC' error!");
         saveJsSet("mLedC", mjs_mk_number(_mjs, meshLedCount), "Set 'mLedC' error!");
+    }
+
+    void ScriptContext::init()
+    {  
+        if(mjs_call(_mjs, NULL, _initFunc, _mjsGlobal, 0) != MJS_OK)
+        {
+            _faulted = true;
+            Serial.println("Error on 'init'!");
+        }
     }
 
     void ScriptContext::updateAnalyzerResult(const uint8_t volume, const uint16_t dominantFrequency)

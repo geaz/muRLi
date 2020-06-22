@@ -18,6 +18,7 @@ namespace Murli
             void loop();
             void broadcast(MurliCommand command);
             void broadcastMod(std::string& mod);
+
             void onCommandReceived(MeshCommandEvent event);
             void onMeshConnection(MeshConnectionEvent event);
             void onModDistributed(MeshModDistributedEvent event);
@@ -26,6 +27,11 @@ namespace Murli
         
         private:
             void serverEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length);
+
+            uint16_t _answers = 0;
+            bool _modDistribution = false;
+            MurliCommand _receivedCommand = { 0 };
+            MurliCommand _requestCommand = { 0 };
 
             MeshCommandEvent _meshCommandEvent = nullptr;
             MeshConnectionEvent _meshConnectionEvent = nullptr;

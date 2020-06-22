@@ -2,15 +2,16 @@ let h=0;
 let s=0;
 let v=0;
 let newColor=0;
-
 let colors=[];
-for(let i=0;i<nLedC;i++){
-    colors[i]=0;
+
+function init(){
+    for(let i=0;i<nLedC;i++){
+        colors[i]=0;
+    }
+    setDelay(pLedC);
 }
 
 function update(delta){
-    setDelay(pLedC);
-    
     if(vol === 0 || freq === 0 || vol < lVol){
         if(v > 0.05){ v-=0.05; }
         else{ v=0; }

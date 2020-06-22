@@ -67,7 +67,7 @@ namespace Murli
 
     void MurliContext::startMeshCount()
     {
-        Serial.println("Connection state changed. Starting MESH_COUNT ...");
+        Serial.println("Connection state changed. Starting MESH_COUNT_REQUEST ...");
         if(_socketServer.connectedClients() == 0)
         {
             Serial.println("No clients connected!");
@@ -76,11 +76,9 @@ namespace Murli
         }
         else
         {
-            MurliCommand command = { millis(), Murli::MESH_COUNT, 0, 0, LED_COUNT, 0, 1 };
-
-            _countData = { command, {}, 0, false };
+            MurliCommand command = { millis(), Murli::MESH_COUNT_REQUEST, 0, 0, LED_COUNT, 0, 1 };
             _socketServer.broadcast(command);
-        }        
+        }
     }
 
     void MurliContext::onSocketServerMeshConnection()
@@ -88,38 +86,27 @@ namespace Murli
         startMeshCount();
     }
 
-    void MurliContext::onSocketServerCommandReceived(Murli::MurliCommand command)
+    void MurliContext::onSocketServerCommandReceived(MurliCommand command)
     {
+        MurliCommand updateCommand;
         switch (command.command)
         {
             case Murli::MESH_CONNECTION:
                 startMeshCount();
                 break;
-            case Murli::MESH_UPDATE:
-                Serial.println("Got MESH_UPDATE!");
-                _countData.answers++;
-                // Save the retrieved MESH_UPDATE, if it is the first one or, if it has a larger LED count route
-                if(_countData.answers == 1 || _countData.updateCommand.meshLedCount < command.meshLedCount)
-                {
-                    _countData.updateCommand = command;
-                }
-                // Send the MESH_UPDATE with the largest LED count/route to the parent,
-                // if we retrieved answers of all clients
-                if(_countData.answers == _socketServer.connectedClients())
-                {
-                    if(_meshLedCount < _countData.updateCommand.meshLedCount)
-                    {
-                        Serial.println("New node connected. Resetting state ...");
-                        currentState = std::make_shared<NoModState>();
-                    }
-                    _meshLedCount = _countData.updateCommand.meshLedCount;
-                    _countData = { {}, {}, 0, false };
+            case Murli::MESH_COUNTED:
+                _meshLedCount = command.meshLedCount;
+                Serial.printf("MESH_COUNT done with %d LEDs on the longest route.\n", _meshLedCount);
 
-                    Serial.printf("MESH_UPDATE done with %d LEDs on the longest route.\n", _meshLedCount);
-                }
+                Serial.println("Distributing result of count ...");
+                updateCommand = { millis(), MESH_UPDATE, 0, 0, _meshLedCount, LED_COUNT, 1 };
+                _socketServer.broadcast(updateCommand);
+                break;
+            case Murli::MESH_UPDATED:
+                Serial.println("Mesh updated - Resetting state ...");
+                currentState = std::make_shared<NoModState>();
                 break;
             default:
-                // The socket server will never retrieve ANALYZER_UPDATE or MESH_COUNT events - MOD_DISTRIBUTED is handled in BraodcastModState
                 break;
         }
     }

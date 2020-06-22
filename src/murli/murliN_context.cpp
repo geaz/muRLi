@@ -41,10 +41,76 @@ namespace Murli
     {
         if(_newMod){
             Serial.println("Received new mod. Creating new ScriptContext ...");
+            _led.clearGroups();
             _scriptContext = std::unique_ptr<Murli::ScriptContext>(new ScriptContext(_led, _currentMod));
+            _scriptContext->updateLedInfo(_previousNodeCount, _previousLedCount, _meshLedCount);
+            _scriptContext->init();
             _newMod = false;
         }
     }
+
+    void MurlinContext::checkDistributeOrAnswer(MurliCommand command, Command answerCommandType)
+    {
+        if(_socketServer.connectedClients() == 0)
+        {
+            command.command = answerCommandType;
+            _socketClient.sendCommand(command);
+        }
+        else { _socketServer.broadcast(command); }
+    }
+
+    void MurlinContext::onSocketClientCommandReceived(Murli::MurliCommand command)
+    {
+        switch (command.command)
+        {
+            case Murli::MESH_COUNT_REQUEST:
+                Serial.println("MESH_COUNT_REQUEST received...");
+                command.meshLedCount += LED_COUNT;
+                checkDistributeOrAnswer(command, Murli::MESH_COUNTED);
+                break;
+            case Murli::MESH_UPDATE:
+                _meshLedCount = command.meshLedCount;
+                _previousLedCount = command.previousLedCount;
+                _previousNodeCount = command.previousNodeCount;
+
+                command.previousLedCount += LED_COUNT;
+                command.previousNodeCount++;
+                
+                checkDistributeOrAnswer(command, Murli::MESH_UPDATED);
+                break;
+            case Murli::ANALYZER_UPDATE:
+                if(_scriptContext != nullptr)
+                {
+                    uint32_t delta = millis() - _lastUpdate;
+                    _lastUpdate = millis();
+                    
+                    _scriptContext->updateAnalyzerResult(command.volume, command.frequency);
+                    _scriptContext->run(delta);
+
+                    command.previousLedCount += LED_COUNT;
+                    command.previousNodeCount++;
+                    _socketServer.broadcast(command);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    void MurlinContext::onSocketClientModReceived(std::string mod)
+    {
+        // DON'T create the ScriptContext in the callback
+        // Unexpected errors will occure!
+        _newMod = true;
+        _currentMod = mod;
+        if(_socketServer.connectedClients() == 0)
+        {
+            Serial.println("End of route - Sending MOD_DISTRIBUTED");
+            Murli::MurliCommand command = { millis(), Murli::MOD_DISTRIBUTED, 0, 0, 0, 0 };
+            _socketClient.sendCommand(command);
+        }
+        else _socketServer.broadcastMod(mod);
+    }    
 
     void MurlinContext::onSocketServerMeshConnection()
     {
@@ -57,86 +123,14 @@ namespace Murli
     {
         switch (command.command)
         {
-            // Send a MESH_CONNECTION up until the root is reached
             case Murli::MESH_CONNECTION:
+            case MESH_COUNTED:
+            case Murli::MESH_UPDATED:
+            case Murli::MOD_DISTRIBUTED:
                 _socketClient.sendCommand(command);
                 break;
-            case Murli::MESH_UPDATE:
-                _currentCountData.answers++;
-                // Save the retrieved MESH_UPDATE, if it is the first one or, if it has a larger LED count route
-                if(_currentCountData.answers == 1 || _currentCountData.updateCommand.meshLedCount < command.meshLedCount)
-                {
-                    _currentCountData.updateCommand = command;
-                }
-                // Send the MESH_UPDATE with the largest LED count/route to the parent,
-                // if we retrieved answers of all clients
-                if(_currentCountData.answers == _socketServer.connectedClients())
-                {
-                    _socketClient.sendCommand(_currentCountData.updateCommand);
-                    _currentCountData = { {}, {}, 0, false };
-                }
-                break;
             default:
-                // The socket server will never retrieve ANALYZER_UPDATE or MESH_COUNT events
                 break;
-        }
-    }
-
-    void MurlinContext::onSocketClientCommandReceived(Murli::MurliCommand command)
-    {
-        switch (command.command)
-        {
-            case Murli::MESH_COUNT:
-                command.meshLedCount += LED_COUNT;
-                // If the current node is the last one (no clients connected)
-                // Send the LED count back to the parent
-                if(_socketServer.connectedClients() == 0)
-                {
-                    command.command = Murli::MESH_UPDATE;
-                    _socketClient.sendCommand(command);
-                }
-                // Only forward the current MESH_COUNT command, if
-                // no other MESH_COUNT is active or the the command
-                // was requested after the current one (a new node connected to the network during an active MESH_COUNT)
-                else if(!_currentCountData.active || _currentCountData.countCommand.id < command.id)
-                {
-                    _currentCountData = { command, {}, 0, true };
-                    _socketServer.broadcast(command);
-                }
-                break;
-            case Murli::ANALYZER_UPDATE:
-                if(_scriptContext != nullptr)
-                {
-                    uint32_t delta = millis() - _lastUpdate;
-                    _lastUpdate = millis();
-
-                    _scriptContext->updateLedInfo(command.previousNodeCount, command.previousLedCount, command.meshLedCount);
-                    _scriptContext->updateAnalyzerResult(command.volume, command.frequency);
-                    _scriptContext->run(delta);
-
-                    command.previousLedCount += LED_COUNT;
-                    command.previousNodeCount++;
-                    _socketServer.broadcast(command);
-                }
-                break;
-            default:
-                // The SocketClient does not have to handle MESH_CONNECTION or MESH_UPDATE events
-                break;
-        }
-    }
-
-    void MurlinContext::onSocketClientModReceived(std::string mod)
-    {
-        // DON'T create the ScriptContext in the callback
-        // Unexpected errors will occure!
-        _newMod = true;
-        _currentMod = mod;
-
-        if(_socketServer.connectedClients() == 0)
-        {
-            Serial.println("End of route - Sending MOD_DISTRIBUTED");
-            Murli::MurliCommand command = { millis(), Murli::MOD_DISTRIBUTED, 0, 0, 0, 0 };
-            _socketClient.sendCommand(command);
         }
     }
 }

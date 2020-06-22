@@ -2,6 +2,8 @@ let h=0;
 let s=0;
 let v=0;
 
+function init(){}
+
 function update(delta){
     if(vol === 0 || freq === 0 || vol < lVol){
         if(v > 0.05){ v-=0.05; }

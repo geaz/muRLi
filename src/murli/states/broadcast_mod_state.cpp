@@ -37,8 +37,11 @@ namespace Murli
                     uint32_t clients = context.getSocketServer().connectedClients();
                     if(clients == ++_receivedCommands || clients == 0)
                     {
-                        context.getLed().setAllLeds(Murli::Black);
                         auto scriptContext = std::make_shared<ScriptContext>(context.getLed(), _mod);
+                        scriptContext->updateLedInfo(0, 0, context.getMeshLedCount());
+                        scriptContext->init();
+
+                        context.getLed().setAllLeds(Murli::Black);
                         context.currentState = std::make_shared<RunModState>(scriptContext);
                     }
                     else _modDistributed = false;

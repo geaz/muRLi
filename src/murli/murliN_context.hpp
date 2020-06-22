@@ -20,23 +20,25 @@ namespace Murli
 
         private:
             void checkNewMod();
-            void onSocketServerMeshConnection();
-            void onSocketServerCommandReceived(Murli::MurliCommand command);
+            void checkDistributeOrAnswer(MurliCommand command, Command answerCommandType);
+
             void onSocketClientCommandReceived(Murli::MurliCommand command);
             void onSocketClientModReceived(std::string mod);
+            void onSocketServerMeshConnection();
+            void onSocketServerCommandReceived(Murli::MurliCommand command);
 
             LED _led;
             MurliWifi _wifi;
             SocketServer _socketServer;
             SocketClient _socketClient;
 
+            uint32_t _meshLedCount = 0;
             uint32_t _previousLedCount = 0;
             uint32_t _previousNodeCount = 0;
-            uint64_t _lastUpdate = millis();            
-            MurliCountData _currentCountData = { {}, {}, 0, false };
 
             bool _newMod = false;
             std::string _currentMod;
+            uint64_t _lastUpdate = millis();
             std::unique_ptr<ScriptContext> _scriptContext = nullptr;
     };
 }
