@@ -25,6 +25,7 @@ namespace Murli
                 context.getDisplay().setView(_insertModView);
                 if(context.isModInserted())
                 {
+                    context.getLed().clearGroups();
                     context.getLed().setPattern(nullptr);
                     context.currentState = std::make_shared<ReadModState>();
                 }

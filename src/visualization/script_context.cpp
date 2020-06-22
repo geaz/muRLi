@@ -16,6 +16,8 @@ namespace Murli
         saveJsSet("xrgb", mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)xrgb), "Set 'xrgb' error!");
         saveJsSet("xhsv", mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)xhsv), "Set 'xhsv' error!");
         saveJsSet("setLed", mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)mjsSetLed), "Set 'setLed' error!");
+        saveJsSet("setGroup", mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)mjsSetGroup), "Set 'setGroup' error!");
+        saveJsSet("clearGroups", mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)mjsClearGroups), "Set 'clearGroups' error!");
         saveJsSet("setDelay", mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)mjsSetDelay), "Set 'setDelay' error!");
 
         saveJsSet("minF", mjs_mk_number(_mjs, MinFrequency), "Set 'minF' error!");
@@ -86,8 +88,8 @@ namespace Murli
     }
 
     bool ScriptContext::isFaulted() { return _faulted; }
-    void ScriptContext::setLed(uint32_t index, Color color) { _led.setLed(index, color); }
     void ScriptContext::setDelay(uint32_t delay) { if(_delay == 0) _delay = delay; }
+    LED& ScriptContext::getLed() { return _led; }
     
     void ScriptContext::saveJsExec(const char* script, const char* errMessage)
     {

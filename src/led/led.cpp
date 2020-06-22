@@ -22,7 +22,17 @@ namespace Murli
     
     void LED::setLed(const uint32_t index, const Color color)
     {
-        if(index >= 0 && index <= LED_COUNT-1) _leds[index] = color;
+        if(index >= 0 && index <= LED_COUNT-1) 
+        {
+            if(_groupsSet)
+            {
+                for(uint32_t i : _groups[index])
+                {
+                    if(i >= 0 && i <= LED_COUNT-1) _leds[i] = color;
+                }
+            }
+            else _leds[index] = color;
+        }
     }
 
     void LED::setAllLeds(const Color color)
@@ -39,6 +49,24 @@ namespace Murli
             setAllLeds(Murli::Black);
         }
         else _pattern = std::move(pattern);
+    }
+
+    void LED::setGroup(const uint32_t index, std::vector<uint32_t> group)
+    {
+        if(index >= 0 && index <= LED_COUNT-1)
+        {
+            _groups[index] = group;
+            _groupsSet = true;
+        }
+    }
+    
+    void LED::clearGroups()
+    {
+        for(uint32_t i=0; i<LED_COUNT;i++)
+        {
+            _groups[i].clear();
+        }
+        _groupsSet = false;
     }
 
     void LED::checkPattern()

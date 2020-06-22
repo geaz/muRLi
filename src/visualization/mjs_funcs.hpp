@@ -6,6 +6,12 @@
 
 namespace Murli
 {
+    /**
+     * @brief Sets a delay for all frequency update commands.
+     * This function is used by mJS and takes one parameter (delay)
+     * 
+     * @param mjs The mJS instance to use
+     */
     void mjsSetDelay(struct mjs *mjs)
     {
         mjs_val_t arg_delay = mjs_arg(mjs, 0);
@@ -14,6 +20,12 @@ namespace Murli
         ScriptContextPointer->setDelay(delay);
     }
 
+    /**
+     * @brief Sets a LED of the current node.
+     * This function is used by mJS and takes two parameters (index, color)
+     * 
+     * @param mjs The mJS instance to use
+     */
     void mjsSetLed(struct mjs *mjs)
     {
         mjs_val_t arg_index = mjs_arg(mjs, 0);
@@ -22,7 +34,31 @@ namespace Murli
         double ledIndex = mjs_get_double(mjs, arg_index);
         double hexColor = mjs_get_double(mjs, arg_color);
 
-        ScriptContextPointer->setLed(ledIndex, Color::fromHex(hexColor));
+        ScriptContextPointer->getLed().setLed(ledIndex, Color::fromHex(hexColor));
+    }
+
+    void mjsSetGroup(struct mjs *mjs)
+    {
+        mjs_val_t arg_index = mjs_arg(mjs, 0);
+        mjs_val_t arg_group = mjs_arg(mjs, 1);
+
+        if(!mjs_is_array(arg_group)) return;
+
+        double index = mjs_get_double(mjs, arg_index);
+        std::vector<uint32_t> group;
+
+        for(uint32_t i=0;i<mjs_array_length(mjs, arg_group);i++)
+        {
+            mjs_val_t ledIndex = mjs_array_get(mjs, arg_group, i);
+            group.push_back(mjs_get_int32(mjs, ledIndex));
+        }
+
+        ScriptContextPointer->getLed().setGroup(index, group);
+    }
+
+    void mjsClearGroups(struct mjs *mjs)
+    {
+        ScriptContextPointer->getLed().clearGroups();
     }
 
     /**
