@@ -28,11 +28,6 @@ namespace Murli
         saveJsExec(mod.c_str(), "MOD script error!");
         saveJsGet("init", _initFunc, "Get 'init' func error!");
         saveJsGet("update", _updateFunc, "Get 'update' func error!");
-        
-        // Testrun the script
-        updateLedInfo(0, 0, LED_COUNT);
-        updateAnalyzerResult(0, 0);
-        run(0);
     }
 
     ScriptContext::~ScriptContext()

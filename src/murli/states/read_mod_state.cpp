@@ -21,6 +21,7 @@ namespace Murli
             void run(MurliContext& context)
             {                         
                 context.getLed().setAllLeds(Murli::Yellow);
+                context.getLed().loop();
                 context.getDisplay().setView(_readModView);
                 context.getDisplay().loop();
 
