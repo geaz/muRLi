@@ -11,6 +11,7 @@ namespace Murli
         MESH_UPDATE,
         MESH_UPDATED,
         MOD_DISTRIBUTED,
+        MOD_REMOVED,
         ANALYZER_UPDATE
     };
 

@@ -21,10 +21,18 @@ namespace Murli
 
             void run(MurliContext& context)
             {
+                if(!_modRemovedSent)
+                {
+                    MurliCommand modRemovedCommand = { millis(), MOD_REMOVED };
+                    context.getSocketServer().broadcast(modRemovedCommand);
+                    _modRemovedSent = true;
+                }
+                
                 context.getLed().setPattern(_fadePattern);
                 context.getDisplay().setView(_insertModView);
                 if(context.isModInserted())
                 {
+                    _modRemovedSent = false;
                     context.getLed().clearGroups();
                     context.getLed().setPattern(nullptr);
                     context.currentState = std::make_shared<ReadModState>();
@@ -32,6 +40,7 @@ namespace Murli
             }
 
         private:
+            bool _modRemovedSent = false;
             std::shared_ptr<LedFadePattern> _fadePattern;
             std::shared_ptr<InsertModView> _insertModView;
     };

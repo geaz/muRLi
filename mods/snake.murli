@@ -1,13 +1,8 @@
 let h=0;
 let s=0;
 let v=0;
-let newColor=0;
-let colors=[];
 
 function init(){
-    for(let i=0;i<nLedC;i++){
-        colors[i]=0;
-    }
     setDelay(pLedC);
 }
 
@@ -20,12 +15,9 @@ function update(delta){
         s=1;
         v=map(vol,0,100,0,1);
     }
-    newColor=xhsv(h,s,v);
 
-    for(let i=nLedC-1; i>=0;i--){
-        if(i===0) { colors[0] = newColor; }
-        else { colors[i] = colors[i-1]; }
-
-        setLed(i, colors[i]);
+    for(let i=nLedC-1; i>0;i--){
+        setLed(i, getLed(i-1));
     }
+    setLed(0, xhsv(h,s,v));
 }

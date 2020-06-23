@@ -37,6 +37,14 @@ namespace Murli
         ScriptContextPointer->getLed().setLed(ledIndex, Color::fromHex(hexColor));
     }
 
+    void mjsGetLed(struct mjs *mjs)
+    {
+        mjs_val_t arg_index = mjs_arg(mjs, 0);
+        double ledIndex = mjs_get_double(mjs, arg_index);
+
+        mjs_return(mjs, mjs_mk_number(mjs, ScriptContextPointer->getLed().getLed(ledIndex)));
+    }
+
     void mjsSetGroup(struct mjs *mjs)
     {
         mjs_val_t arg_index = mjs_arg(mjs, 0);

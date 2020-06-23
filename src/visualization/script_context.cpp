@@ -11,20 +11,31 @@ namespace Murli
         _mjs = mjs_create();
         _mjsGlobal = mjs_get_global(_mjs);
 
+        // Set API functions
         saveJsSet("map", mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)mjsMap), "Set 'map' error!");
         saveJsSet("round", mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)mjsRound), "Set 'round' error!");
         saveJsSet("xrgb", mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)xrgb), "Set 'xrgb' error!");
         saveJsSet("xhsv", mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)xhsv), "Set 'xhsv' error!");
         saveJsSet("setLed", mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)mjsSetLed), "Set 'setLed' error!");
+        saveJsSet("getLed", mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)mjsGetLed), "Set 'getLed' error!");
         saveJsSet("setGroup", mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)mjsSetGroup), "Set 'setGroup' error!");
         saveJsSet("clearGroups", mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)mjsClearGroups), "Set 'clearGroups' error!");
         saveJsSet("setDelay", mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)mjsSetDelay), "Set 'setDelay' error!");
 
+        // Set variables
         saveJsSet("minF", mjs_mk_number(_mjs, MinFrequency), "Set 'minF' error!");
         saveJsSet("midF", mjs_mk_number(_mjs, MidFrequency), "Set 'midF' error!");
         saveJsSet("maxF", mjs_mk_number(_mjs, MaxFrequency), "Set 'maxF' error!");
         saveJsSet("nLedC", mjs_mk_number(_mjs, LED_COUNT), "Set 'nLedC' error!");
+        saveJsSet("mLedC", mjs_mk_number(_mjs, LED_COUNT), "Set 'mLedC' error!");
+        saveJsSet("pLedC", mjs_mk_number(_mjs, 0), "Set 'pLedC' error!");
+        saveJsSet("pNodeC", mjs_mk_number(_mjs, 0), "Set 'pNodeC' error!");
+        saveJsSet("lVol", mjs_mk_number(_mjs, 0), "Set 'lVol' error!");
+        saveJsSet("lFreq", mjs_mk_number(_mjs, 0), "Set 'lFreq' error!");
+        saveJsSet("vol", mjs_mk_number(_mjs, 0), "Set 'vol' error!");
+        saveJsSet("freq", mjs_mk_number(_mjs, 0), "Set 'freq' error!");
 
+        // Load MOD
         saveJsExec(mod.c_str(), "MOD script error!");
         saveJsGet("init", _initFunc, "Get 'init' func error!");
         saveJsGet("update", _updateFunc, "Get 'update' func error!");

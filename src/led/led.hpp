@@ -18,6 +18,8 @@ namespace Murli
             
             void loop();
             void setLed(const uint32_t index, const Color color);
+            uint32_t getLed(const uint32_t index);
+
             void setAllLeds(const Color color);
             void setPattern(std::shared_ptr<LedPattern> pattern);
 

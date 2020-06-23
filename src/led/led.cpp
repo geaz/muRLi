@@ -35,6 +35,17 @@ namespace Murli
         }
     }
 
+    uint32_t LED::getLed(const uint32_t index)
+    {
+        CRGB color = CRGB::Black;
+        if(index >= 0 && index <= LED_COUNT-1) 
+        {
+            if(_groupsSet) color = _leds[_groups[index].front()];
+            else color = _leds[index];
+        }
+        return (color.r << 16) | (color.g << 8) | color.b;
+    }
+
     void LED::setAllLeds(const Color color)
     {
         for(uint16_t index = 0; index < _leds.size(); index++)

@@ -78,6 +78,9 @@ namespace Murli
                 
                 checkDistributeOrAnswer(command, Murli::MESH_UPDATED);
                 break;
+            case Murli::MOD_REMOVED:
+                _led.setAllLeds(Murli::Black);
+                break;
             case Murli::ANALYZER_UPDATE:
                 if(_scriptContext != nullptr)
                 {

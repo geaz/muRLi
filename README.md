@@ -169,8 +169,11 @@ The script API exposes some methods to work with:
 - **xhsv(h, s, v)** *Returns the hex representation of the given HSV color*
 - **setDelay(count)** *If set to a value >0 the script engine will delay the frequency updates. For example with a value of '1', the script engine would delay the frequency updates by one other frequency update.*
 - **setLed(index, hexColor)** *Set the LED with the given index to the given hex color*
+- **getLed(index)** *Get the hex color of the given LED*
+- **setGroup(index, [led1, led2, ...])** *Set a group of an array of leds to the given index - For example setGroup(0, [0,1]): a setLed(0) would now set index 0 and 1 together*
+- **clearGroups()** *Clear all previous group definitions*
 
-Look into the *mod* folder for some examples.
+Look into the *mod* folder for some examples. If you write your own mod, try to avoid objects and arrays as much as possible. They are perfomance killers!
 
 ### Write MODs
 
