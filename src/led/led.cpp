@@ -40,8 +40,10 @@ namespace Murli
         CRGB color = CRGB::Black;
         if(index >= 0 && index <= LED_COUNT-1) 
         {
-            if(_groupsSet) color = _leds[_groups[index].front()];
-            else color = _leds[index];
+            if(_groupsSet && _groups[index].size() > 0)
+                color = _leds[_groups[index].front()];
+            else
+                color = _leds[index];
         }
         return (color.r << 16) | (color.g << 8) | color.b;
     }
@@ -74,9 +76,7 @@ namespace Murli
     void LED::clearGroups()
     {
         for(uint32_t i=0; i<LED_COUNT;i++)
-        {
             _groups[i].clear();
-        }
         _groupsSet = false;
     }
 

@@ -5,6 +5,7 @@ namespace Murli
     void MurlinContext::setup()
     {
         _socketServer.onMeshConnection([this]() { onSocketServerMeshConnection(); });
+        _socketServer.onModDistributed([this](MurliCommand command) { onSocketServerModDistributed(command); });
         _socketServer.onCommandReceived([this](MurliCommand command) { onSocketServerCommandReceived(command); });
         _socketClient.onCommandReceived([this](MurliCommand command) { onSocketClientCommandReceived(command); });
         _socketClient.onModReceived([this](std::string mod) {onSocketClientModReceived(mod); });
@@ -80,6 +81,7 @@ namespace Murli
                 break;
             case Murli::MOD_REMOVED:
                 _led.setAllLeds(Murli::Black);
+                _socketServer.broadcast(command);
                 break;
             case Murli::ANALYZER_UPDATE:
                 if(_scriptContext != nullptr)
@@ -122,18 +124,22 @@ namespace Murli
         _socketClient.sendCommand(command);
     }
 
-    void MurlinContext::onSocketServerCommandReceived(Murli::MurliCommand command)
+    void MurlinContext::onSocketServerCommandReceived(MurliCommand command)
     {
         switch (command.command)
         {
             case Murli::MESH_CONNECTION:
-            case MESH_COUNTED:
+            case Murli::MESH_COUNTED:
             case Murli::MESH_UPDATED:
-            case Murli::MOD_DISTRIBUTED:
                 _socketClient.sendCommand(command);
                 break;
             default:
                 break;
         }
+    }
+
+    void MurlinContext::onSocketServerModDistributed(MurliCommand command)
+    {
+        _socketClient.sendCommand(command);
     }
 }

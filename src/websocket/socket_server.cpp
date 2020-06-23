@@ -99,7 +99,7 @@ namespace Murli
                     _requestCommand.id = 0;
                     _modDistribution = false;
                     if(receivedCommand.command == Murli::MOD_DISTRIBUTED && _meshModDistributedEvent != nullptr)
-                        _meshModDistributedEvent();
+                        _meshModDistributedEvent(receivedCommand);
                     else if(receivedCommand.command != Murli::MOD_DISTRIBUTED && _meshCommandEvent != nullptr)
                         _meshCommandEvent(receivedCommand);
                 }

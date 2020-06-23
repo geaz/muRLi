@@ -22,10 +22,11 @@ namespace Murli
             void checkNewMod();
             void checkDistributeOrAnswer(MurliCommand command, Command answerCommandType);
 
-            void onSocketClientCommandReceived(Murli::MurliCommand command);
+            void onSocketClientCommandReceived(MurliCommand command);
             void onSocketClientModReceived(std::string mod);
             void onSocketServerMeshConnection();
-            void onSocketServerCommandReceived(Murli::MurliCommand command);
+            void onSocketServerModDistributed(MurliCommand command);
+            void onSocketServerCommandReceived(MurliCommand command);
 
             LED _led;
             MurliWifi _wifi;

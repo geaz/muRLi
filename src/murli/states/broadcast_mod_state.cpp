@@ -27,31 +27,28 @@ namespace Murli
                 if(!_broadcastStarted && context.getMeshLedCount() > LED_COUNT)
                 {
                     context.getSocketServer().broadcastMod(_mod);
-                    context.getSocketServer().onModDistributed([this]() { _modDistributed = true; });
+                    context.getSocketServer().onModDistributed([this](MurliCommand command) { _modDistributed = true; });
                     _broadcastStarted = true;
                 }
                 else if(context.getSocketServer().connectedClients() == 0) _modDistributed = true;
 
                 if(_modDistributed)
                 {
-                    uint32_t clients = context.getSocketServer().connectedClients();
-                    if(clients == ++_receivedCommands || clients == 0)
-                    {
-                        auto scriptContext = std::make_shared<ScriptContext>(context.getLed(), _mod);
-                        scriptContext->updateLedInfo(0, 0, context.getMeshLedCount());
-                        scriptContext->init();
+                    auto scriptContext = std::make_shared<ScriptContext>(context.getLed(), _mod);
+                    scriptContext->updateLedInfo(0, 0, context.getMeshLedCount());
+                    scriptContext->init();
 
-                        context.getLed().setAllLeds(Murli::Black);
-                        context.currentState = std::make_shared<RunModState>(scriptContext);
-                    }
-                    else _modDistributed = false;
+                    context.getLed().setAllLeds(Murli::Black);
+                    context.currentState = std::make_shared<RunModState>(scriptContext);
+
+                    _modDistributed = false;
+                    _broadcastStarted = false;
                 }
             }
 
         private:
             std::string _mod;
             std::shared_ptr<IconTextView> _broadcastModView;
-            uint32_t _receivedCommands = 0;
             bool _broadcastStarted = false;
             bool _modDistributed = false;
     };

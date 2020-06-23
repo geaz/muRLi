@@ -7,7 +7,7 @@
 namespace Murli
 {
     typedef std::function<void()> MeshConnectionEvent;
-    typedef std::function<void()> MeshModDistributedEvent;
+    typedef std::function<void(MurliCommand command)> MeshModDistributedEvent;
     typedef std::function<void(MurliCommand command)> MeshCommandEvent;
 
     class SocketServer
