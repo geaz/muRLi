@@ -193,12 +193,13 @@ If you run the script without any parameters, it will list all available COM por
 
 **muRLiN**s are devices which are able to connect to the *websocket* provided by **muRLi** or a closer available other **muRLiN** via WiFi. Because every **muRLiN** is also an access point and a websocket server it is possible to span a pretty big mesh of **muRLiN**s.
 
-This repository provides a *naive* example for a **muRLiN** in form of a battery powered device. But it is possible to create other devices like for example wall mounted LED devices which will connect to **muRLi** to create some nice color effects. Or desk lamp like devices. Just play with your imagination and come up with some cool devices. All you have to do is to take a *Wemos D1 Mini* connect some LEDs and flash the **muRLiN** firmware on it.
+This repository provides a *naive* example for a **muRLiN**. But it is possible to create other devices like for example wall mounted LED devices which will connect to **muRLi** to create some nice color effects. Or desk lamp like devices. Just play with your imagination and come up with some cool devices. All you have to do is to take a *Wemos D1 Mini* connect some LEDs and flash the **muRLiN** firmware on it.
 
 ### <a name="node-bom"></a> BOM (For one small battery powered muRLiN)
 
 - 3D Printed Parts
 - Wemos D1 Mini
+- 1x 330 Ohm Resistor
 - [4x4 WS2812B LEDs (I used a strip and cut it)](https://www.amazon.de/dp/B01CDTED80)
 - 4x M2x12mm screws
 - Wire
