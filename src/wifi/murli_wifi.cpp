@@ -55,7 +55,7 @@ namespace Murli
                 Serial.print(".");
             }       
             Serial.println(" Connected!");
-            _parentIp = IPAddress(192, 168, nodeNr - 1, 1);
+            _parentIp = WiFi.gatewayIP();
 
             _ssid = SSID + " #" + String(nodeNr);
             WiFi.softAPConfig(
