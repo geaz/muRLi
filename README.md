@@ -155,10 +155,12 @@ On every loop the scripts will get some variables injected by **muRLi**.
 - **nLedC** *Number of LEDs of the current executing node*
 - **pNodeC** *Number of previous nodes in route*
 
-Every script has to implement the *update* method:
+Every script has to implement the *init*, *update* and *getName* method:
 
 ```
+function init() {}
 function update(delta) {}
+function getName(){ return "NAME"; }
 ```
 
 The script API exposes some methods to work with:
@@ -184,7 +186,7 @@ Connect **muRLi** to your machine, insert a cartridge and execute the script lik
 python writeMod.py COM4 simple.murli
 ```
 
-The script will tell you, if something went wrong. **muRLi** will show a *MOD saved*, if everything went well.
+The python script will tell you, if something went wrong. **muRLi** will show a *MOD saved*, if everything went well.
 If you run the script without any parameters, it will list all available COM ports.
 
 ## muRLiN
@@ -197,9 +199,13 @@ This repository provides a *naive* example for a **muRLiN** in form of a battery
 
 - 3D Printed Parts
 - Wemos D1 Mini
-- TP4056 charging board (make sure you buy one with integrated load protection)
+- [4x4 WS2812B LEDs (I used a strip and cut it)](https://www.amazon.de/dp/B01CDTED80)
+- 4x M2x12mm screws
+- Wire
 
 ### <a name="node-firmware"></a> Firmware
+
+The upload works like the firmware upload for *muRLi*. Just set the **-DLED_COUNT** build flag to *16* and swap the **-DBUILD_MURLI** flag for the **-DBUILD_MURLINODE** flag.
 
 ### <a name="node-build"></a> Build
 

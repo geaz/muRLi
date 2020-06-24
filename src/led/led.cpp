@@ -83,8 +83,6 @@ namespace Murli
     void LED::checkPattern()
     {
         if(_pattern != nullptr)
-        {
-            _pattern->loop(*this);       
-        }
+            _pattern->loop(*this);
     }
 }

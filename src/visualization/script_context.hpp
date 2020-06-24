@@ -17,6 +17,7 @@ namespace Murli
             
             void updateLedInfo(const uint16_t previousNodeCount, const uint32_t previousLedCount, const uint32_t meshLedCount);
             void init();
+            std::string getModName();
             void updateAnalyzerResult(const uint8_t volume, const uint16_t dominantFrequency);
             void run(const uint8_t delta);
 
@@ -34,6 +35,7 @@ namespace Murli
             mjs_val_t _mjsGlobal;
             mjs_val_t _updateFunc;
             mjs_val_t _initFunc;
+            mjs_val_t _getNameFunc;
             bool _faulted = false;
 
             uint8_t _lastVolume = 0;

@@ -16,6 +16,7 @@ namespace Murli
             RunModState(std::shared_ptr<ScriptContext> scriptContext) : _scriptContext(scriptContext)
             {
                 _runModView = std::make_shared<RunModView>();
+                _modName = _scriptContext->getModName();
             }
 
             void run(MurliContext& context)
@@ -42,6 +43,7 @@ namespace Murli
         private:
             void setView(AnalyzerResult& result)
             {
+                _runModView->modName = _modName;
                 _runModView->decibel = result.decibel;
                 if(result.volume > 0 && result.dominantFrequency > 0)
                 {
@@ -59,6 +61,7 @@ namespace Murli
             std::shared_ptr<RunModView> _runModView;
             std::shared_ptr<ScriptContext> _scriptContext;
             uint64_t _lastLedUpdate = millis();
+            std::string _modName;
     };
 }
 

@@ -15,7 +15,7 @@ namespace Murli
             void drawFrame(DisplayCtrl& display) override
             {
                 display.setFontPosCenter();
-                uint8_t displayCenter = (display.getDisplayHeight() - 10) / 2;
+                uint8_t displayCenter = display.getDisplayHeight() / 2;
 
                 display.setFont(_iconFont);
                 display.drawGlyph(10, displayCenter, _iconNr);

@@ -18,3 +18,5 @@ function update(delta){
         setLed(i, color);
     }
 }
+
+function getName() { return "easyMod"; }

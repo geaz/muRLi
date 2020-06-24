@@ -16,13 +16,12 @@ namespace Murli
                     drawFrequencyBar(display, i, frequencyRange[i]);
                 }
 
-                display.setFontPosTop();
-                display.setFont(u8g2_font_5x8_tf); 
-
                 if(!_strPosCalculated)
                 {
                     uint8_t volStrWidth = display.getStrWidth("-00.0dB");
+                    uint8_t freqStrWidth = display.getStrWidth("00000hz");
                     _volStrXPos = display.getDisplayWidth() - volStrWidth;
+                    _freqStrXPos = display.getDisplayWidth() - freqStrWidth;
                     _strPosCalculated = true;
                 }       
                                     
@@ -32,10 +31,15 @@ namespace Murli
                 std::sprintf(dBBuf.data(), "%05.1fdB", decibel);
                 std::sprintf(freqBuf.data(), "%05ihz", dominantFrequency);
 
-                display.drawStr(0, 0, freqBuf.data());
+                display.setFont(u8g2_font_5x8_tf); 
+                display.setFontPosTop();
+                display.drawStr(0, 0, modName.c_str());
                 display.drawStr(_volStrXPos, 0, dBBuf.data());
                 display.drawHLine(0, 10, display.getDisplayWidth());
-
+                display.drawHLine(0, display.getDisplayHeight() - 10, display.getDisplayWidth());
+                
+                display.setFontPosBottom();
+                display.drawStr(_freqStrXPos, display.getDisplayHeight(), freqBuf.data());
                 display.setFontPosBaseline();
             }
 
@@ -48,6 +52,7 @@ namespace Murli
             }
             
             float decibel = 0.0;
+            std::string modName = "TEST";
             uint16_t dominantFrequency = 0;
             std::vector<uint8_t> frequencyRange
                 = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };

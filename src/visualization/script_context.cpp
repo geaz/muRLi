@@ -39,6 +39,7 @@ namespace Murli
         saveJsExec(mod.c_str(), "MOD script error!");
         saveJsGet("init", _initFunc, "Get 'init' func error!");
         saveJsGet("update", _updateFunc, "Get 'update' func error!");
+        saveJsGet("getName", _getNameFunc, "Get 'getName' func error!");
     }
 
     ScriptContext::~ScriptContext()
@@ -61,6 +62,22 @@ namespace Murli
             _faulted = true;
             Serial.println("Error on 'init'!");
         }
+    }
+
+    std::string ScriptContext::getModName()
+    {
+        mjs_val_t res;
+        std::string name = "";
+        if(mjs_call(_mjs, &res, _getNameFunc, _mjsGlobal, 0) != MJS_OK)
+        {
+            _faulted = true;
+            Serial.println("Error on 'getName'!");
+        }
+        else
+        {
+            name = mjs_get_cstring(_mjs, &res);
+        }
+        return name;
     }
 
     void ScriptContext::updateAnalyzerResult(const uint8_t volume, const uint16_t dominantFrequency)

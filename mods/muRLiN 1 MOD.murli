@@ -34,3 +34,5 @@ function update(delta){
         setLed(0, xhsv(h,s,v));
     }    
 }
+
+function getName() { return "muRLiN"; }

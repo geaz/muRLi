@@ -76,6 +76,8 @@ namespace Murli
                 MurliCommand receivedCommand;
                 memcpy(&receivedCommand, payload, length);
 
+                // We want to wait for the answers of all connected clients
+                // for the folowwing commands - just run the event delegate, if all clients responded
                 if(receivedCommand.command == MESH_COUNTED 
                 || receivedCommand.command == MESH_UPDATED
                 || receivedCommand.command == MOD_DISTRIBUTED)

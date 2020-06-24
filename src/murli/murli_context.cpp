@@ -15,7 +15,6 @@ namespace Murli
     {
         _display.init();
         _display.setView(std::make_shared<Murli::SplashView>());
-        _display.setLeftStatus("Starting Mesh...");
         _display.loop();
         
         _socketServer.onCommandReceived([this](MurliCommand command) { onSocketServerCommandReceived(command); });
@@ -26,10 +25,6 @@ namespace Murli
 
     void MurliContext::loop()
     {
-        char heapString[10];
-        itoa(ESP.getFreeHeap(), heapString, 10);
-        _display.setLeftStatus(heapString);
-
         checkModuleInserted();
         checkWriteRequest();
         
