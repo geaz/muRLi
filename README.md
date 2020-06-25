@@ -8,7 +8,8 @@ Furthermore **muRLi** creates a naive mesh including a *websocket*. **muRLiN**s 
 
 *Everything combined, it is possible to span a mesh of WiFi connected devices which are synchronously reacting to music.*
 
-![muRLi](https://raw.githubusercontent.com/geaz/muRLi/master/img/cover.jpg)
+> *Click the image for a video of it in action!*
+[![muRLi](https://raw.githubusercontent.com/geaz/muRLi/master/img/cover2.jpg)](https://www.youtube.com/watch?v=Lw6lD8utsBI)
 
 # Table of Contents
 1. [3D Model](#3d-model)
@@ -22,10 +23,9 @@ Furthermore **muRLi** creates a naive mesh including a *websocket*. **muRLiN**s 
     c) [Create MODs](#create-mods)  
     d) [Write MODs](#write-mods)
 4. [muRLiN](#murlin)  
-    a) [BOM (for one small battery powered muRLiN)](#node-bom)  
+    a) [BOM](#node-bom)  
     b) [Firmware](#node-firmware)  
-    c) [Build](#node-build)  
-    d) [OTA Updates](#node-ota)
+    c) [Build](#node-build)
 
 ## 3D Model
 The models were designed in Fusion 360. The exported STLs are included in the Github repository (*stl* folder). Furthermore there are Fusion 360 archive files ready to download (*cad* folder).
@@ -193,9 +193,9 @@ If you run the script without any parameters, it will list all available COM por
 
 **muRLiN**s are devices which are able to connect to the *websocket* provided by **muRLi** or a closer available other **muRLiN** via WiFi. Because every **muRLiN** is also an access point and a websocket server it is possible to span a pretty big mesh of **muRLiN**s.
 
-This repository provides a *naive* example for a **muRLiN**. But it is possible to create other devices like for example wall mounted LED devices which will connect to **muRLi** to create some nice color effects. Or desk lamp like devices. Just play with your imagination and come up with some cool devices. All you have to do is to take a *Wemos D1 Mini* connect some LEDs and flash the **muRLiN** firmware on it.
+This repository provides a simple example for a **muRLiN**. But it is possible to create other devices like for example wall mounted LED devices which will connect to **muRLi** to create some nice color effects. Or desk lamp like devices. Just play with your imagination and come up with some cool devices. All you have to do is to take a *Wemos D1 Mini* connect some LEDs and flash the **muRLiN** firmware on it.
 
-### <a name="node-bom"></a> BOM (For one small battery powered muRLiN)
+### <a name="node-bom"></a> BOM
 
 - 3D Printed Parts
 - Wemos D1 Mini
@@ -210,4 +210,18 @@ The upload works like the firmware upload for *muRLi*. Just set the **-DLED_COUN
 
 ### <a name="node-build"></a> Build
 
-### <a name="node-ota"></a> OTA Update
+Insert the four led strips into the *middle* part. And solder them together - **keep the direction of the data line in mind!**
+
+![muRLiN-leds](https://raw.githubusercontent.com/geaz/muRLi/master/img/murlin-leds.jpg)
+
+Solder the LEDs to the *Wemos D1 Mini*. *VCC* to *5V*, *GND* to *GND* and *DataIn* to *D4*. Next, solder the 300Ohm resistor to the pins *RST* and *D0* and insert the *D1 Mini* into the *bottom* part.
+
+![muRLiN-inserted](https://raw.githubusercontent.com/geaz/muRLi/master/img/murlin-inserted.jpg)
+
+Cut four pieces of paper and insert them into the slots of the *top* part.
+
+![muRLiN-paper](https://raw.githubusercontent.com/geaz/muRLi/master/img/murlin-paper.jpg)
+
+Now place everything together and close it with the screws. You are done!
+
+![muRLiN-done](https://raw.githubusercontent.com/geaz/muRLi/master/img/murlin-done.jpg)
