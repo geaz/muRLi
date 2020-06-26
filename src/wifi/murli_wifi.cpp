@@ -41,8 +41,11 @@ namespace Murli
                 {
                     nearestNode = i;
                 }
-                nodeNr++;
             }
+            
+            String ssid = WiFi.SSID(i);
+            short foundNodeNr = ssid.substring(ssid.indexOf("#") + 1).toInt();
+            if(foundNodeNr >= nodeNr) nodeNr = foundNodeNr + 1;
         }
 
         if(nearestNode != -1) 
