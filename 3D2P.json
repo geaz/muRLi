@@ -1,64 +1,85 @@
 {
   "id": "L5ROHHWVD0QKQAC3DGYIZB",
   "name": "muRLi",
-  "thumbnail": "..\\simplyRetro-Z5\\images\\cover.jpg",
+  "thumbnail": "img\\cover2.jpg",
   "readme": "README.md",
-  "status": 1,
+  "status": 2,
   "stlInfoList": [
     {
-      "name": "1x Bottom.stl",
+      "name": "Bottom.stl",
       "color": "#F58026",
       "status": 2,
-      "relativePath": "stl\\1x Bottom.stl",
+      "relativePath": "stl\\muRLiN\\Bottom.stl",
       "annotationList": []
     },
     {
-      "name": "1x Frame.stl",
+      "name": "Middle.stl",
       "color": "#F58026",
       "status": 2,
-      "relativePath": "stl\\1x Frame.stl",
+      "relativePath": "stl\\muRLiN\\Middle.stl",
       "annotationList": []
     },
     {
-      "name": "1x Middle.stl",
+      "name": "Top.stl",
       "color": "#F58026",
       "status": 2,
-      "relativePath": "stl\\1x Middle.stl",
-      "annotationList": []
-    },
-    {
-      "name": "1x Top.stl",
-      "color": "#F58026",
-      "status": 2,
-      "relativePath": "stl\\1x Top.stl",
-      "annotationList": []
-    },
-    {
-      "name": "2x Divider.stl",
-      "color": "#F58026",
-      "status": 2,
-      "relativePath": "stl\\2x Divider.stl",
-      "annotationList": []
-    },
-    {
-      "name": "4x Bolt.stl",
-      "color": "#F58026",
-      "status": 2,
-      "relativePath": "stl\\4x Bolt.stl",
+      "relativePath": "stl\\muRLiN\\Top.stl",
       "annotationList": []
     },
     {
       "name": "Mod Bottom.stl",
       "color": "#F58026",
       "status": 2,
-      "relativePath": "stl\\Mod Bottom.stl",
+      "relativePath": "stl\\MOD\\Mod Bottom.stl",
       "annotationList": []
     },
     {
       "name": "Mod Top.stl",
       "color": "#F58026",
       "status": 2,
-      "relativePath": "stl\\Mod Top.stl",
+      "relativePath": "stl\\MOD\\Mod Top.stl",
+      "annotationList": []
+    },
+    {
+      "name": "1x Bottom.stl",
+      "color": "#F58026",
+      "status": 2,
+      "relativePath": "stl\\muRLi\\1x Bottom.stl",
+      "annotationList": []
+    },
+    {
+      "name": "1x Frame.stl",
+      "color": "#F58026",
+      "status": 2,
+      "relativePath": "stl\\muRLi\\1x Frame.stl",
+      "annotationList": []
+    },
+    {
+      "name": "1x Middle.stl",
+      "color": "#F58026",
+      "status": 2,
+      "relativePath": "stl\\muRLi\\1x Middle.stl",
+      "annotationList": []
+    },
+    {
+      "name": "1x Top.stl",
+      "color": "#F58026",
+      "status": 2,
+      "relativePath": "stl\\muRLi\\1x Top.stl",
+      "annotationList": []
+    },
+    {
+      "name": "2x Divider.stl",
+      "color": "#F58026",
+      "status": 2,
+      "relativePath": "stl\\muRLi\\2x Divider.stl",
+      "annotationList": []
+    },
+    {
+      "name": "4x Bolt.stl",
+      "color": "#F58026",
+      "status": 2,
+      "relativePath": "stl\\muRLi\\4x Bolt.stl",
       "annotationList": []
     }
   ]
