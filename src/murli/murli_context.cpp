@@ -20,7 +20,7 @@ namespace Murli
         _socketServer.onCommandReceived([this](MurliCommand command) { onSocketServerCommandReceived(command); });
         _socketServer.onMeshConnection([this]() { onSocketServerMeshConnection(); });
 
-        _wifi.startMesh();
+        _mesh.startMesh();
     }
 
     void MurliContext::loop()

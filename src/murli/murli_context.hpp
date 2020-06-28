@@ -4,7 +4,7 @@
 #include <memory>
 #include "state.hpp"
 #include "../led/led.hpp"
-#include "../wifi/murli_wifi.hpp"
+#include "../wifi/murli_mesh.hpp"
 #include "../display/display.hpp"
 #include "../rom/rom_24LC32A.hpp"
 #include "../websocket/socket_server.hpp"
@@ -39,7 +39,7 @@ namespace Murli
             void onSocketServerCommandReceived(MurliCommand command);
 
             LED _led;
-            MurliWifi _wifi;
+            MurliMesh _mesh;
             Display _display;
             SocketServer _socketServer;
             Rom24LC32A _rom = Rom24LC32A(0x50);

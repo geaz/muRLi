@@ -9,10 +9,10 @@ namespace Murli
     static const String SSID = "muRLi Network";
     static const String Password = "muRLiSaysLetThereBeLight!";
 
-    class MurliWifi
+    class MurliMesh
     {
         public:
-            MurliWifi();
+            MurliMesh();
             
             void startMesh();
             bool tryJoinMesh();

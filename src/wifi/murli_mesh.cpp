@@ -1,18 +1,17 @@
-#include "murli_wifi.hpp"
+#include "murli_mesh.hpp"
 
 namespace Murli
 {
-    MurliWifi::MurliWifi()
+    MurliMesh::MurliMesh()
     {
         WiFi.disconnect();
         WiFi.mode(WIFI_AP_STA);
         WiFi.setSleepMode(WIFI_NONE_SLEEP);
     }
 
-    void MurliWifi::startMesh()
-    {
+    void MurliMesh::startMesh()
+    {   
         Serial.println("Starting mesh ...");
-
         _ssid = SSID + " #1";
         WiFi.softAPConfig(
             IPAddress(192, 168, 1, 1), 
@@ -24,7 +23,7 @@ namespace Murli
         Serial.println("Node Local IP: " + WiFi.localIP().toString());
     }
 
-    bool MurliWifi::tryJoinMesh()
+    bool MurliMesh::tryJoinMesh()
     {
         bool connected = false;
 
@@ -74,17 +73,17 @@ namespace Murli
         return connected;
     }
 
-    bool MurliWifi::isConnected() const
+    bool MurliMesh::isConnected() const
     {
         return WiFi.isConnected();
     }
 
-    bool MurliWifi::hasConnectedNodes() const
+    bool MurliMesh::hasConnectedNodes() const
     {
         return WiFi.softAPgetStationNum() != 0;
     }
 
-    IPAddress MurliWifi::getParentIp() const
+    IPAddress MurliMesh::getParentIp() const
     {
         return _parentIp;
     }

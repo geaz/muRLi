@@ -10,10 +10,10 @@ namespace Murli
         _socketClient.onCommandReceived([this](MurliCommand command) { onSocketClientCommandReceived(command); });
         _socketClient.onModReceived([this](std::string mod) {onSocketClientModReceived(mod); });
 
-        if(_wifi.tryJoinMesh())
+        if(_mesh.tryJoinMesh())
         {
             Serial.println("Connected to muRLi mesh! Starting operation ...");
-            _socketClient.start(_wifi.getParentIp().toString());
+            _socketClient.start(_mesh.getParentIp().toString());
         }
         else
         {
@@ -29,7 +29,7 @@ namespace Murli
         _socketClient.loop();
         _socketServer.loop();
         _led.loop();
-        if(!_wifi.isConnected())
+        if(!_mesh.isConnected())
         {
             Serial.println("Websocket and WiFi disconnected! Going to sleep ...");
             _led.setAllLeds(Murli::Black);
