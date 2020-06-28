@@ -3,7 +3,7 @@
 
 #include <memory>
 #include "../led/led.hpp"
-#include "../wifi/murli_mesh.hpp"
+#include "../mesh/murli_mesh.hpp"
 #include "../websocket/socket_server.hpp"
 #include "../websocket/socket_client.hpp"
 #include "../visualization/script_context.hpp"

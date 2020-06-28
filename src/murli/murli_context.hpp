@@ -4,7 +4,7 @@
 #include <memory>
 #include "state.hpp"
 #include "../led/led.hpp"
-#include "../wifi/murli_mesh.hpp"
+#include "../mesh/murli_mesh.hpp"
 #include "../display/display.hpp"
 #include "../rom/rom_24LC32A.hpp"
 #include "../websocket/socket_server.hpp"
