@@ -20,13 +20,12 @@ namespace Murli
 
         private:
             void checkNewMod();
-            void checkDistributeOrAnswer(MurliCommand command, Command answerCommandType);
+            void checkDistributeOrAnswer(Client::Command command, Server::CommandType answerCommandType);
 
-            void onSocketClientCommandReceived(MurliCommand command);
+            void onSocketClientCommandReceived(Client::Command command);
             void onSocketClientModReceived(std::string mod);
             void onSocketServerMeshConnection();
-            void onSocketServerModDistributed(MurliCommand command);
-            void onSocketServerCommandReceived(MurliCommand command);
+            void onSocketServerCommandReceived(Server::Command command);
 
             LED _led;
             MurliMesh _mesh;

@@ -13,11 +13,11 @@ namespace Murli
         _webSocket.loop();
     }
 
-    void SocketServer::broadcast(MurliCommand command)
+    void SocketServer::broadcast(Client::Command command)
     {
-        if(command.command == Murli::MESH_COUNT_REQUEST || command.command == Murli::MESH_UPDATE)
+        if (command.commandType == Client::MESH_COUNT_REQUEST
+        || command.commandType == Client::MESH_UPDATE)
         {
-            _answers = 0;
             _requestCommand = command;
         }
 
@@ -29,29 +29,22 @@ namespace Murli
     }
 
     void SocketServer::broadcastMod(std::string& mod)
-    {        
-        _answers = 0;
+    {
         _modDistribution = true;
-
         _webSocket.broadcastTXT(mod.c_str(), mod.length());
     }
 
-    void SocketServer::onCommandReceived(MeshCommandEvent event)
+    void SocketServer::addOnMeshConnection(MeshConnectionEvent event)
     {
-        _meshCommandEvent = event;
+        _meshConnectionEvents.push_back(event);
     }
 
-    void SocketServer::onMeshConnection(MeshConnectionEvent event)
+    void SocketServer::addOnCommandReceived(ServerCommandEvent event)
     {
-        _meshConnectionEvent = event;
-    }
-    
-    void SocketServer::onModDistributed(MeshModDistributedEvent event)
-    {
-        _meshModDistributedEvent = event;
+        _serverCommandEvents.push_back(event);
     }
 
-    uint32_t SocketServer::connectedClients()
+    uint32_t SocketServer::getClientsCount()
     {
         return _webSocket.connectedClients();
     }
@@ -64,50 +57,56 @@ namespace Murli
         {
             case WStype_DISCONNECTED:              
                 Serial.println("Client disconnected!");
-                if(_meshConnectionEvent != nullptr) _meshConnectionEvent();
+                for(MeshConnectionEvent event : _meshConnectionEvents) event();
                 break;
             case WStype_CONNECTED:        
                 Serial.println("Connection from: " + remoteIp.toString());
-                if(_meshConnectionEvent != nullptr) _meshConnectionEvent();
+                for(MeshConnectionEvent event : _meshConnectionEvents) event();
                 break;
             case WStype_BIN:
                 Serial.println("Server receiving command ...");
 
-                MurliCommand receivedCommand;
+                Server::Command receivedCommand;
                 memcpy(&receivedCommand, payload, length);
-
-                // We want to wait for the answers of all connected clients
-                // for the folowwing commands - just run the event delegate, if all clients responded
-                if(receivedCommand.command == MESH_COUNTED 
-                || receivedCommand.command == MESH_UPDATED
-                || receivedCommand.command == MOD_DISTRIBUTED)
+                if(allAnswerReceived(receivedCommand))
                 {
-                    if(_requestCommand.id == receivedCommand.id
-                    || _modDistribution)
-                    {
-                        _answers++;
-                        if(_answers == 1 || _receivedCommand.meshLedCount < receivedCommand.meshLedCount)
-                        {
-                            _receivedCommand = receivedCommand;
-                        }
-                        callFuncs = _answers == _webSocket.connectedClients();
-                        if(callFuncs) receivedCommand = _receivedCommand;
-                    }
-                }
-                else callFuncs = true;
-
-                if(callFuncs)
-                {
+                    _answers = 0;
                     _requestCommand.id = 0;
                     _modDistribution = false;
-                    if(receivedCommand.command == Murli::MOD_DISTRIBUTED && _meshModDistributedEvent != nullptr)
-                        _meshModDistributedEvent(receivedCommand);
-                    else if(receivedCommand.command != Murli::MOD_DISTRIBUTED && _meshCommandEvent != nullptr)
-                        _meshCommandEvent(receivedCommand);
+                    for(ServerCommandEvent event : _serverCommandEvents) event(_receivedCommand);
                 }
                 break;
             default:
                 break;
         }
+    }
+
+    bool SocketServer::allAnswerReceived(Server::Command receivedCommand)
+    {
+        bool allReceived = false;
+
+        // We want to wait for the answers of all connected clients
+        // MESH_CONNECTION is not an answer command - thats why we exclude it here
+        if(receivedCommand.commandType != Server::MESH_CONNECTION)
+        {            
+            if(_requestCommand.id == receivedCommand.id || _modDistribution)
+            {
+                _answers++;
+                if (_answers == 1
+                || (receivedCommand.commandType == Server::MESH_COUNTED 
+                && _receivedCommand.countedCommand.meshLedCount < receivedCommand.countedCommand.meshLedCount))
+                {
+                    _receivedCommand = receivedCommand;
+                }
+                allReceived = _answers == _webSocket.connectedClients();
+            }
+        }
+        else
+        {
+            allReceived = true;
+            _receivedCommand = receivedCommand;
+        }
+
+        return allReceived;
     }
 }

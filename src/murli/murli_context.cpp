@@ -17,8 +17,8 @@ namespace Murli
         _display.setView(std::make_shared<Murli::SplashView>());
         _display.loop();
         
-        _socketServer.onCommandReceived([this](MurliCommand command) { onSocketServerCommandReceived(command); });
-        _socketServer.onMeshConnection([this]() { onSocketServerMeshConnection(); });
+        _socketServer.addOnCommandReceived([this](Server::Command command) { onSocketServerCommandReceived(command); });
+        _socketServer.addOnMeshConnection([this]() { onSocketServerMeshConnection(); });
 
         _mesh.startMesh();
     }
@@ -63,7 +63,7 @@ namespace Murli
     void MurliContext::startMeshCount()
     {
         Serial.println("Connection state changed. Starting MESH_COUNT_REQUEST ...");
-        if(_socketServer.connectedClients() == 0)
+        if(_socketServer.getClientsCount() == 0)
         {
             Serial.println("No clients connected!");
             Serial.printf("muRLi alone with %d LEDs :(\n", LED_COUNT);
@@ -71,7 +71,10 @@ namespace Murli
         }
         else
         {
-            MurliCommand command = { millis(), Murli::MESH_COUNT_REQUEST, 0, 0, LED_COUNT, 0, 1 };
+            Client::CountCommand countCommand = { LED_COUNT, LED_COUNT, 1 };
+            Client::Command command = { millis(), Client::MESH_COUNT_REQUEST };
+            command.countCommand = countCommand;
+            
             _socketServer.broadcast(command);
         }
     }
@@ -81,23 +84,25 @@ namespace Murli
         startMeshCount();
     }
 
-    void MurliContext::onSocketServerCommandReceived(MurliCommand command)
+    void MurliContext::onSocketServerCommandReceived(Server::Command command)
     {
-        MurliCommand updateCommand;
-        switch (command.command)
+        Client::Command updateCommand;
+        Client::CountCommand countCommand;
+        switch (command.commandType)
         {
-            case Murli::MESH_CONNECTION:
+            case Server::MESH_CONNECTION:
                 startMeshCount();
                 break;
-            case Murli::MESH_COUNTED:
-                _meshLedCount = command.meshLedCount;
+            case Server::MESH_COUNTED:
+                _meshLedCount = command.countedCommand.meshLedCount;
                 Serial.printf("MESH_COUNT done with %d LEDs on the longest route.\n", _meshLedCount);
 
                 Serial.println("Distributing result of count ...");
-                updateCommand = { millis(), MESH_UPDATE, 0, 0, _meshLedCount, LED_COUNT, 1 };
+                countCommand = { _meshLedCount, LED_COUNT, 1 };
+                updateCommand = { millis(), Client::MESH_UPDATE, countCommand };
                 _socketServer.broadcast(updateCommand);
                 break;
-            case Murli::MESH_UPDATED:
+            case Server::MESH_UPDATED:
                 Serial.println("Mesh updated - Resetting state ...");
                 currentState = std::make_shared<NoModState>();
                 break;

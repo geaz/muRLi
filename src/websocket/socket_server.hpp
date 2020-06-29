@@ -1,14 +1,15 @@
 #ifndef SOCKETSERVER_H
 #define SOCKETSERVER_H
 
+#include <vector>
 #include <WebSocketsServer.h>
-#include "murli_command.hpp"
+#include "server_commands.hpp"
+#include "client_commands.hpp"
 
 namespace Murli
 {
     typedef std::function<void()> MeshConnectionEvent;
-    typedef std::function<void(MurliCommand command)> MeshModDistributedEvent;
-    typedef std::function<void(MurliCommand command)> MeshCommandEvent;
+    typedef std::function<void(Server::Command command)> ServerCommandEvent;
 
     class SocketServer
     {
@@ -16,27 +17,26 @@ namespace Murli
             SocketServer();
             
             void loop();
-            void broadcast(MurliCommand command);
+            void broadcast(Client::Command command);
             void broadcastMod(std::string& mod);
 
-            void onCommandReceived(MeshCommandEvent event);
-            void onMeshConnection(MeshConnectionEvent event);
-            void onModDistributed(MeshModDistributedEvent event);
+            void addOnMeshConnection(MeshConnectionEvent event);
+            void addOnCommandReceived(ServerCommandEvent event);
 
-            uint32_t connectedClients();
+            uint32_t getClientsCount();
         
         private:
             void serverEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length);
+            bool allAnswerReceived(Server::Command receivedCommand);
 
             uint16_t _answers = 0;
             bool _modDistribution = false;
-            MurliCommand _receivedCommand = { 0 };
-            MurliCommand _requestCommand = { 0 };
+            Server::Command _receivedCommand;
+            Client::Command _requestCommand;
 
-            MeshCommandEvent _meshCommandEvent = nullptr;
-            MeshConnectionEvent _meshConnectionEvent = nullptr;
-            MeshModDistributedEvent _meshModDistributedEvent = nullptr;
             WebSocketsServer _webSocket = WebSocketsServer(81);
+            std::vector<MeshConnectionEvent> _meshConnectionEvents;
+            std::vector<ServerCommandEvent> _serverCommandEvents;
     };
 }
 

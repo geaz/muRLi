@@ -27,10 +27,13 @@ namespace Murli
                 if(!_broadcastStarted && context.getMeshLedCount() > LED_COUNT)
                 {
                     context.getSocketServer().broadcastMod(_mod);
-                    context.getSocketServer().onModDistributed([this](MurliCommand command) { _modDistributed = true; });
+                    context.getSocketServer().addOnCommandReceived([this](Server::Command command) 
+                    { 
+                        _modDistributed = command.commandType == Server::MOD_DISTRIBUTED; 
+                    });
                     _broadcastStarted = true;
                 }
-                else if(context.getSocketServer().connectedClients() == 0) _modDistributed = true;
+                else if(context.getSocketServer().getClientsCount() == 0) _modDistributed = true;
 
                 if(_modDistributed)
                 {

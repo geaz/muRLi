@@ -36,7 +36,7 @@ namespace Murli
 
             void startMeshCount();
             void onSocketServerMeshConnection();
-            void onSocketServerCommandReceived(MurliCommand command);
+            void onSocketServerCommandReceived(Server::Command command);
 
             LED _led;
             MurliMesh _mesh;

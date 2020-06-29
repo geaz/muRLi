@@ -23,7 +23,7 @@ namespace Murli
             {
                 if(!_modRemovedSent)
                 {
-                    MurliCommand modRemovedCommand = { millis(), MOD_REMOVED };
+                    Client::Command modRemovedCommand = { millis(), Client::MOD_REMOVED };
                     context.getSocketServer().broadcast(modRemovedCommand);
                     _modRemovedSent = true;
                 }

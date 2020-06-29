@@ -4,11 +4,10 @@ namespace Murli
 {
     void MurlinContext::setup()
     {
-        _socketServer.onMeshConnection([this]() { onSocketServerMeshConnection(); });
-        _socketServer.onModDistributed([this](MurliCommand command) { onSocketServerModDistributed(command); });
-        _socketServer.onCommandReceived([this](MurliCommand command) { onSocketServerCommandReceived(command); });
-        _socketClient.onCommandReceived([this](MurliCommand command) { onSocketClientCommandReceived(command); });
-        _socketClient.onModReceived([this](std::string mod) {onSocketClientModReceived(mod); });
+        _socketServer.addOnMeshConnection([this]() { onSocketServerMeshConnection(); });
+        _socketServer.addOnCommandReceived([this](Server::Command command) { onSocketServerCommandReceived(command); });
+        _socketClient.addOnCommandReceived([this](Client::Command command) { onSocketClientCommandReceived(command); });
+        _socketClient.addOnModReceived([this](std::string mod) {onSocketClientModReceived(mod); });
 
         if(_mesh.tryJoinMesh())
         {
@@ -50,50 +49,52 @@ namespace Murli
         }
     }
 
-    void MurlinContext::checkDistributeOrAnswer(MurliCommand command, Command answerCommandType)
+    void MurlinContext::checkDistributeOrAnswer(Client::Command command, Server::CommandType answerCommandType)
     {
-        if(_socketServer.connectedClients() == 0)
+        if(_socketServer.getClientsCount() == 0)
         {
-            command.command = answerCommandType;
-            _socketClient.sendCommand(command);
+            Server::Command answerCommand = { command.id, answerCommandType };
+            if(answerCommandType == Server::MESH_COUNTED)
+            {
+                Server::CountedCommand counted = { command.countCommand.meshLedCount };
+                answerCommand.countedCommand = counted;
+            }
+            _socketClient.sendCommand(answerCommand);
         }
         else { _socketServer.broadcast(command); }
     }
 
-    void MurlinContext::onSocketClientCommandReceived(Murli::MurliCommand command)
+    void MurlinContext::onSocketClientCommandReceived(Client::Command command)
     {
-        switch (command.command)
+        switch (command.commandType)
         {
-            case Murli::MESH_COUNT_REQUEST:
+            case Client::MESH_COUNT_REQUEST:
                 Serial.println("MESH_COUNT_REQUEST received...");
-                command.meshLedCount += LED_COUNT;
-                checkDistributeOrAnswer(command, Murli::MESH_COUNTED);
+                command.countCommand.meshLedCount += LED_COUNT;
+                checkDistributeOrAnswer(command, Server::MESH_COUNTED);
                 break;
-            case Murli::MESH_UPDATE:
-                _meshLedCount = command.meshLedCount;
-                _previousLedCount = command.previousLedCount;
-                _previousNodeCount = command.previousNodeCount;
+            case Client::MESH_UPDATE:
+                _meshLedCount = command.countCommand.meshLedCount;
+                _previousLedCount = command.countCommand.previousLedCount;
+                _previousNodeCount = command.countCommand.previousNodeCount;
 
-                command.previousLedCount += LED_COUNT;
-                command.previousNodeCount++;
+                command.countCommand.previousLedCount += LED_COUNT;
+                command.countCommand.previousNodeCount++;
                 
-                checkDistributeOrAnswer(command, Murli::MESH_UPDATED);
+                checkDistributeOrAnswer(command, Server::MESH_UPDATED);
                 break;
-            case Murli::MOD_REMOVED:
+            case Client::MOD_REMOVED:
                 _led.setAllLeds(Murli::Black);
                 _socketServer.broadcast(command);
                 break;
-            case Murli::ANALYZER_UPDATE:
+            case Client::ANALYZER_UPDATE:
                 if(_scriptContext != nullptr)
                 {
                     uint32_t delta = millis() - _lastUpdate;
                     _lastUpdate = millis();
                     
-                    _scriptContext->updateAnalyzerResult(command.volume, command.frequency);
-                    _scriptContext->run(delta);
-
-                    command.previousLedCount += LED_COUNT;
-                    command.previousNodeCount++;
+                    _scriptContext->updateAnalyzerResult(command.analyzerCommand.volume, command.analyzerCommand.frequency);
+                    _scriptContext->run(delta);                    
                     _socketServer.broadcast(command);
                 }
                 break;
@@ -108,10 +109,10 @@ namespace Murli
         // Unexpected errors will occure!
         _newMod = true;
         _currentMod = mod;
-        if(_socketServer.connectedClients() == 0)
+        if(_socketServer.getClientsCount() == 0)
         {
             Serial.println("End of route - Sending MOD_DISTRIBUTED");
-            Murli::MurliCommand command = { millis(), Murli::MOD_DISTRIBUTED, 0, 0, 0, 0 };
+            Server::Command command = { millis(), Server::MOD_DISTRIBUTED };
             _socketClient.sendCommand(command);
         }
         else _socketServer.broadcastMod(mod);
@@ -120,26 +121,22 @@ namespace Murli
     void MurlinContext::onSocketServerMeshConnection()
     {
         Serial.println("Got a new connection. Informing parent node ...");
-        Murli::MurliCommand command = { millis(), Murli::MESH_CONNECTION, 0, 0, 0, 0 };
+        Server::Command command = { millis(), Server::MESH_CONNECTION };
         _socketClient.sendCommand(command);
     }
 
-    void MurlinContext::onSocketServerCommandReceived(MurliCommand command)
+    void MurlinContext::onSocketServerCommandReceived(Server::Command command)
     {
-        switch (command.command)
+        switch (command.commandType)
         {
-            case Murli::MESH_CONNECTION:
-            case Murli::MESH_COUNTED:
-            case Murli::MESH_UPDATED:
+            case Server::MESH_CONNECTION:
+            case Server::MESH_COUNTED:
+            case Server::MESH_UPDATED:
+            case Server::MOD_DISTRIBUTED:
                 _socketClient.sendCommand(command);
                 break;
             default:
                 break;
         }
-    }
-
-    void MurlinContext::onSocketServerModDistributed(MurliCommand command)
-    {
-        _socketClient.sendCommand(command);
     }
 }

@@ -16,7 +16,7 @@ namespace Murli
         _webSocket.loop();
     }
 
-    void SocketClient::sendCommand(MurliCommand command)
+    void SocketClient::sendCommand(Server::Command command)
     {
         size_t commandSize = sizeof(command);
         uint8_t serializedCommand[commandSize];
@@ -25,14 +25,14 @@ namespace Murli
         _webSocket.sendBIN(&serializedCommand[0], commandSize);
     }
 
-    void SocketClient::onModReceived(MeshModEvent event)
+    void SocketClient::addOnModReceived(MeshModEvent event)
     {
-        _meshModEvent = event;
+        _meshModEvents.push_back(event);
     }
 
-    void SocketClient::onCommandReceived(MeshCommandEvent event)
+    void SocketClient::addOnCommandReceived(ClientCommandEvent event)
     {
-        _meshCommandEvent = event;
+        _clientCommandEvents.push_back(event);
     }
     
     bool SocketClient::isConnected() const
@@ -53,15 +53,14 @@ namespace Murli
                 _isConnected = true;
                 break;
             case WStype_BIN:
-                MurliCommand receivedCommand;
+                Client::Command receivedCommand;
                 memcpy(&receivedCommand, payload, length);
-                if(_meshCommandEvent != nullptr) _meshCommandEvent(receivedCommand);
+                for(ClientCommandEvent event : _clientCommandEvents) event(receivedCommand);
                 break;
             case WStype_TEXT:
-                if(_meshModEvent != nullptr) _meshModEvent(std::string((char*)payload));
+                for(MeshModEvent event : _meshModEvents) event(std::string((char*)payload));
                 break;
             default:
-                // Not interested in other cases
                 break;
         }
     }

@@ -29,8 +29,12 @@ namespace Murli
                 }
 
                 AnalyzerResult result = _frequencyAnalyzer.loop();
-                MurliCommand analyzerCommand = { millis(), ANALYZER_UPDATE, result.volume, result.dominantFrequency };            
-                context.getSocketServer().broadcast(analyzerCommand);
+
+                Client::AnalyzerCommand analyzerCommand = { result.volume, result.dominantFrequency };                
+                Client::Command command = { millis(), Client::ANALYZER_UPDATE };
+                command.analyzerCommand = analyzerCommand;
+
+                context.getSocketServer().broadcast(command);
                 setView(result);
 
                  uint32_t delta = millis() - _lastLedUpdate;
