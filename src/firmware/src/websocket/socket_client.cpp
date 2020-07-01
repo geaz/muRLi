@@ -24,16 +24,6 @@ namespace Murli
 
         _webSocket.sendBIN(&serializedCommand[0], commandSize);
     }
-
-    void SocketClient::addOnModReceived(MeshModEvent event)
-    {
-        _meshModEvents.push_back(event);
-    }
-
-    void SocketClient::addOnCommandReceived(ClientCommandEvent event)
-    {
-        _clientCommandEvents.push_back(event);
-    }
     
     bool SocketClient::isConnected() const
     {
@@ -55,10 +45,10 @@ namespace Murli
             case WStype_BIN:
                 Client::Command receivedCommand;
                 memcpy(&receivedCommand, payload, length);
-                for(ClientCommandEvent event : _clientCommandEvents) event(receivedCommand);
+                for(auto event : clientCommandEvents.getEventHandlers()) event.second(receivedCommand);
                 break;
             case WStype_TEXT:
-                for(MeshModEvent event : _meshModEvents) event(std::string((char*)payload));
+                for(auto event : meshModEvents.getEventHandlers()) event.second(std::string((char*)payload));
                 break;
         }
     }

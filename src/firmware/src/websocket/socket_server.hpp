@@ -1,10 +1,10 @@
 #ifndef SOCKETSERVER_H
 #define SOCKETSERVER_H
 
-#include <vector>
 #include <WebSocketsServer.h>
 #include "commands/server_commands.hpp"
 #include "commands/client_commands.hpp"
+#include "event_registration.hpp"
 
 namespace Murli
 {
@@ -20,13 +20,10 @@ namespace Murli
             void broadcast(Client::Command command);
             void broadcastMod(std::string& mod);
 
-            void addOnMeshConnection(MeshConnectionEvent event);
-            void addOnCommandReceived(ServerCommandEvent event);
-
-            void removeOnMeshConnection(MeshConnectionEvent event);
-            void removeOnCommandReceived(ServerCommandEvent event);
-
             uint32_t getClientsCount();
+
+            EventRegistration<MeshConnectionEvent> meshConnectionEvents;
+            EventRegistration<ServerCommandEvent> serverCommandEvents;
         
         private:
             void serverEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length);
@@ -38,8 +35,6 @@ namespace Murli
             Client::Command _requestCommand;
 
             WebSocketsServer _webSocket = WebSocketsServer(81);
-            std::vector<MeshConnectionEvent> _meshConnectionEvents;
-            std::vector<ServerCommandEvent> _serverCommandEvents;
     };
 }
 

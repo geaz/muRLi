@@ -17,8 +17,12 @@ namespace Murli
         _display.setView(std::make_shared<Murli::SplashView>());
         _display.loop();
         
-        _socketServer.addOnCommandReceived([this](Server::Command command) { onSocketServerCommandReceived(command); });
-        _socketServer.addOnMeshConnection([this]() { onSocketServerMeshConnection(); });
+        _socketServer
+            .serverCommandEvents
+            .addEventHandler([this](Server::Command command) { onSocketServerCommandReceived(command); });
+        _socketServer
+            .meshConnectionEvents
+            .addEventHandler([this]() { onSocketServerMeshConnection(); });
 
         WiFi.disconnect();
         _web.connectNetwork();

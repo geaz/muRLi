@@ -32,7 +32,7 @@ namespace Murli
                 {
                     std::string loadedMod((char*)&modChars[0]);
                     ScriptContext scriptContext = ScriptContext(context.getLed(), loadedMod);                    
-                    if(!scriptContext.isFaulted()) context.currentState = std::make_shared<BroadcastModState>(loadedMod);
+                    if(!scriptContext.isFaulted()) context.currentState = std::make_shared<BroadcastModState>(context, loadedMod);
                     else context.currentState = std::make_shared<InvalidModState>();
                 }
                 else context.currentState = std::make_shared<InvalidModState>();     

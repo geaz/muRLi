@@ -1,10 +1,10 @@
 #ifndef SOCKETCLIENT_H
 #define SOCKETCLIENT_H
 
-#include <vector>
 #include <WebSocketsClient.h>
 #include "commands/client_commands.hpp"
 #include "commands/server_commands.hpp"
+#include "event_registration.hpp"
 #include "../led/led.hpp"
 
 namespace Murli
@@ -19,17 +19,15 @@ namespace Murli
             void loop();
             void sendCommand(Server::Command command);
 
-            void addOnModReceived(MeshModEvent event);
-            void addOnCommandReceived(ClientCommandEvent event);
-
             bool isConnected() const;
+
+            EventRegistration<MeshModEvent> meshModEvents;
+            EventRegistration<ClientCommandEvent> clientCommandEvents;
         
         private:
             void clientEvent(WStype_t type, uint8_t* payload, size_t length);
 
-            WebSocketsClient _webSocket;            
-            std::vector<MeshModEvent> _meshModEvents;
-            std::vector<ClientCommandEvent> _clientCommandEvents;
+            WebSocketsClient _webSocket;
             bool _isConnected = false;
     };
 }

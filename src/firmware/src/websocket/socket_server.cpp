@@ -37,16 +37,6 @@ namespace Murli
         _webSocket.broadcastTXT(mod.c_str(), mod.length());
     }
 
-    void SocketServer::addOnMeshConnection(MeshConnectionEvent event)
-    {
-        _meshConnectionEvents.push_back(event);
-    }
-
-    void SocketServer::addOnCommandReceived(ServerCommandEvent event)
-    {
-        _serverCommandEvents.push_back(event);
-    }
-
     uint32_t SocketServer::getClientsCount()
     {
         return _webSocket.connectedClients();
@@ -59,11 +49,11 @@ namespace Murli
         {
             case WStype_DISCONNECTED:              
                 Serial.println("Client disconnected!");
-                for(MeshConnectionEvent event : _meshConnectionEvents) event();
+                for(auto event : meshConnectionEvents.getEventHandlers()) event.second();
                 break;
             case WStype_CONNECTED:        
                 Serial.println("Connection from: " + remoteIp.toString());
-                for(MeshConnectionEvent event : _meshConnectionEvents) event();
+                for(auto event : meshConnectionEvents.getEventHandlers()) event.second();
                 break;
             case WStype_BIN:
                 Server::Command receivedCommand;
@@ -72,15 +62,7 @@ namespace Murli
                 {
                     _requestCommand.id = 0;
                     _modDistribution = false;
-                    for(ServerCommandEvent event : _serverCommandEvents)
-                    {
-                        if(event)
-                        {
-                            Serial.println("jau");
-                            event(_receivedCommand);
-                        }
-                        else Serial.println("nau");
-                    }   
+                    for(auto event : serverCommandEvents.getEventHandlers()) event.second(_receivedCommand); 
                 }
                 break;
         }

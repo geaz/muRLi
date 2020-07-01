@@ -4,10 +4,18 @@ namespace Murli
 {
     void MurlinContext::setup()
     {
-        _socketServer.addOnMeshConnection([this]() { onSocketServerMeshConnection(); });
-        _socketServer.addOnCommandReceived([this](Server::Command command) { onSocketServerCommandReceived(command); });
-        _socketClient.addOnCommandReceived([this](Client::Command command) { onSocketClientCommandReceived(command); });
-        _socketClient.addOnModReceived([this](std::string mod) {onSocketClientModReceived(mod); });
+        _socketServer
+            .meshConnectionEvents
+            .addEventHandler([this]() { onSocketServerMeshConnection(); });
+        _socketServer
+            .serverCommandEvents
+            .addEventHandler([this](Server::Command command) { onSocketServerCommandReceived(command); });
+        _socketClient
+            .clientCommandEvents
+            .addEventHandler([this](Client::Command command) { onSocketClientCommandReceived(command); });
+        _socketClient
+            .meshModEvents
+            .addEventHandler([this](std::string mod) {onSocketClientModReceived(mod); });
         
         WiFi.disconnect();
         if(_mesh.tryJoinMesh())

@@ -13,9 +13,23 @@ namespace Murli
     class BroadcastModState : public State
     {
         public:
-            BroadcastModState(std::string mod) : _mod(mod)
+            BroadcastModState(MurliContext& context, std::string mod)
+                : _context(context), _mod(mod)
             {
+                _handleId = context.getSocketServer()
+                    .serverCommandEvents
+                    .addEventHandler([this](Server::Command command) 
+                { 
+                    _modDistributed = command.commandType == Server::MOD_DISTRIBUTED; 
+                });
                 _broadcastModView = std::make_shared<IconTextView>("Broadcasting MOD ...", u8g2_font_open_iconic_thing_2x_t, 74);
+            }
+
+            ~BroadcastModState()
+            {
+                _context.getSocketServer()
+                    .serverCommandEvents
+                    .removeEventHandler(_handleId);
             }
 
             void run(MurliContext& context)
@@ -27,10 +41,6 @@ namespace Murli
                 if(!_broadcastStarted && context.getSocketServer().getClientsCount() > 0)
                 {
                     context.getSocketServer().broadcastMod(_mod);
-                    context.getSocketServer().addOnCommandReceived([this](Server::Command command) 
-                    { 
-                        _modDistributed = command.commandType == Server::MOD_DISTRIBUTED; 
-                    });
                     _broadcastStarted = true;
                 }
                 else if(context.getSocketServer().getClientsCount() == 0) _modDistributed = true;
@@ -55,7 +65,10 @@ namespace Murli
             }
 
         private:
+            MurliContext& _context;
             std::string _mod;
+            uint64_t _handleId;
+
             std::shared_ptr<IconTextView> _broadcastModView;
             bool _broadcastStarted = false;
             bool _modDistributed = false;
