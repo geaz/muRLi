@@ -118,6 +118,8 @@ namespace Murli
                 Serial.println("External");
                 Serial.printf("%d %d\n", command.externalAnalyzerCommand.volume, command.externalAnalyzerCommand.frequency);
                 break;
+            case Server::MOD_DISTRIBUTED:
+                break;
         }
     }
 

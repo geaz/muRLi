@@ -107,6 +107,8 @@ namespace Murli
                     _socketServer.broadcast(command);
                 }
                 break;
+            case Client::SOURCE_UPDATE:
+                break;
         }
     }
 
@@ -141,6 +143,8 @@ namespace Murli
             case Server::MESH_UPDATED:
             case Server::MOD_DISTRIBUTED:
                 _socketClient.sendCommand(command);
+                break;
+            case Server::EXTERNAL_ANALYZER:
                 break;
         }
     }
