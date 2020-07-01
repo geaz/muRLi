@@ -1,6 +1,7 @@
 #ifndef FREQUENCYANALYZER_H
 #define FREQUENCYANALYZER_H
 
+#include <math.h>
 #include <array>
 #include <vector>
 

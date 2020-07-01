@@ -1,7 +1,7 @@
 #include "murli_context.hpp"
-#include "../display/views/splash_view.cpp"
 #include "states/no_mod_state.cpp"
 #include "states/receive_length_state.cpp"
+#include "../views/splash_view.cpp"
 
 namespace Murli
 {

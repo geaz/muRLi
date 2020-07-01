@@ -1,8 +1,8 @@
 #ifndef RUNMODVIEW_H
 #define RUNMODVIEW_H
 
-#include "../view.hpp"
-#include "../display.hpp"
+#include "hardware/display/view.hpp"
+#include "hardware/display/display.hpp"
 
 namespace Murli
 {

@@ -1,8 +1,6 @@
 #ifndef CLIENTCOMMANDS_H
 #define CLIENTCOMMANDS_H
 
-#include <string>
-
 namespace Murli
 {
     namespace Client

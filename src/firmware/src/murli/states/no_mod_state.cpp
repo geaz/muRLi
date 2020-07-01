@@ -5,8 +5,8 @@
 #include "read_mod_state.cpp"
 #include "../state.hpp"
 #include "../murli_context.hpp"
-#include "../../led/patterns/led_fade_pattern.cpp"
-#include "../../display/views/insert_mod_view.cpp"
+#include "../../hardware/led/patterns/led_fade_pattern.cpp"
+#include "../../views/insert_mod_view.cpp"
 
 namespace Murli
 {

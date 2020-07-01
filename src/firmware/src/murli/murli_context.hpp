@@ -3,12 +3,12 @@
 
 #include <memory>
 #include "state.hpp"
-#include "../led/led.hpp"
-#include "../mesh/murli_mesh.hpp"
-#include "../display/display.hpp"
-#include "../rom/rom_24LC32A.hpp"
-#include "../websocket/socket_server.hpp"
-#include "../webserver/murli_web.hpp"
+#include "../hardware/led/led.hpp"
+#include "../hardware/display/display.hpp"
+#include "../hardware/rom/rom_24LC32A.hpp"
+#include "../network/mesh/murli_mesh.hpp"
+#include "../network/websocket/socket_server.hpp"
+#include "../network/webserver/murli_web.hpp"
 
 namespace Murli
 {

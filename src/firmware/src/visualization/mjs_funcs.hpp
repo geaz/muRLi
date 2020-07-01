@@ -3,7 +3,7 @@
 
 #include <mjs.h>
 #include <math.h>
-#include "../websocket/commands/client_commands.hpp"
+#include "../network/websocket/commands/client_commands.hpp"
 
 namespace Murli
 {

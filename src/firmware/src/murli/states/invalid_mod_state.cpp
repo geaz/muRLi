@@ -3,7 +3,7 @@
 
 #include "../state.hpp"
 #include "../murli_context.hpp"
-#include "../../display/views/icon_text_view.cpp"
+#include "../../views/icon_text_view.cpp"
 
 namespace Murli
 {

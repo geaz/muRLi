@@ -4,9 +4,10 @@
 #include <tuple>
 #include <deque>
 #include <mjs.h>
-#include "../led/led.hpp"
+
 #include "frequency_analyzer.hpp"
-#include "../websocket/commands/client_commands.hpp"
+#include "../hardware/led/led.hpp"
+#include "../network/websocket/commands/client_commands.hpp"
 
 namespace Murli
 {

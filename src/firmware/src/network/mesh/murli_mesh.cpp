@@ -16,7 +16,7 @@ namespace Murli
             IPAddress(192, 168, 1, 1), 
             IPAddress(0, 0, 0, 0), 
             IPAddress(255, 255, 255, 0));
-        WiFi.softAP(_ssid, Password, 11, false, 8);
+        WiFi.softAP(_ssid, Password, 1, false, 8);
 
         Serial.println("Node AP IP: " + WiFi.softAPIP().toString());
         Serial.println("Node Local IP: " + WiFi.localIP().toString());
@@ -63,7 +63,7 @@ namespace Murli
                 IPAddress(192, 168, nodeNr, 1), 
                 IPAddress(0, 0, 0, 0), 
                 IPAddress(255, 255, 255, 0));
-            WiFi.softAP(_ssid, Password, 11, false, 8);
+            WiFi.softAP(_ssid, Password, 1, false, 8);
 
             Serial.println("Node AP IP: " + WiFi.softAPIP().toString());
             Serial.println("Node Local IP: " + WiFi.localIP().toString());

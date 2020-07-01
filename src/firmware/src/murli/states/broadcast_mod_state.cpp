@@ -5,7 +5,7 @@
 #include "invalid_mod_state.cpp"
 #include "../state.hpp"
 #include "../murli_context.hpp"
-#include "../../display/views/icon_text_view.cpp"
+#include "../../views/icon_text_view.cpp"
 #include "../../visualization/script_context.hpp"
 
 namespace Murli

@@ -2,11 +2,11 @@
 #define MURLINCONTEXT_H
 
 #include <memory>
-#include "../led/led.hpp"
-#include "../mesh/murli_mesh.hpp"
-#include "../websocket/socket_server.hpp"
-#include "../websocket/socket_client.hpp"
+#include "../hardware/led/led.hpp"
 #include "../visualization/script_context.hpp"
+#include "../network/mesh/murli_mesh.hpp"
+#include "../network/websocket/socket_server.hpp"
+#include "../network/websocket/socket_client.hpp"
 
 namespace Murli
 {

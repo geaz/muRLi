@@ -1,5 +1,4 @@
 #include "socket_client.hpp"
-#include "../led/patterns/led_blink_pattern.cpp"
 
 namespace Murli
 {
