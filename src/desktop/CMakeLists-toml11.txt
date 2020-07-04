@@ -3,9 +3,11 @@ include(ExternalProject)
 set(toml11_INCLUDE_DIR "${CMAKE_BINARY_DIR}/libs/toml11/include/")
 
 EXTERNALPROJECT_ADD(
-    toml11
+    ext_toml11
     GIT_REPOSITORY https://github.com/ToruNiina/toml11.git
     CMAKE_ARGS 
         "-DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/libs/toml11"
         "-Dtoml11_BUILD_TEST=OFF"
 )
+
+include_directories(${toml11_INCLUDE_DIR})

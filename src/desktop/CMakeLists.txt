@@ -2,23 +2,13 @@ cmake_minimum_required(VERSION 3.12)
 project(muRLi-Desktop VERSION 0.5.0)
 
 set(CMAKE_CXX_STANDARD 17)
+include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists-kissfft.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists-toml11.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists-rtAudio.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists-zLib.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists-ixWebsocket.txt)
-add_dependencies(ixws external_zlib)
 
-include_directories(
-    ${toml11_INCLUDE_DIR}
-    ${rtaudio_INCLUDE_DIR}
-    ${ixWebsocket_INCLUDE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/../firmware/src/network/websocket/commands)
-
-link_directories(
-    ${zLib_LIBRARY_DIR}
-    ${wxWidgets_LIBRARY_DIR}
-    ${rtaudio_LIBRARY_DIR}
-    ${ixWebsocket_LIBRARY_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../firmware/src/network/websocket/commands)
     
 file(GLOB_RECURSE MURLIDESKTOP_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp"
@@ -26,11 +16,18 @@ file(GLOB_RECURSE MURLIDESKTOP_SOURCES
 )
 
 add_executable(muRLi-Desktop ${MURLIDESKTOP_SOURCES})
-add_dependencies(muRLi-Desktop external_zlib ixws toml11 rta)
+add_dependencies(muRLi-Desktop
+    ext_zLib
+    ext_ixws
+    ext_toml11
+    ext_rtaudio)
 target_link_libraries(muRLi-Desktop
+    kissfft
     zlibstatic
     ixwebsocket
     rtaudio)
+
+# Necessary for ixWebsocket
 if(WIN32)
     target_link_libraries(muRLi-Desktop ws2_32)
 endif()
