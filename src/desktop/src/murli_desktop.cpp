@@ -12,6 +12,9 @@ namespace Murli
 
         void MurliDesktop::run()
         {
+            FrequencyAnalyzer ana;
+            ana.run();
+
             _websocket.start();
             while(true) { }
         }
@@ -28,6 +31,9 @@ namespace Murli
                     break;
                 case Client::CommandType::SOURCE_UPDATE:
                     std::cout << "SOURCE: " << command.sourceCommand.source << "\n";
+                    break;
+                case Client::CommandType::MOD_REMOVED:
+                    std::cout << "MOD REMOVED\n";
                     break;
                 case Client::CommandType::ANALYZER_UPDATE:
                     std::cout << "Update: " << command.analyzerCommand.frequency << "\n";

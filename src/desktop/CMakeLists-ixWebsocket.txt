@@ -1,0 +1,13 @@
+include(ExternalProject)
+
+set(ixWebsocket_INCLUDE_DIR "${CMAKE_BINARY_DIR}/libs/ixwebsocket/include/")
+set(ixWebsocket_LIBRARY_DIR "${CMAKE_BINARY_DIR}/libs/ixwebsocket/lib/")
+
+EXTERNALPROJECT_ADD(
+    ixws
+    GIT_REPOSITORY https://github.com/machinezone/IXWebSocket.git
+    CMAKE_ARGS 
+        "-DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/libs/ixwebsocket"
+        "-DZLIB_LIBRARY=${zLib_LIBRARY_DIR}"
+        "-DZLIB_INCLUDE_DIR=${zLib_INCLUDE_DIR}"
+)

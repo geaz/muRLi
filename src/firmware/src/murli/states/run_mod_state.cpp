@@ -27,21 +27,37 @@ namespace Murli
                     context.currentState = std::make_shared<InvalidModState>();
                     return;
                 }
+                handleMicrophoneSource(context.getSocketServer());
+            }
 
-                AnalyzerResult result = _frequencyAnalyzer.loop();
+            void handleMicrophoneSource(SocketServer& socketServer)
+            {
+                if(_scriptContext->source == Client::AnalyzerSource::Microphone)
+                {
+                    AnalyzerResult result = _frequencyAnalyzer.loop();
 
-                Client::AnalyzerCommand analyzerCommand = { result.volume, result.dominantFrequency };                
-                Client::Command command = { millis(), Client::ANALYZER_UPDATE };
-                command.analyzerCommand = analyzerCommand;
+                    Client::AnalyzerCommand analyzerCommand = { result.volume, result.dominantFrequency };                
+                    Client::Command command = { millis(), Client::ANALYZER_UPDATE };
+                    command.analyzerCommand = analyzerCommand;
 
-                context.getSocketServer().broadcast(command);
-                setView(result);
+                    socketServer.broadcast(command);
+                    setView(result);
 
-                 uint32_t delta = millis() - _lastLedUpdate;
-                _lastLedUpdate = millis();
+                    uint32_t delta = millis() - _lastLedUpdate;
+                    _lastLedUpdate = millis();
 
-                _scriptContext->updateAnalyzerResult(result.volume, result.dominantFrequency);
-                _scriptContext->run(delta);
+                    _scriptContext->updateAnalyzerResult(result.volume, result.dominantFrequency);
+                    _scriptContext->run(delta);
+                }
+            }
+
+            void handleExternalSource(Server::Command command)
+            {
+                if(_scriptContext->source != Client::AnalyzerSource::Microphone
+                && command.commandType == Server::CommandType::EXTERNAL_ANALYZER)
+                {
+
+                }
             }
 
         private:

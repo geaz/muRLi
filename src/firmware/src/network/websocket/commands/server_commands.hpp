@@ -23,6 +23,7 @@ namespace Murli
 
         struct ExternalAnalyzerCommand
         {
+            float decibel;
             uint8_t volume;
             uint16_t frequency;
             std::array<uint8_t, 17> buckets;

@@ -2,6 +2,7 @@
 #define MURLIDESKTOP_H
 
 #include "websocket.hpp"
+#include "frequency_analyzer.hpp"
 
 namespace Murli
 {
