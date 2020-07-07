@@ -34,6 +34,9 @@ namespace Murli
         checkModuleInserted();
         checkWriteRequest();
         
+        _display.setLeftStatus("");
+        _display.setRightStatus(getLocalIp().toString().c_str());
+        
         currentState->run(*this);
         _socketServer.loop();
         _led.loop();
@@ -128,4 +131,5 @@ namespace Murli
     Display& MurliContext::getDisplay() { return _display; }
     uint32_t MurliContext::getMeshLedCount() { return _meshLedCount; }
     SocketServer& MurliContext::getSocketServer() { return _socketServer; }
+    IPAddress MurliContext::getLocalIp() { return _mesh.getLocalIp(); }
 }

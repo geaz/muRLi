@@ -20,10 +20,12 @@ namespace Murli
             bool isConnected() const;
             bool hasConnectedNodes() const;
             IPAddress getParentIp() const;
+            IPAddress getLocalIp() const;
 
         private:
             String _ssid = SSID;
             IPAddress _parentIp = IPAddress(0, 0, 0, 0);
+            IPAddress _localIp = IPAddress(0, 0, 0, 0);
     };
 }
 

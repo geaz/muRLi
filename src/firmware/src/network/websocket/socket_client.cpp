@@ -49,6 +49,8 @@ namespace Murli
             case WStype_TEXT:
                 for(auto event : meshModEvents.getEventHandlers()) event.second(std::string((char*)payload));
                 break;
+            default:
+                break;
         }
     }
 }

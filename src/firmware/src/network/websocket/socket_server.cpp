@@ -65,6 +65,8 @@ namespace Murli
                     for(auto event : serverCommandEvents.getEventHandlers()) event.second(_receivedCommand); 
                 }
                 break;
+            default:
+                break;
         }
     }
 

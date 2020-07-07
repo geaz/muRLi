@@ -27,6 +27,7 @@ namespace Murli
             Display& getDisplay();
             uint32_t getMeshLedCount();
             SocketServer& getSocketServer();
+            IPAddress getLocalIp();
 
             bool writeRequested = false;
             std::shared_ptr<State> currentState;

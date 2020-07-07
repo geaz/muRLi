@@ -22,6 +22,7 @@ namespace Murli
             void run(MurliContext& context)
             {                         
                 context.getDisplay().setView(_runModView);
+                context.getDisplay().setLeftStatus(_modName);
                 if(_scriptContext->isFaulted())
                 {
                     context.currentState = std::make_shared<InvalidModState>();
@@ -63,7 +64,6 @@ namespace Murli
         private:
             void setView(AnalyzerResult& result)
             {
-                _runModView->modName = _modName;
                 _runModView->decibel = result.decibel;
                 if(result.volume > 0 && result.dominantFrequency > 0)
                 {

@@ -18,10 +18,15 @@ namespace Murli
             void loop();
 
             void setView(const std::shared_ptr<View> view);
+            void setLeftStatus(const std::string& text);
+            void setRightStatus(const std::string& text);
 
         private:
             DisplayCtrl _ctrl;
             std::shared_ptr<View> _currentView;
+
+            std::string _leftStatusText = "";
+            std::string _rightStatusText = "";
     };
 }
 

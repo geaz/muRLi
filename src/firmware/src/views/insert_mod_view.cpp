@@ -15,21 +15,21 @@ namespace Murli
 
                 display.setFontPosCenter();
                 display.setFont(u8g2_font_5x8_tf);
-                display.drawStr(35, display.getDisplayHeight() / 2, "Insert MOD ...");
+                display.drawStr(35, (display.getDisplayHeight() - 10) / 2, "Insert MOD ...");
 
-                display.setFontPosBaseline();                
+                display.setFontPosBaseline();                        
             }
 
             void animateGlyph(DisplayCtrl& display) 
             {
                 if(_lastAnimate + 50 < millis())
                 {
-                    if(_glyphY == (display.getDisplayHeight() - 20) && _lastAnimate + 250 < millis())
+                    if(_glyphY == (display.getDisplayHeight() - 30) && _lastAnimate + 250 < millis())
                     {
                         _glyphY = 25;
                         _lastAnimate = millis();
                     }
-                    else if(_glyphY < (display.getDisplayHeight() - 20))
+                    else if(_glyphY < (display.getDisplayHeight() - 30))
                     {
                         _glyphY++;
                         _lastAnimate = millis();
