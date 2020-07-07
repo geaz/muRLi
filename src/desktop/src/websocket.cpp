@@ -32,26 +32,25 @@ namespace Murli
             _socket.sendBinary(std::string(serializedCommand.begin(), serializedCommand.end()));
         }
 
-        void Websocket::addOnCommandReceived(CommandReceivedEvent event)
-        {
-            _commandReceivedEvents.push_back(event);
-        }
-
         void Websocket::onMessage(const ix::WebSocketMessagePtr& msg)
         {
-            if(msg->type != ix::WebSocketMessageType::Message)
-                return;
-
-            if(msg->binary)
+            if(msg->type == ix::WebSocketMessageType::Open)
+                for(auto event : connectionEvents.getEventHandlers()) event.second(true);
+            else if(msg->type == ix::WebSocketMessageType::Close)
+                for(auto event : connectionEvents.getEventHandlers()) event.second(false);
+            else if(msg->type == ix::WebSocketMessageType::Message)
             {
-                Murli::Client::Command receivedCommand;
-                memcpy(&receivedCommand, &msg->str.c_str()[0], msg->str.length());
-                for(CommandReceivedEvent event : _commandReceivedEvents) event(receivedCommand);
-            }
-            else
-            {
-                std::cout << "Distributed\n";
-                send({ 0, Server::MOD_DISTRIBUTED });
+                 if(msg->binary)
+                {
+                    Murli::Client::Command receivedCommand;
+                    memcpy(&receivedCommand, &msg->str.c_str()[0], msg->str.length());
+                    for(auto event : commandEvents.getEventHandlers()) event.second(receivedCommand);
+                }
+                else
+                {
+                    std::cout << "Distributed\n";
+                    send({ 0, Server::MOD_DISTRIBUTED });
+                }
             }
         }
     }

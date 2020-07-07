@@ -1,74 +1,79 @@
-#include "frequency_analyzer.hpp"
-#include <iostream>
-#include <RtAudio.h>
-#include <kiss_fft.h>
 #include <cmath>
+#include "frequency_analyzer.hpp"
 
 namespace Murli
 {
     namespace Desktop
     {
-        void FrequencyAnalyzer::run()
+        bool FrequencyAnalyzer::start()
         {
-            if(_adc.getDeviceCount() < 1) return;
-
-            _parameters.deviceId = _adc.getDefaultOutputDevice();
-            _parameters.nChannels = 2;
-            _parameters.firstChannel = 0;
-            
-            unsigned int sampleRate = 9000;
-            unsigned int bufferFrames = 512;
-
-            auto info = _adc.getDeviceInfo(_parameters.deviceId);
-            std::cout << info.nativeFormats << "\n";
+            bool started = false;
+            if(_adc.getDeviceCount() < 1) return started;
 
             try
             {
-                _adc.openStream(nullptr, &_parameters, RTAUDIO_SINT16, sampleRate, &bufferFrames, 
-                    &FrequencyAnalyzer::streamCallback, (void *)this);
+                if(!_adc.isStreamOpen())
+                {                    
+                    unsigned int bufferFrames = FFTDataSize;
+
+                    _parameters.deviceId = _adc.getDefaultOutputDevice();
+                    _parameters.nChannels = 2;
+                    _parameters.firstChannel = 0;
+                    
+                    _adc.openStream(nullptr, &_parameters, RTAUDIO_SINT16, SampleRate, &bufferFrames, 
+                        &FrequencyAnalyzer::streamCallback, (void *)this);
+                }
                 _adc.startStream();
+                started = true;
             }
             catch (RtAudioError& e)
             {
                 e.printMessage();
             }
+            return started;
         }
 
-        int FrequencyAnalyzer::streamCallback(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames, 
-                    double streamTime, RtAudioStreamStatus status, void *userData)
+        void FrequencyAnalyzer::stop()
         {
-            kiss_fft_cpx cx_in[512], cx_out[512];       
-            kiss_fft_cfg cfg = kiss_fft_alloc(512, false, nullptr, nullptr);
-            for(uint16_t i = 0; i < nBufferFrames; i++)
-            {
-                cx_in[i].r = (float)((int16_t *)inputBuffer)[i];
-                cx_in[i].i = 0;
-            }
-            kiss_fft(cfg , cx_in, cx_out);
-            float freqData[512/2];
+            if(_adc.isStreamRunning()) _adc.stopStream();
+        }
+
+        uint16_t FrequencyAnalyzer::getDominantFrequency(const kiss_fft_cpx* cx) const
+        {
             uint16_t highestBin = 0;
             float highestAmplitude = 0;
-            for(uint16_t i = 0; i < nBufferFrames/2; i++)
+            float freqData[HalfFFTDataSize];
+
+            for(uint16_t i = 0; i < HalfFFTDataSize; i++)
             {
-                freqData[i] = sqrt(pow(cx_out[i].r, 2) + pow(cx_out[i].i, 2));
+                freqData[i] = sqrt(pow(cx[i].r, 2) + pow(cx[i].i, 2));
                 if(freqData[i] > highestAmplitude)
                 {
                     highestAmplitude = freqData[i];
                     highestBin = i;
                 }
             }
-            std::cout << "Dominant Frequency: " << highestBin * ((float)9000 / (float)256) << "\n";
-            kiss_fft_free(cfg);
+            return (uint16_t)(highestBin * ((float)9000 / (float)256));
+        }
 
+        /* static */ int FrequencyAnalyzer::streamCallback(void *outputBuffer, void *inputBuffer, 
+            unsigned int nBufferFrames, double streamTime, RtAudioStreamStatus status, void *userData)
+        {            
             FrequencyAnalyzer* freqAnalyzer = (FrequencyAnalyzer*)userData;
 
-            if ( status ) std::cout << "Stream over/underflow detected." << std::endl;
-            auto now = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double, std::milli> duration = now - freqAnalyzer->_lastRun;
-            std::cout << duration.count() << "\n";            
-            freqAnalyzer->_lastRun = now;
+            kiss_fft_cpx cx_in[FFTDataSize], cx_out[FFTDataSize];       
+            kiss_fft_cfg cfg = kiss_fft_alloc(FFTDataSize, false, nullptr, nullptr);
+            for(uint16_t i = 0; i < FFTDataSize; i++)
+            {
+                cx_in[i].r = (float)((int16_t *)inputBuffer)[i];
+                cx_in[i].i = 0;
+            }
+            kiss_fft(cfg , cx_in, cx_out);
+            uint16_t dominantFrequency = freqAnalyzer->getDominantFrequency(&cx_out[0]);
+            kiss_fft_free(cfg);
 
-            std::cout << outputBuffer << ' ' << ((float *)outputBuffer)[0] << ' ' << inputBuffer << ' ' << ((float *)inputBuffer)[0] << ' ' << nBufferFrames << std::endl;
+            for(auto event : freqAnalyzer->frequencyEvents.getEventHandlers()) event.second(dominantFrequency);
+
             return 0;
         }
     }

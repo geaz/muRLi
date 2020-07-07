@@ -7,8 +7,6 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists-toml11.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists-rtAudio.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists-zLib.txt)
 include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists-ixWebsocket.txt)
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../firmware/src/network/websocket/commands)
     
 file(GLOB_RECURSE MURLIDESKTOP_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp"
@@ -26,6 +24,9 @@ target_link_libraries(muRLi-Desktop
     zlibstatic
     ixwebsocket
     rtaudio)
+target_include_directories(muRLi-Desktop PRIVATE 
+    ${CMAKE_CURRENT_SOURCE_DIR}/../firmware/src/network/websocket/
+    ${CMAKE_CURRENT_SOURCE_DIR}/../firmware/src/network/websocket/commands)
 
 # Necessary for ixWebsocket
 if(WIN32)

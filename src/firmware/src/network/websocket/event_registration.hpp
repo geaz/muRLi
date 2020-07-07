@@ -11,7 +11,7 @@ namespace Murli
         public:
             uint64_t addEventHandler(const T event)
             {
-                uint64_t id = millis();
+                uint64_t id = _events.size();
                 _events[id] = event;
                 return id;
             }
