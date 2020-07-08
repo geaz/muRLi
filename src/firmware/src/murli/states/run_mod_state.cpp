@@ -57,7 +57,7 @@ namespace Murli
                 if(_scriptContext->source != Client::AnalyzerSource::Microphone
                 && command.commandType == Server::CommandType::EXTERNAL_ANALYZER)
                 {
-
+                    
                 }
             }
 
@@ -68,7 +68,7 @@ namespace Murli
                 if(result.volume > 0 && result.dominantFrequency > 0)
                 {
                     _runModView->dominantFrequency = result.dominantFrequency;
-                    _runModView->frequencyRange = _frequencyAnalyzer.getFrequencyRange(result, 17, 8);
+                    _runModView->frequencyRange = _frequencyAnalyzer.getFrequencyRange(result, BAR_COUNT, BAR_HEIGHT);
                 }
                 else
                 {

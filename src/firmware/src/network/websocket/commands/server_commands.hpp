@@ -26,7 +26,7 @@ namespace Murli
             float decibel;
             uint8_t volume;
             uint16_t frequency;
-            std::array<uint8_t, 17> buckets;
+            std::array<uint8_t, BAR_COUNT> buckets;
         };
 
         struct Command

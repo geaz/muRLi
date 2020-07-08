@@ -93,7 +93,7 @@ namespace Murli
         fft.compute(FFTDirection::Forward);
         fft.complexToMagnitude();
 
-        // Exonential Smoothing fo the frequencies
+        // Exponential Smoothing for the frequencies
         // To flatten frequency peaks
         float dominantFrequency = EfAlpha * fft.majorPeak() + (1 - EfAlpha) * _lastDominantFrequency;
         _lastDominantFrequency = dominantFrequency;
