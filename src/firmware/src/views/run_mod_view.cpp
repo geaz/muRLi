@@ -29,7 +29,7 @@ namespace Murli
 
                 if(!_strPosCalculated)
                 {
-                    uint8_t volStrWidth = display.getStrWidth("-00.0dB");
+                    uint8_t volStrWidth = display.getStrWidth("-000.0dB");
                     _volStrXPos = display.getDisplayWidth() - volStrWidth;
                     _strPosCalculated = true;
                 }       
@@ -37,7 +37,7 @@ namespace Murli
                 std::array<char, 16> dBBuf; 
                 std::array<char, 16> freqBuf;
 
-                std::sprintf(dBBuf.data(), "%05.1fdB", decibel);
+                std::sprintf(dBBuf.data(), "%06.1fdB", decibel);
                 std::sprintf(freqBuf.data(), "%05ihz", dominantFrequency);
 
                 display.drawStr(0, 0, freqBuf.data());

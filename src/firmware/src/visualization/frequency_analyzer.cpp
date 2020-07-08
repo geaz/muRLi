@@ -1,4 +1,5 @@
 #include <arduinoFFT.h>
+#include "frequency_include.hpp"
 #include "frequency_analyzer.hpp"
 
 namespace Murli
@@ -16,41 +17,6 @@ namespace Murli
         else result.dominantFrequency = 0;
         
         return result;
-    }    
-
-    /**
-     * @brief This method returns a consollidated reprensentation of the calculated frequency buckets.
-     * 
-     * @param AnalyzerResult The AnalyzerResult to calculate the frequency range
-     * @return std::array<uint8_t, BAR_COUNT> Returns a array with the mapped value of each bucket
-     */
-    std::array<uint8_t, BAR_COUNT> FrequencyAnalyzer::getFrequencyRange(const AnalyzerResult& result) const
-    {
-        std::array<uint8_t, BAR_COUNT> combinedBuckets;
-        
-        // only check buckets between our min and max frequency
-        uint8_t minFreqIndex = (uint8_t)((float)MinFrequency / ((float)SampleRate / (float)FFTDataSize));
-        uint8_t maxFreqIndex = (uint8_t)((float)MaxFrequency / ((float)SampleRate / (float)FFTDataSize));
-
-        float originalMaxValue = 0;
-        for(uint8_t i = minFreqIndex; i < maxFreqIndex; i++)
-        {
-            originalMaxValue = max(originalMaxValue, result.fftReal[i]);
-        }
-        
-        uint8_t splitSize = (maxFreqIndex - minFreqIndex + 1) / BAR_COUNT;
-        for(uint8_t i = 0; i < BAR_COUNT; i++)
-        {
-            uint32_t combinedValue = 0;
-            for(uint8_t j = 0; j < splitSize; j++)
-            {
-                combinedValue += result.fftReal[j + (i * splitSize) + minFreqIndex /* offset */];
-            }
-            
-            uint8_t newMaxValue = map(combinedValue/splitSize, 0, originalMaxValue, 0, BAR_HEIGHT);
-            combinedBuckets[i] = newMaxValue;
-        }
-        return combinedBuckets;
     }
 
     void FrequencyAnalyzer::collectSamples(AnalyzerResult& result)
@@ -81,7 +47,7 @@ namespace Murli
 
         float signalRMSflt = sqrt(signalRMS / FFTDataSize);
         result.decibel = 20.0*log10(signalRMSflt / 512);
-        result.volume = map(result.decibel < MinDB ? MinDB : result.decibel, MinDB, 0, 0, 100);
+        result.volume = Murli::map(result.decibel < MinDB ? MinDB : result.decibel, MinDB, 0, 0, 100);
     }
 
     void FrequencyAnalyzer::calculateDominantFrequency(AnalyzerResult& result) 
@@ -93,7 +59,7 @@ namespace Murli
 
         // Exponential Smoothing for the frequencies
         // To flatten frequency peaks
-        float dominantFrequency = EfAlpha * fft.majorPeak() + (1 - EfAlpha) * _lastDominantFrequency;
+        float dominantFrequency = EfAlpha * fft.majorPeak() + (1.0f - EfAlpha) * _lastDominantFrequency;
         _lastDominantFrequency = dominantFrequency;
 
         result.dominantFrequency = dominantFrequency > MaxFrequency ? MaxFrequency : dominantFrequency;

@@ -40,17 +40,13 @@ namespace Murli
                 for(auto event : connectionEvents.getEventHandlers()) event.second(false);
             else if(msg->type == ix::WebSocketMessageType::Message)
             {
-                 if(msg->binary)
+                if(msg->binary)
                 {
                     Murli::Client::Command receivedCommand;
                     memcpy(&receivedCommand, &msg->str.c_str()[0], msg->str.length());
                     for(auto event : commandEvents.getEventHandlers()) event.second(receivedCommand);
                 }
-                else
-                {
-                    std::cout << "Distributed\n";
-                    send({ 0, Server::MOD_DISTRIBUTED });
-                }
+                else send({ 0, Server::MOD_DISTRIBUTED });
             }
         }
     }

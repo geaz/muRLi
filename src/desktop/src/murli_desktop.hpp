@@ -17,10 +17,10 @@ namespace Murli
                 void run();
 
             private:
-                void onConnection(bool connected);
-                void onCommandReceived(Client::Command command);
-                void onFrequencyCalculated(uint16_t dominantFrequency);
-                Server::Command createAnswer(Client::Command command, Server::CommandType answerCommandType);
+                void onConnection(const bool connected);
+                void onCommandReceived(const Client::Command command);
+                void onFrequencyCalculated(const float decibel, const uint8_t volume, const uint16_t dominantFrequency, const std::array<uint8_t, BAR_COUNT> buckets);
+                Server::Command createAnswer(const Client::Command command, const Server::CommandType answerCommandType) const;
 
                 Websocket _websocket;
                 FrequencyAnalyzer _freqAnalyzer;

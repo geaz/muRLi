@@ -7,16 +7,28 @@
 #include "../../views/run_mod_view.cpp"
 #include "../../visualization/script_context.hpp"
 #include "../../visualization/frequency_analyzer.hpp"
+#include "../../visualization/frequency_include.hpp"
 
 namespace Murli
 {
     class RunModState : public State
     {
         public:
-            RunModState(std::shared_ptr<ScriptContext> scriptContext) : _scriptContext(scriptContext)
+            RunModState(MurliContext& context, std::shared_ptr<ScriptContext> scriptContext) 
+                : _context(context), _scriptContext(scriptContext)
             {
+                _handleId = context.getSocketServer()
+                    .serverCommandEvents
+                    .addEventHandler([this](Server::Command command) { handleExternalSource(command); });
                 _runModView = std::make_shared<RunModView>();
                 _modName = _scriptContext->getModName();
+            }
+
+            ~RunModState()
+            {
+                _context.getSocketServer()
+                    .serverCommandEvents
+                    .removeEventHandler(_handleId);
             }
 
             void run(MurliContext& context)
@@ -42,7 +54,11 @@ namespace Murli
                     command.analyzerCommand = analyzerCommand;
 
                     socketServer.broadcast(command);
-                    setView(result);
+                    setView(
+                        result.decibel, 
+                        result.volume, 
+                        result.dominantFrequency, 
+                        Murli::getFrequencyBars(&result.fftReal[0], Murli::SampleRate, Murli::FFTDataSize));
 
                     uint32_t delta = millis() - _lastLedUpdate;
                     _lastLedUpdate = millis();
@@ -57,18 +73,34 @@ namespace Murli
                 if(_scriptContext->source != Client::AnalyzerSource::Microphone
                 && command.commandType == Server::CommandType::EXTERNAL_ANALYZER)
                 {
-                    
+                    Server::ExternalAnalyzerCommand externalCommand = command.externalAnalyzerCommand;
+                    Client::AnalyzerCommand analyzerCommand = { externalCommand.volume, externalCommand.frequency };                
+                    Client::Command command = { millis(), Client::ANALYZER_UPDATE };
+                    command.analyzerCommand = analyzerCommand;
+
+                    _context.getSocketServer().broadcast(command);
+                    setView(
+                        externalCommand.decibel, 
+                        externalCommand.volume, 
+                        externalCommand.frequency,
+                        externalCommand.buckets);
+
+                    uint32_t delta = millis() - _lastLedUpdate;
+                    _lastLedUpdate = millis();
+
+                    _scriptContext->updateAnalyzerResult(externalCommand.volume, externalCommand.frequency);
+                    _scriptContext->run(delta);
                 }
             }
 
         private:
-            void setView(AnalyzerResult& result)
+            void setView(const float decibel, const uint16_t volume, const uint16_t dominantFrequency, const std::array<uint8_t, BAR_COUNT> buckets)
             {
-                _runModView->decibel = result.decibel;
-                if(result.volume > 0 && result.dominantFrequency > 0)
+                _runModView->decibel = decibel;
+                if(volume > 0 && dominantFrequency > 0)
                 {
-                    _runModView->dominantFrequency = result.dominantFrequency;
-                    _runModView->frequencyRange = _frequencyAnalyzer.getFrequencyRange(result);
+                    _runModView->dominantFrequency = dominantFrequency;
+                    _runModView->frequencyRange = buckets;
                 }
                 else
                 {
@@ -77,11 +109,14 @@ namespace Murli
                 }
             }
 
-            FrequencyAnalyzer _frequencyAnalyzer;
-            std::shared_ptr<RunModView> _runModView;
+            MurliContext& _context;
             std::shared_ptr<ScriptContext> _scriptContext;
-            uint64_t _lastLedUpdate = millis();
+            std::shared_ptr<RunModView> _runModView;
+            uint64_t _handleId = 0;
             std::string _modName;
+
+            FrequencyAnalyzer _frequencyAnalyzer;
+            uint64_t _lastLedUpdate = millis();
     };
 }
 

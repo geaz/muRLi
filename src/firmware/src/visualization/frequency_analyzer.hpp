@@ -10,14 +10,9 @@ namespace Murli
     // The ESP8266 is able to sample up to a rate of ~10000
     static const uint16_t SampleRate = 9000;
     static const uint64_t SamplePerioduSec = round(1000000*(1.0 / SampleRate)); // micro seconds between to samples
-    static const unsigned short FFTDataSize = 128;
+    static const uint16_t FFTDataSize = 128;
 
-    // https://en.wikipedia.org/wiki/Audio_frequency
-    static const short MinFrequency = 130;  // Lowest note for viola, mandola
-    static const short MidFrequency = 1046; // 1046 Highest note reproducible by average female
-    static const short MaxFrequency = 3140; // 3140 Between highest note on a flute and on a 88-key piano
-
-    static const float EfAlpha = 0.4;
+    static const float EfAlpha = 0.4f;
     static const int8_t MinDB = -30;
 
     struct AnalyzerResult
@@ -33,7 +28,6 @@ namespace Murli
     {
         public:
             AnalyzerResult loop();
-            std::array<uint8_t, BAR_COUNT> getFrequencyRange(const AnalyzerResult& result) const;
 
         private:
             void collectSamples(AnalyzerResult& result);

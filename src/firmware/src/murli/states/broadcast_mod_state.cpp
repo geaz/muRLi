@@ -19,9 +19,9 @@ namespace Murli
                 _handleId = context.getSocketServer()
                     .serverCommandEvents
                     .addEventHandler([this](Server::Command command) 
-                { 
-                    _modDistributed = command.commandType == Server::MOD_DISTRIBUTED; 
-                });
+                    { 
+                        _modDistributed = command.commandType == Server::MOD_DISTRIBUTED; 
+                    });
                 _broadcastModView = std::make_shared<IconTextView>("Broadcasting MOD ...", u8g2_font_open_iconic_thing_2x_t, 74);
             }
 
@@ -57,7 +57,7 @@ namespace Murli
                     context.getSocketServer().broadcast(command);
 
                     context.getLed().setAllLeds(Murli::Black);
-                    context.currentState = std::make_shared<RunModState>(scriptContext);
+                    context.currentState = std::make_shared<RunModState>(context, scriptContext);
 
                     _modDistributed = false;
                     _broadcastStarted = false;

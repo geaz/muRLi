@@ -6,6 +6,7 @@
 #include <mjs.h>
 
 #include "frequency_analyzer.hpp"
+#include "frequency_include.hpp"
 #include "../hardware/led/led.hpp"
 #include "../network/websocket/commands/client_commands.hpp"
 

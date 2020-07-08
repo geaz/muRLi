@@ -118,9 +118,6 @@ namespace Murli
                 currentState = std::make_shared<NoModState>();
                 break;
             case Server::EXTERNAL_ANALYZER:
-                Serial.println("External");
-                Serial.printf("%d %d\n", command.externalAnalyzerCommand.volume, command.externalAnalyzerCommand.frequency);
-                break;
             case Server::MOD_DISTRIBUTED:
                 break;
         }

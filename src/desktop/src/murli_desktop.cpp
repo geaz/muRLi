@@ -12,7 +12,8 @@ namespace Murli
             _websocket.connectionEvents.addEventHandler(
                 [this](bool connected) { onConnection(connected); });
             _freqAnalyzer.frequencyEvents.addEventHandler(
-                [this](uint16_t dominantFrequency) { });
+                [this](const float decibel, const uint8_t volume, uint16_t dominantFrequency, std::array<uint8_t, BAR_COUNT> buckets) 
+                { onFrequencyCalculated(decibel, volume, dominantFrequency, buckets); });
         }
 
         void MurliDesktop::run()
@@ -21,13 +22,13 @@ namespace Murli
             while(true) { }
         }
 
-        void MurliDesktop::onConnection(bool connected)
+        void MurliDesktop::onConnection(const bool connected)
         {
             if(connected) _freqAnalyzer.start();
             else _freqAnalyzer.stop();
         }
 
-        void MurliDesktop::onCommandReceived(Client::Command command)
+        void MurliDesktop::onCommandReceived(const Client::Command command)
         {
             switch(command.commandType)
             {
@@ -49,22 +50,19 @@ namespace Murli
             }
         }
 
-        void MurliDesktop::onFrequencyCalculated(uint16_t dominantFrequency)
+        void MurliDesktop::onFrequencyCalculated(const float decibel, const uint8_t volume, const uint16_t dominantFrequency, const std::array<uint8_t, BAR_COUNT> buckets)
         {
             if(_currentSource != Client::AnalyzerSource::Desktop) return;
+            std::cout << dominantFrequency << "\n";
 
             Server::Command serverCommand = { 0, Server::CommandType::EXTERNAL_ANALYZER };
-            //Server::ExternalAnalyzerCommand analyzerCommand = { }
+            Server::ExternalAnalyzerCommand analyzerCommand = { decibel, volume, dominantFrequency, buckets };
+            serverCommand.externalAnalyzerCommand = analyzerCommand;
 
-            /*
-            float decibel;
-            uint8_t volume;
-            uint16_t frequency;
-            std::array<uint8_t, 17> buckets;
-            */ 
+            _websocket.send(serverCommand); 
         }
 
-        Server::Command MurliDesktop::createAnswer(Client::Command command, Server::CommandType answerCommandType)
+        Server::Command MurliDesktop::createAnswer(const Client::Command command, const Server::CommandType answerCommandType) const
         {
             Server::Command answerCommand = { command.id, answerCommandType };
             if(answerCommandType == Murli::Server::MESH_COUNTED)
