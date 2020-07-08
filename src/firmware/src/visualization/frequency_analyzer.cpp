@@ -22,13 +22,11 @@ namespace Murli
      * @brief This method returns a consollidated reprensentation of the calculated frequency buckets.
      * 
      * @param AnalyzerResult The AnalyzerResult to calculate the frequency range
-     * @param buckets Defines into how many buckets the data should be combined
-     * @param maxValue Defines the new max value for each bucket. The values will be mapped into this new range (0-maxValue)
-     * @return std::vector<uint8_t> Returns a vector with the mapped value of each bucket
+     * @return std::array<uint8_t, BAR_COUNT> Returns a array with the mapped value of each bucket
      */
-    std::vector<uint8_t> FrequencyAnalyzer::getFrequencyRange(const AnalyzerResult& result, const uint8_t buckets, const uint8_t maxValue) const
+    std::array<uint8_t, BAR_COUNT> FrequencyAnalyzer::getFrequencyRange(const AnalyzerResult& result) const
     {
-        std::vector<uint8_t> combinedBuckets;
+        std::array<uint8_t, BAR_COUNT> combinedBuckets;
         
         // only check buckets between our min and max frequency
         uint8_t minFreqIndex = (uint8_t)((float)MinFrequency / ((float)SampleRate / (float)FFTDataSize));
@@ -40,8 +38,8 @@ namespace Murli
             originalMaxValue = max(originalMaxValue, result.fftReal[i]);
         }
         
-        uint8_t splitSize = (maxFreqIndex - minFreqIndex + 1) / buckets;
-        for(uint8_t i = 0; i < buckets; i++)
+        uint8_t splitSize = (maxFreqIndex - minFreqIndex + 1) / BAR_COUNT;
+        for(uint8_t i = 0; i < BAR_COUNT; i++)
         {
             uint32_t combinedValue = 0;
             for(uint8_t j = 0; j < splitSize; j++)
@@ -49,8 +47,8 @@ namespace Murli
                 combinedValue += result.fftReal[j + (i * splitSize) + minFreqIndex /* offset */];
             }
             
-            uint8_t newMaxValue = map(combinedValue/splitSize, 0, originalMaxValue, 0, maxValue);
-            combinedBuckets.push_back(newMaxValue);
+            uint8_t newMaxValue = map(combinedValue/splitSize, 0, originalMaxValue, 0, BAR_HEIGHT);
+            combinedBuckets[i] = newMaxValue;
         }
         return combinedBuckets;
     }
@@ -64,7 +62,7 @@ namespace Murli
             result.fftImg[i] = 0;
 
             while(micros() - startMicros < SamplePerioduSec){
-                //empty loop
+                //empty loop to wait
             }
             startMicros += SamplePerioduSec;
         }

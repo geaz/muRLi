@@ -68,7 +68,7 @@ namespace Murli
                 if(result.volume > 0 && result.dominantFrequency > 0)
                 {
                     _runModView->dominantFrequency = result.dominantFrequency;
-                    _runModView->frequencyRange = _frequencyAnalyzer.getFrequencyRange(result, BAR_COUNT, BAR_HEIGHT);
+                    _runModView->frequencyRange = _frequencyAnalyzer.getFrequencyRange(result);
                 }
                 else
                 {

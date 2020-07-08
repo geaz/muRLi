@@ -8,7 +8,15 @@ namespace Murli
 {
     class RunModView : public View
     {
-        public:            
+        public:
+            RunModView()
+            {
+                for(uint8_t i = 0; i < BAR_COUNT; i++)
+                {
+                    frequencyRange[i] = 0;
+                }
+            }
+
             void drawFrame(DisplayCtrl& display) override
             {
                 for(uint8_t i = 0; i < frequencyRange.size(); i++)
@@ -49,8 +57,7 @@ namespace Murli
             
             float decibel = 0.0;
             uint16_t dominantFrequency = 0;
-            std::vector<uint8_t> frequencyRange
-                = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            std::array<uint8_t, BAR_COUNT> frequencyRange;
 
         private:
             /**

@@ -3,7 +3,6 @@
 
 #include <math.h>
 #include <array>
-#include <vector>
 
 namespace Murli
 {    
@@ -34,7 +33,7 @@ namespace Murli
     {
         public:
             AnalyzerResult loop();
-            std::vector<uint8_t> getFrequencyRange(const AnalyzerResult& result, const uint8_t buckets, const uint8_t maxValue) const;
+            std::array<uint8_t, BAR_COUNT> getFrequencyRange(const AnalyzerResult& result) const;
 
         private:
             void collectSamples(AnalyzerResult& result);
