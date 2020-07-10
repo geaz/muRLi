@@ -24,8 +24,6 @@ namespace Murli
         saveJsSet("setSource", mjs_mk_foreign_func(_mjs, (mjs_func_ptr_t)mjsSetSource), "Set 'setSource' error!");
 
         // Set variables
-        saveJsSet("minF", mjs_mk_number(_mjs, MinFrequency), "Set 'minF' error!");
-        saveJsSet("midF", mjs_mk_number(_mjs, MidFrequency), "Set 'midF' error!");
         saveJsSet("maxF", mjs_mk_number(_mjs, MaxFrequency), "Set 'maxF' error!");
         saveJsSet("nLedC", mjs_mk_number(_mjs, LED_COUNT), "Set 'nLedC' error!");
         saveJsSet("mLedC", mjs_mk_number(_mjs, LED_COUNT), "Set 'mLedC' error!");

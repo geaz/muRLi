@@ -25,7 +25,7 @@ target_link_libraries(muRLi-Desktop
     ixwebsocket
     rtaudio)
 target_include_directories(muRLi-Desktop PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/../firmware/src/visualization/
+    ${CMAKE_CURRENT_SOURCE_DIR}/../firmware/src/
     ${CMAKE_CURRENT_SOURCE_DIR}/../firmware/src/network/websocket/
     ${CMAKE_CURRENT_SOURCE_DIR}/../firmware/src/network/websocket/commands)
 target_compile_definitions(muRLi-Desktop PRIVATE BAR_COUNT=17 BAR_HEIGHT=8)

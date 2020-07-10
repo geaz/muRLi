@@ -4,10 +4,10 @@
 #include "../state.hpp"
 #include "../murli_context.hpp"
 #include "invalid_mod_state.cpp"
+#include "../../shared.hpp"
 #include "../../views/run_mod_view.cpp"
 #include "../../visualization/script_context.hpp"
 #include "../../visualization/frequency_analyzer.hpp"
-#include "../../visualization/frequency_include.hpp"
 
 namespace Murli
 {
@@ -58,7 +58,7 @@ namespace Murli
                         result.decibel, 
                         result.volume, 
                         result.dominantFrequency, 
-                        Murli::getFrequencyBars(&result.fftReal[0], Murli::SampleRate, Murli::FFTDataSize));
+                        Murli::getFrequencyBars(&result.fftReal[0], result.volume));
 
                     uint32_t delta = millis() - _lastLedUpdate;
                     _lastLedUpdate = millis();

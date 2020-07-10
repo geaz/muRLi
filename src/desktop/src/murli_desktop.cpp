@@ -33,19 +33,21 @@ namespace Murli
             switch(command.commandType)
             {
                 case Murli::Client::CommandType::MESH_COUNT_REQUEST:
+                    std::cout << "MESH COUNT REQUEST\n";
                     _websocket.send(createAnswer(command, Murli::Server::CommandType::MESH_COUNTED));
                     break;
                 case Murli::Client::CommandType::MESH_UPDATE:
+                    std::cout << "MESH UPDATE\n";
                     _websocket.send(createAnswer(command, Murli::Server::CommandType::MESH_UPDATED));
                     break;
                 case Client::CommandType::SOURCE_UPDATE:
+                    std::cout << "SOURCE UPDATE\n";
                     _currentSource = command.sourceCommand.source;
                     break;
                 case Client::CommandType::MOD_REMOVED:
                     std::cout << "MOD REMOVED\n";
                     break;
                 case Client::CommandType::ANALYZER_UPDATE:
-                    std::cout << "Update: " << command.analyzerCommand.frequency << "\n";
                     break;
             }
         }
