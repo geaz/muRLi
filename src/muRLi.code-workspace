@@ -1,6 +1,9 @@
 {
 	"folders": [
 		{
+			"path": "api"
+		},
+		{
 			"path": "desktop"
 		},
 		{

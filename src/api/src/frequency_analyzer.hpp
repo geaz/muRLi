@@ -11,7 +11,7 @@
 
 namespace Murli
 {
-    namespace Desktop
+    namespace Api
     {
         typedef std::function<void(float, uint8_t, uint16_t, std::array<uint8_t, BAR_COUNT>)> FrequencyEvent;
 

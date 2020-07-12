@@ -1,0 +1,13 @@
+include(ExternalProject)
+
+set(zLib_INCLUDE_DIR "${CMAKE_BINARY_DIR}/libs/zlib/include/")
+set(zLib_LIBRARY_DIR "${CMAKE_BINARY_DIR}/libs/zlib/lib/")
+
+EXTERNALPROJECT_ADD(
+    ext_zLib
+    GIT_REPOSITORY https://github.com/madler/zlib.git
+    CMAKE_ARGS 
+        "-DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/libs/zlib"
+)
+
+link_directories(${zLib_LIBRARY_DIR})
